@@ -1,43 +1,44 @@
 "use client";
 
-import { useRef } from "react";
+import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { BEATS, steps, pulse } from "./timeline";
 import { useIntroClock } from "./Scene";
+import { BRACKETS } from "./logo-paths";
+import { CENTER_Y, shapesFromD } from "./Emblem";
 
 /**
- * Four HUD corner brackets, snapping in one by one (staccato) during the
- * frame-in beat — the logo's viewfinder frame, rebuilt in depth.
+ * The isotype's four corner brackets — REAL traced vector contours from
+ * logo-paths.ts, extruded. Same staccato snap-in during the frame-in beat.
+ * Each geometry is re-centered on its own bbox center so the snap pulse
+ * scales around the bracket itself.
  */
-
-/**
- * Frame traced from the official isotype: ±3.55 x ±2.55 around the emblem
- * center, arm 0.75, thickness 0.09 (150px / 18px at 1px = 0.005 units).
- * Positioned relative to the emblem's world center (y = 0.4).
- */
-const CORNERS: Array<{ pos: [number, number, number]; flip: [number, number] }> = [
-  { pos: [-3.55, 2.95, -1], flip: [1, 1] },
-  { pos: [3.55, 2.95, -1], flip: [-1, 1] },
-  { pos: [-3.55, -2.15, -1], flip: [1, -1] },
-  { pos: [3.55, -2.15, -1], flip: [-1, -1] },
-];
-
-const ARM = 0.75;
-const THICK = 0.09;
 
 function Bracket({
-  pos,
-  flip,
+  d,
+  cx,
+  cy,
   index,
 }: {
-  pos: [number, number, number];
-  flip: [number, number];
+  d: string;
+  cx: number;
+  cy: number;
   index: number;
 }) {
   const clock = useIntroClock();
   const group = useRef<THREE.Group>(null!);
   const mat = useRef<THREE.MeshStandardMaterial>(null!);
+
+  const geo = useMemo(() => {
+    const g = new THREE.ExtrudeGeometry(shapesFromD(d), {
+      depth: 0.1,
+      bevelEnabled: false,
+      curveSegments: 12,
+    });
+    g.translate(-cx, -cy, -0.05);
+    return g;
+  }, [d, cx, cy]);
 
   useFrame(() => {
     const t = clock.t;
@@ -45,7 +46,6 @@ function Bracket({
     group.current.visible = fired;
     if (!fired) return;
 
-    // Snap pulse right when this bracket lands.
     const [a, b] = BEATS.frameIn;
     const landAt = a + ((index + 1) / 4) * (b - a);
     const snap = pulse(t, landAt, 0.25);
@@ -54,21 +54,10 @@ function Bracket({
   });
 
   return (
-    <group ref={group} position={pos} visible={false}>
-      {/* horizontal arm */}
-      <mesh position={[(flip[0] * ARM) / 2, 0, 0]}>
-        <boxGeometry args={[ARM, THICK, THICK]} />
+    <group ref={group} position={[cx, cy, 0]} visible={false}>
+      <mesh geometry={geo}>
         <meshStandardMaterial
           ref={mat}
-          color="#00d4d4"
-          emissive="#00d4d4"
-          emissiveIntensity={1.1}
-        />
-      </mesh>
-      {/* vertical arm (shares material via second mesh, cheap) */}
-      <mesh position={[0, (-flip[1] * ARM) / 2, 0]}>
-        <boxGeometry args={[THICK, ARM, THICK]} />
-        <meshStandardMaterial
           color="#00d4d4"
           emissive="#00d4d4"
           emissiveIntensity={1.1}
@@ -80,9 +69,9 @@ function Bracket({
 
 export default function Brackets() {
   return (
-    <group>
-      {CORNERS.map((c, i) => (
-        <Bracket key={i} pos={c.pos} flip={c.flip} index={i} />
+    <group position={[0, CENTER_Y, -1]}>
+      {BRACKETS.map((b, i) => (
+        <Bracket key={i} d={b.d} cx={b.cx} cy={b.cy} index={i} />
       ))}
     </group>
   );
