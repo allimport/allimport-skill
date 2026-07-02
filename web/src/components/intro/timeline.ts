@@ -5,24 +5,24 @@
  * (seconds since intro start). This keeps the sequence scrubbable and lets the
  * future Hero drive the same timeline from scroll without re-architecting.
  *
- * Beats (seconds):
+ * Beats (seconds) — direction B "Premium Scanner":
  *   0.0 – 0.8  atmosphere    grid + particles fade in, camera far
- *   0.8 – 1.6  bolt streak   lightning scales in along its diagonal
- *   1.6 – 2.2  strike        flash, ring "O" materializes, shockwave
- *   2.2 – 3.2  frame-in      camera dolly, HUD brackets snap in (staccato)
- *   3.2 – 4.3  wordmark      DOM overlay reveals (driven via onPhase callback)
- *   4.3 – 5.0  settle        blend to idle loop (Hero-ready state)
+ *   0.8 – 2.4  scan          beam sweeps bottom→top, clipping-reveals the O
+ *   2.4 – 3.0  ignition      bolt strikes in, flash, shockwave — scan verified
+ *   3.0 – 3.7  frameIn       camera dolly, HUD brackets snap in (staccato)
+ *   3.4 – 4.4  wordmark      DOM overlay reveals (driven via onWordmark)
+ *   4.4 – 5.2  settle        blend to idle loop (Hero-ready state)
  */
 
-export const INTRO_DURATION = 5.0;
+export const INTRO_DURATION = 5.2;
 
 export const BEATS = {
   atmosphereIn: [0.0, 0.8],
-  boltStreak: [0.8, 1.6],
-  strike: [1.6, 2.2],
-  frameIn: [2.2, 3.2],
-  wordmark: [3.2, 4.3],
-  settle: [4.3, 5.0],
+  scan: [0.8, 2.4],
+  ignition: [2.4, 3.0],
+  frameIn: [3.0, 3.7],
+  wordmark: [3.4, 4.4],
+  settle: [4.4, 5.2],
 } as const;
 
 export type Ease = (x: number) => number;

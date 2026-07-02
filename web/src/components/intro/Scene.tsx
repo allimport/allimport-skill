@@ -78,7 +78,11 @@ export default function Scene({
   return (
     <Canvas
       dpr={[1, 1.75]}
-      gl={{ antialias: false, powerPreference: "high-performance" }}
+      gl={{
+        antialias: false,
+        powerPreference: "high-performance",
+        localClippingEnabled: true,
+      }}
       camera={{ fov: 42, near: 0.1, far: 60, position: [0, 0, 15] }}
       style={{ position: "absolute", inset: 0 }}
     >

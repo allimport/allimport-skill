@@ -17,7 +17,7 @@ export default function Shockwave() {
 
   useFrame(() => {
     const t = clock.t;
-    const start = BEATS.strike[0];
+    const start = BEATS.ignition[0] + 0.22;
     const life = 1.1;
     const p = clamp01((t - start) / life);
     const active = t >= start && p < 1;
