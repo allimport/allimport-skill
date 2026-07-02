@@ -13,18 +13,25 @@ import {
   linear,
 } from "./timeline";
 import { useIntroClock } from "./Scene";
-import { RING_D, BOLT_D } from "./logo-paths";
+import {
+  RING_D,
+  BOLT_TIP_D,
+  BOLT_TAIL_D,
+  BOLT_SLIVER_D,
+  HALO_D,
+} from "./logo-paths";
 
 /**
  * Exact 3D build of the official All Import isotype.
  *
- * Geometry comes from logo-paths.ts — REAL vector paths auto-traced from
- * the brand asset with potrace (zero manual estimation). Two meshes:
+ * Geometry comes from logo-paths.ts — REAL vector paths (potrace output)
+ * with MANUAL, developer-pinned semantics. Three meshes by meaning:
  *
- *   1. White O ring  — outer contour + italic hole, extruded.
- *   2. Cyan layer    — every cyan fragment of the artwork (double-tip bolt,
- *                      tail, halo arcs, inner sliver) extruded behind the
- *                      ring, exactly as the flat asset composites them.
+ *   1. White O ring — outer contour + italic hole, extruded.
+ *   2. Halo         — the cyan rim hugging the O. Belongs to the O's look,
+ *                     so it reveals WITH the ring during the scan.
+ *   3. Bolt         — tip + tail + sliver as one striking piece; it's the
+ *                     element that arrives at ignition.
  *
  * Only extrusion, PBR materials, light and animation. No reinterpretation.
  */
@@ -56,16 +63,33 @@ function useRingGeometry() {
   }, []);
 }
 
-function useCyanGeometry() {
+const CYAN_EXTRUDE: THREE.ExtrudeGeometryOptions = {
+  depth: 0.16,
+  bevelEnabled: true,
+  bevelThickness: 0.02,
+  bevelSize: 0.02,
+  bevelSegments: 2,
+  curveSegments: 24,
+};
+
+/** Bolt = tip + tail + sliver, one striking piece (manual semantics). */
+function useBoltGeometry() {
   return useMemo(() => {
-    const geo = new THREE.ExtrudeGeometry(shapesFromD(BOLT_D), {
-      depth: 0.16,
-      bevelEnabled: true,
-      bevelThickness: 0.02,
-      bevelSize: 0.02,
-      bevelSegments: 2,
-      curveSegments: 24,
-    });
+    const shapes = [
+      ...shapesFromD(BOLT_TIP_D),
+      ...shapesFromD(BOLT_TAIL_D),
+      ...shapesFromD(BOLT_SLIVER_D),
+    ];
+    const geo = new THREE.ExtrudeGeometry(shapes, CYAN_EXTRUDE);
+    geo.translate(0, 0, -0.08);
+    return geo;
+  }, []);
+}
+
+/** Halo = the O's cyan rim; reveals with the ring during the scan. */
+function useHaloGeometry() {
+  return useMemo(() => {
+    const geo = new THREE.ExtrudeGeometry(shapesFromD(HALO_D), CYAN_EXTRUDE);
     geo.translate(0, 0, -0.08);
     return geo;
   }, []);
@@ -75,6 +99,7 @@ export default function Emblem() {
   const clock = useIntroClock();
   const group = useRef<THREE.Group>(null!);
   const ring = useRef<THREE.Mesh>(null!);
+  const halo = useRef<THREE.Mesh>(null!);
   const bolt = useRef<THREE.Mesh>(null!);
   const boltMat = useRef<THREE.MeshStandardMaterial>(null!);
   const flash = useRef<THREE.PointLight>(null!);
@@ -82,7 +107,8 @@ export default function Emblem() {
   const beamMat = useRef<THREE.MeshBasicMaterial>(null!);
 
   const ringGeo = useRingGeometry();
-  const cyanGeo = useCyanGeometry();
+  const boltGeo = useBoltGeometry();
+  const haloGeo = useHaloGeometry();
 
   /** Scan reveal: world-space clipping plane rides the beam (ring only). */
   const clipPlane = useMemo(
@@ -101,6 +127,7 @@ export default function Emblem() {
 
     const scanning = t >= BEATS.scan[0] && scanP < 1;
     ring.current.visible = t >= BEATS.scan[0];
+    halo.current.visible = t >= BEATS.scan[0];
     beam.current.visible = scanning;
     if (scanning) {
       beam.current.position.y = beamY;
@@ -148,8 +175,20 @@ export default function Emblem() {
           />
         </mesh>
 
-        {/* Cyan layer — bolt + halo + sliver, exactly as the flat asset */}
-        <mesh ref={bolt} geometry={cyanGeo} visible={false}>
+        {/* Halo — the O's cyan rim, scan-revealed with the ring */}
+        <mesh ref={halo} geometry={haloGeo} position={[0, 0, -0.3]} visible={false}>
+          <meshStandardMaterial
+            color="#00d4d4"
+            emissive="#00d4d4"
+            emissiveIntensity={1.2}
+            roughness={0.4}
+            metalness={0}
+            clippingPlanes={clipPlanes}
+          />
+        </mesh>
+
+        {/* Bolt — tip + tail + sliver, strikes in at ignition */}
+        <mesh ref={bolt} geometry={boltGeo} visible={false}>
           <meshStandardMaterial
             ref={boltMat}
             color="#00d4d4"
