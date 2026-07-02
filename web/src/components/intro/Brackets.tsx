@@ -11,15 +11,20 @@ import { useIntroClock } from "./Scene";
  * frame-in beat — the logo's viewfinder frame, rebuilt in depth.
  */
 
+/**
+ * Frame traced from the official isotype: ±3.55 x ±2.55 around the emblem
+ * center, arm 0.75, thickness 0.09 (150px / 18px at 1px = 0.005 units).
+ * Positioned relative to the emblem's world center (y = 0.4).
+ */
 const CORNERS: Array<{ pos: [number, number, number]; flip: [number, number] }> = [
-  { pos: [-4.4, 2.6, -1], flip: [1, 1] },
-  { pos: [4.4, 2.6, -1], flip: [-1, 1] },
-  { pos: [-4.4, -2.6, -1], flip: [1, -1] },
-  { pos: [4.4, -2.6, -1], flip: [-1, -1] },
+  { pos: [-3.55, 2.95, -1], flip: [1, 1] },
+  { pos: [3.55, 2.95, -1], flip: [-1, 1] },
+  { pos: [-3.55, -2.15, -1], flip: [1, -1] },
+  { pos: [3.55, -2.15, -1], flip: [-1, -1] },
 ];
 
-const ARM = 0.7;
-const THICK = 0.07;
+const ARM = 0.75;
+const THICK = 0.09;
 
 function Bracket({
   pos,
