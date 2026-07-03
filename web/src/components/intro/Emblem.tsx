@@ -102,10 +102,10 @@ export default function Emblem() {
     const on = seg(t, BEATS.boltOn, easeInOutCubic);
     const over = pulse(t, BEATS.boltOn[1], 0.35) * 0.5;
     boltMat.current.opacity = Math.max(emerged, on);
-    boltMat.current.emissiveIntensity = 0.9 * on + over;
+    boltMat.current.emissiveIntensity = 1.3 * on + over;
     haloMat.current.opacity = on;
-    haloMat.current.emissiveIntensity = 0.35 * on;
-    boltLight.current.intensity = 24 * on + 10 * over;
+    haloMat.current.emissiveIntensity = 0.4 * on;
+    boltLight.current.intensity = 14 * on + 8 * over;
 
     // --- Stabilize: mass lands once the light is on.
     const dip = pulse(t, BEATS.stabilize[0], 0.3);
@@ -127,18 +127,19 @@ export default function Emblem() {
 
   return (
     <group ref={group} position={[0, CENTER_Y, 0]} visible={false}>
-      {/* Letters: premium black metal, micro-reflectance */}
+      {/* Letters: brand white. The bolt's point light tints the letters
+          near the o with celeste — a real light gradient across the logo. */}
       {LETTERS.map((l, i) => (
         <mesh key={l.name} geometry={letterGeos[i]}>
           <meshPhysicalMaterial
             ref={(m) => {
               letterMats.current[i] = m;
             }}
-            color="#12181f"
-            metalness={0.9}
-            roughness={0.32}
-            clearcoat={1}
-            clearcoatRoughness={0.18}
+            color="#ffffff"
+            metalness={0.15}
+            roughness={0.26}
+            clearcoat={0.6}
+            clearcoatRoughness={0.22}
             transparent
             opacity={0}
           />

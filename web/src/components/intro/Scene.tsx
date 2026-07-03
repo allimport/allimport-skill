@@ -85,9 +85,9 @@ export default function Scene({
 
         {/* Minimal ambient bed: the black metal must live off speculars
             and, after activation, the bolt's own light. */}
-        <ambientLight intensity={0.2} />
-        <directionalLight position={[3, 5, 8]} intensity={1.25} color="#ffffff" />
-        <directionalLight position={[-6, -2, 4]} intensity={0.45} color="#00d4d4" />
+        <ambientLight intensity={0.25} />
+        <directionalLight position={[3, 5, 8]} intensity={1.5} color="#ffffff" />
+        <directionalLight position={[-6, -2, 4]} intensity={0.22} color="#00d4d4" />
 
         <FluidVeil />
         <Particles mobile={mobile} />
