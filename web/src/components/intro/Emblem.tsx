@@ -171,13 +171,15 @@ export default function Emblem() {
         />
       </mesh>
 
-      {/* The bolt's own light: it illuminates the metal letters */}
+      {/* The bolt's own light: BEHIND the logo, at the bolt's position —
+          a backlight. Nearby letters catch cyan on their edges and the
+          glow spills around them from behind, not from the front. */}
       <pointLight
         ref={boltLight}
-        position={[O_CENTER[0], O_CENTER[1] + 0.4, 1.6]}
+        position={[O_CENTER[0], O_CENTER[1] + 0.4, -1.6]}
         color="#33e4e4"
         intensity={0}
-        distance={10}
+        distance={11}
         decay={1.8}
       />
     </group>
