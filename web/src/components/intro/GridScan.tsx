@@ -38,15 +38,15 @@ const fragment = /* glsl */ `
     // wider falloff. The territory wakes up as you enter it.
     float dx = mix(24.0, 44.0, uEvolve);
     float dy = mix(14.0, 26.0, uEvolve);
-    float grid = max(gridLine(uv.x, dx), gridLine(uv.y, dy)) * mix(0.09, 0.13, uEvolve);
+    float grid = max(gridLine(uv.x, dx), gridLine(uv.y, dy)) * mix(0.045, 0.075, uEvolve);
 
     // traveling scanline band — ambient, barely there
     float scanPos = fract(uTime * 0.05);
-    float scan = smoothstep(0.06, 0.0, abs(uv.y - scanPos)) * 0.06;
+    float scan = smoothstep(0.06, 0.0, abs(uv.y - scanPos)) * 0.03;
 
     // radial falloff — vignette into the navy background
     float d = distance(uv, vec2(0.5, 0.52));
-    float falloff = smoothstep(mix(0.75, 0.95, uEvolve), 0.15, d);
+    float falloff = smoothstep(mix(0.62, 0.85, uEvolve), 0.15, d);
 
     float a = (grid + scan) * falloff * uOpacity;
     if (a < 0.004) discard;

@@ -123,9 +123,11 @@ export default function Scene({
         />
 
         {/* Lighting: white key + cyan rim (brand contamination on the O's edge) */}
-        <ambientLight intensity={0.25} />
-        <directionalLight position={[4, 6, 8]} intensity={1.6} color="#ffffff" />
-        <directionalLight position={[-7, -2, 3]} intensity={2.2} color="#00d4d4" />
+        {/* Strong white key so the O reads WHITE (the brand color); the cyan
+            rim only kisses the edge — it must never tint the face. */}
+        <ambientLight intensity={0.3} />
+        <directionalLight position={[4, 6, 8]} intensity={2.0} color="#ffffff" />
+        <directionalLight position={[-7, -2, 3]} intensity={1.1} color="#00d4d4" />
 
         <GridScan />
         <Particles count={mobile ? 500 : 1200} />

@@ -21,15 +21,15 @@ import { useIntroClock } from "./Scene";
  */
 
 const START_Z = 15;
-const END_Z = 8;
+const END_Z = 9.4;
 
 /** Hero framing: emblem right-third, slightly smaller. */
-const HERO_Z = 9.2;
+const HERO_Z = 10.6;
 const HERO_LOOK_X = -1.25;
 const HERO_LOOK_Y = 0.3;
 
 /** First-scroll framing: the universe widens, the emblem rises to masthead. */
-const SCROLL_Z = 11.5;
+const SCROLL_Z = 12.8;
 const SCROLL_LOOK_X = 0;
 const SCROLL_LOOK_Y = 1.15;
 
@@ -61,7 +61,13 @@ export default function CameraRig() {
       heroZ + (SCROLL_Z - heroZ) * s,
     );
 
-    const heroLX = HERO_LOOK_X * hero;
+    // Narrow viewports get a reduced lateral shift so the emblem never
+    // leaves the frame or collides with the text column on mobile.
+    const aspect =
+      "aspect" in camera ? (camera as { aspect: number }).aspect : 1.78;
+    const lateral = Math.min(1, Math.max(0.35, (aspect - 0.5) / 1.1));
+
+    const heroLX = HERO_LOOK_X * lateral * hero;
     const heroLY = 0.2 + (HERO_LOOK_Y - 0.2) * hero;
     camera.lookAt(
       heroLX + (SCROLL_LOOK_X - heroLX) * s,

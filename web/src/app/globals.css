@@ -17,9 +17,15 @@
   --sp: 0;
 }
 
-html,
+/* overflow-x on body ONLY (propagates to viewport): hiding it on html too
+   turns <body> into the scroll container and kills window scroll events.
+   No height: 100% — the fixed .intro-root doesn't need it and it clamps
+   the document's scrollHeight. */
+html {
+  background: var(--bg);
+}
+
 body {
-  height: 100%;
   background: var(--bg);
   color: var(--white);
   font-family: var(--font-brand), system-ui, sans-serif;
@@ -56,7 +62,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: flex-end;
-  padding-bottom: 18vh;
+  padding-bottom: 9vh;
   pointer-events: none;
   z-index: 10;
 }
@@ -158,7 +164,7 @@ body {
   justify-content: center;
   gap: 1.6rem;
   padding: 0 8vw;
-  max-width: min(560px, 55vw);
+  max-width: min(620px, 58vw);
   pointer-events: none;
   visibility: hidden;
 }
@@ -205,11 +211,15 @@ body {
   gap: 0.08em;
   font-style: italic;
   font-weight: 800;
-  font-size: clamp(2.3rem, 5.2vw, 4.2rem);
+  font-size: clamp(2rem, 4.6vw, 3.9rem);
   line-height: 1.04;
   letter-spacing: -0.02em;
   color: var(--white);
-  text-wrap: balance;
+}
+
+/* Each line is a unit — the headline never rewraps */
+.hh-line {
+  white-space: nowrap;
 }
 
 /* The differential marked by color alone — no glow competing with the emblem */

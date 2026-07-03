@@ -152,10 +152,11 @@ export default function Emblem() {
     flash.current.intensity = 140 * hit;
 
     // --- Idle: controlled presence. ±10% slow emissive breath on the bolt;
-    // rotation capped at ~3° — alive, but dominated.
+    // rotation capped at ~3° — alive, but dominated. Base emissive kept low
+    // so the bolt reads as a lit OBJECT, not a flat glow sticker.
     const idle = seg(t, BEATS.settle);
     boltMat.current.emissiveIntensity =
-      1.4 + 6 * hit + idle * 0.15 * Math.sin(t * 1.2);
+      0.85 + 6 * hit + idle * 0.1 * Math.sin(t * 1.2);
     group.current.rotation.y = idle * Math.sin(t * 0.3) * 0.05;
     group.current.rotation.x = idle * Math.cos(t * 0.22) * 0.02;
   });
@@ -182,7 +183,7 @@ export default function Emblem() {
           <meshStandardMaterial
             color="#00d4d4"
             emissive="#00d4d4"
-            emissiveIntensity={1.2}
+            emissiveIntensity={0.55}
             roughness={0.4}
             metalness={0}
             clippingPlanes={clipPlanes}
@@ -195,7 +196,7 @@ export default function Emblem() {
             ref={boltMat}
             color="#00d4d4"
             emissive="#00d4d4"
-            emissiveIntensity={1.4}
+            emissiveIntensity={0.85}
             roughness={0.3}
             metalness={0}
           />

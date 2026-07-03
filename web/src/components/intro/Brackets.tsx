@@ -56,8 +56,9 @@ function Bracket({
     // viewport edges and advance in z, framing the incoming content instead
     // of the emblem. Chrome now, not event: emissive settles lower.
     const s = easeInOutCubic(clock.scroll);
-    group.current.position.set(cx * (1 + 0.85 * s), cy * (1 + 0.85 * s), 2.2 * s);
-    mat.current.emissiveIntensity = 1.1 + snap * 1.5 - 0.4 * s;
+    // Spread tuned so all four corners stay inside the frame at stage end.
+    group.current.position.set(cx * (1 + 0.5 * s), cy * (1 + 0.5 * s), 1.6 * s);
+    mat.current.emissiveIntensity = 0.9 + snap * 1.5 - 0.3 * s;
   });
 
   return (
@@ -67,7 +68,7 @@ function Bracket({
           ref={mat}
           color="#00d4d4"
           emissive="#00d4d4"
-          emissiveIntensity={1.1}
+          emissiveIntensity={0.9}
         />
       </mesh>
     </group>
