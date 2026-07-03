@@ -7,15 +7,59 @@ import { BEATS, seg } from "./timeline";
 import { useIntroClock } from "./Scene";
 
 /**
- * Dense Void — stars for scale, nothing else.
+ * Stars — scale only. Very few, completely still.
  *
- * STATIC by direction: no drift, no rotation, no parallax. Very few
- * stars (power-law population) plus a barely-subliminal micro-dust
- * layer. They exist to give the void scale; if the eye notices them,
- * they are wrong. Only the intro fade-in and the scroll offset move.
+ * Distribution is NATURAL, not statistical: positions are rejection-
+ * sampled against a low-frequency noise mask, producing organic clusters
+ * and large, fully empty regions — composition instead of fill. No
+ * micro-dust, no drift, no rotation, no parallax. Only the intro fade-in
+ * and the scroll transition displace anything.
  */
 
-/** Soft round sprite (pre-rendered canvas texture — kills square points). */
+function hash2(x: number, y: number) {
+  const s = Math.sin(x * 127.1 + y * 311.7) * 43758.5453;
+  return s - Math.floor(s);
+}
+
+/** Low-frequency value noise for the void mask. */
+function vnoise(x: number, y: number) {
+  const xi = Math.floor(x);
+  const yi = Math.floor(y);
+  const xf = x - xi;
+  const yf = y - yi;
+  const u = xf * xf * (3 - 2 * xf);
+  const v = yf * yf * (3 - 2 * yf);
+  const a = hash2(xi, yi);
+  const b = hash2(xi + 1, yi);
+  const c = hash2(xi, yi + 1);
+  const d = hash2(xi + 1, yi + 1);
+  return a + (b - a) * u + (c - a) * v + (a - b - c + d) * u * v;
+}
+
+/** Sample star positions inside noise clusters; big zones stay empty. */
+function sampleClustered(
+  count: number,
+  spread: [number, number],
+  zRange: [number, number],
+  seed: number,
+) {
+  const arr = new Float32Array(count * 3);
+  let placed = 0;
+  let guard = 0;
+  while (placed < count && guard < count * 60) {
+    guard++;
+    const x = (Math.random() - 0.5) * spread[0];
+    const y = (Math.random() - 0.5) * spread[1];
+    const m = vnoise(x * 0.14 + seed, y * 0.14 + seed * 1.7);
+    if (m < 0.56) continue; // inside a void — reject
+    arr[placed * 3] = x;
+    arr[placed * 3 + 1] = y;
+    arr[placed * 3 + 2] = zRange[0] + Math.random() * (zRange[1] - zRange[0]);
+    placed++;
+  }
+  return arr.slice(0, placed * 3);
+}
+
 function useSoftSprite() {
   return useMemo(() => {
     const c = document.createElement("canvas");
@@ -40,6 +84,7 @@ function Layer({
   size,
   maxOpacity,
   color,
+  seed,
   sprite,
 }: {
   count: number;
@@ -48,25 +93,20 @@ function Layer({
   size: number;
   maxOpacity: number;
   color: string;
+  seed: number;
   sprite: THREE.Texture;
 }) {
   const clock = useIntroClock();
   const group = useRef<THREE.Group>(null!);
   const mat = useRef<THREE.PointsMaterial>(null!);
 
-  const positions = useMemo(() => {
-    const arr = new Float32Array(count * 3);
-    for (let i = 0; i < count; i++) {
-      arr[i * 3] = (Math.random() - 0.5) * spread[0];
-      arr[i * 3 + 1] = (Math.random() - 0.5) * spread[1];
-      arr[i * 3 + 2] = zRange[0] + Math.random() * (zRange[1] - zRange[0]);
-    }
-    return arr;
-  }, [count, spread, zRange]);
+  const positions = useMemo(
+    () => sampleClustered(count, spread, zRange, seed),
+    [count, spread, zRange, seed],
+  );
 
   useFrame(() => {
     const t = clock.t;
-    // Static void: only the scroll transition displaces the field.
     group.current.position.y = -1.5 * clock.scroll;
     mat.current.opacity = maxOpacity * seg(t, BEATS.particles);
   });
@@ -98,18 +138,6 @@ export default function Particles({ mobile }: { mobile: boolean }) {
 
   return (
     <>
-      {/* Micro-dust: barely subliminal depth */}
-      <Layer
-        count={Math.round(180 * m)}
-        zRange={[-18, -8]}
-        spread={[34, 20]}
-        size={0.05}
-        maxOpacity={0.07}
-        color="#9aa6b6"
-        sprite={sprite}
-      />
-
-      {/* Far plane: ~50 stars, power-law, static — scale only */}
       <Layer
         count={Math.round(34 * m)}
         zRange={[-30, -22]}
@@ -117,6 +145,7 @@ export default function Particles({ mobile }: { mobile: boolean }) {
         size={0.14}
         maxOpacity={0.24}
         color="#cdd5df"
+        seed={3.1}
         sprite={sprite}
       />
       <Layer
@@ -126,6 +155,7 @@ export default function Particles({ mobile }: { mobile: boolean }) {
         size={0.3}
         maxOpacity={0.26}
         color="#e3e9f0"
+        seed={11.7}
         sprite={sprite}
       />
       <Layer
@@ -135,6 +165,7 @@ export default function Particles({ mobile }: { mobile: boolean }) {
         size={0.55}
         maxOpacity={0.3}
         color="#f4f7fa"
+        seed={27.3}
         sprite={sprite}
       />
     </>

@@ -5,7 +5,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import Emblem from "./Emblem";
 import Particles from "./Particles";
 import Atmosphere from "./Atmosphere";
-import GravityField from "./GravityField";
+import DepthField from "./DepthField";
 import CameraRig from "./CameraRig";
 import Effects from "./Effects";
 import { BEATS, INTRO_DURATION, seg } from "./timeline";
@@ -93,7 +93,7 @@ export default function Scene({
         <directionalLight position={[3, 5, 8]} intensity={1.5} color="#ffffff" />
         <directionalLight position={[-6, -2, 4]} intensity={0.22} color="#00d4d4" />
 
-        <GravityField />
+        <DepthField />
         <Particles mobile={mobile} />
         <Atmosphere />
         <Emblem />
