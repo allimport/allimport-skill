@@ -1,42 +1,30 @@
 /**
- * Master timeline for the All Import intro.
+ * Master timeline for the All Import "Void" intro.
  *
  * Deterministic: every visual property derives from a single clock value `t`
- * (seconds since intro start). This keeps the sequence scrubbable and lets the
- * future Hero drive the same timeline from scroll without re-architecting.
+ * (seconds since intro start), plus a scroll input gated by assembly.
  *
- * Beats (seconds) — FULL LOGO ASSEMBLY, perception-tuned:
- *   0.00 – 0.90  atmosphere   near-dark holds; grid/particles rise slowly
- *   0.90 – 1.50  frameIn      brackets snap in first — the stage is set
- *   1.50 – 1.75  SILENCE      250ms of stillness before the signature
- *   1.75 – 2.05  ignition     bolt strikes in 120ms; flash
- *   2.05 – 2.65  oForm        the o materializes under a short scan sweep
- *   2.75 – 3.90  letters      remaining letters emerge from the darkness,
- *                             staggered outward from the o
- *   3.90 – 4.60  volume       the assembled logo gains physical depth
- *   4.60 – 5.30  settle       idle blend — mouse interaction begins ONLY
- *                             here, once the logo is fully assembled
+ * Beats (seconds):
+ *   0.00 – 0.50  void        absolute black — nothing exists yet
+ *   0.50 – 1.80  particles   the galaxy field fades in, spatial depth
+ *   1.60 – 3.00  emerge      the black-metal logo surfaces from darkness
+ *                            (opacity + z drift; barely a silhouette)
+ *   3.00 – 3.60  boltOn      the bolt ACTIVATES as the scene's only light
+ *                            source — the logo is lit by its own energy
+ *   3.60 – 4.30  stabilize   materials settle to final reflectance,
+ *                            micro-settle of mass
+ *   4.30 – 5.00  settle      interaction enables ONLY here: mouse moves
+ *                            the logo, particles parallax, fluid reacts
  */
 
-export const INTRO_DURATION = 5.3;
-
-/**
- * Hero transition — ADDITIVE, intro v1.0 frozen. The clock keeps running
- * past the intro: pure idle holds 5.4–6.6s (the brand breathes untouched),
- * then the camera finds a new viewpoint inside the SAME scene over
- * 6.6–8.0s. Nothing restarts; heroP is 0 for the whole intro.
- */
-export const HERO_START = 6.5;
-export const HERO_END = 7.9;
+export const INTRO_DURATION = 5.0;
 
 export const BEATS = {
-  atmosphereIn: [0.0, 0.9],
-  frameIn: [0.9, 1.5],
-  ignition: [1.75, 2.05],
-  oForm: [2.05, 2.65],
-  letters: [2.75, 3.9],
-  volume: [3.9, 4.6],
-  settle: [4.6, 5.3],
+  particles: [0.5, 1.8],
+  emerge: [1.6, 3.0],
+  boltOn: [3.0, 3.6],
+  stabilize: [3.6, 4.3],
+  settle: [4.3, 5.0],
 } as const;
 
 export type Ease = (x: number) => number;
@@ -66,10 +54,3 @@ export const pulse = (t: number, at: number, decay: number): number => {
   if (t < at) return 0;
   return Math.exp(-(t - at) / decay);
 };
-
-/** Staccato stepper: returns how many of `count` steps fired inside [a, b]. */
-export const steps = (
-  t: number,
-  [a, b]: readonly [number, number],
-  count: number,
-): number => Math.floor(clamp01((t - a) / (b - a)) * count);

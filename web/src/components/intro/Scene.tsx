@@ -1,31 +1,20 @@
 "use client";
 
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-} from "react";
+import { createContext, useContext, useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import Emblem from "./Emblem";
-import Brackets from "./Brackets";
 import Particles from "./Particles";
-import GridScan from "./GridScan";
-import Shockwave from "./Shockwave";
+import FluidVeil from "./FluidVeil";
 import CameraRig from "./CameraRig";
 import Effects from "./Effects";
-import { HERO_START, HERO_END, seg } from "./timeline";
+import { BEATS, INTRO_DURATION, seg } from "./timeline";
 
 /**
- * Shared intro clock. A mutable ref object (not state) so 60fps reads never
- * re-render React. `reducedMotion` pins t past the end: the scene renders in
- * its settled Hero-ready pose with no sequence.
- *
- * `scroll` is the system's second input (0..1, first-scroll transition).
- * It is GATED by the hero blend in ClockDriver, so during the frozen
- * intro/Hero sequence scrolling cannot alter a single frame.
+ * The void. One scene, one protagonist: the complete 3D logo.
+ * No grid, no HUD, no frames — spatial black, a galaxy field, a dark
+ * fluid veil, and the logo lit by its own bolt.
  */
+
 export interface IntroClock {
   t: number;
   scroll: number;
@@ -43,24 +32,16 @@ function ClockDriver({
   clock,
   frozen,
   scrollProgress,
-  onHero,
 }: {
   clock: IntroClock;
   frozen: boolean;
   scrollProgress: { v: number };
-  onHero: () => void;
 }) {
-  const firedHero = useRef(false);
-
   useFrame((_, dt) => {
     if (!frozen) clock.t += dt;
-    // Scroll input, gated by the hero blend: 0 for the entire intro, so
-    // early scrolling cannot disturb the assembly — by construction.
-    clock.scroll = scrollProgress.v * seg(clock.t, [HERO_START, HERO_END]);
-    if (!firedHero.current && clock.t >= HERO_START) {
-      firedHero.current = true;
-      onHero();
-    }
+    // Scroll input, gated by assembly: 0 until the logo has settled, so
+    // early scrolling cannot disturb the sequence — by construction.
+    clock.scroll = scrollProgress.v * seg(clock.t, BEATS.settle);
   });
 
   return null;
@@ -70,22 +51,15 @@ export default function Scene({
   reducedMotion,
   mobile,
   scrollProgress,
-  onHero,
 }: {
   reducedMotion: boolean;
   mobile: boolean;
   scrollProgress: { v: number };
-  onHero: () => void;
 }) {
   const clock = useMemo<IntroClock>(
-    () => ({ t: reducedMotion ? HERO_END + 10 : 0, scroll: 0 }),
+    () => ({ t: reducedMotion ? INTRO_DURATION + 10 : 0, scroll: 0 }),
     [reducedMotion],
   );
-
-  // Reduced motion: assembled logo and hero immediately, final framing.
-  useEffect(() => {
-    if (reducedMotion) onHero();
-  }, [reducedMotion, onHero]);
 
   return (
     <Canvas
@@ -93,36 +67,31 @@ export default function Scene({
       gl={{
         antialias: false,
         powerPreference: "high-performance",
-        localClippingEnabled: true,
       }}
-      camera={{ fov: 42, near: 0.1, far: 60, position: [0, 0, 15] }}
+      camera={{ fov: 42, near: 0.1, far: 80, position: [0, 0, 12] }}
       style={{ position: "absolute", inset: 0 }}
+      aria-label="All Import"
+      role="img"
     >
-      {/* Fog pushed out so narrow-viewport camera fits (z up to ~24 on
-          phones for the wide wordmark) without greying the logo. */}
-      <color attach="background" args={["#0a0f1a"]} />
-      <fog attach="fog" args={["#0a0f1a", 26, 46]} />
+      {/* Deep spatial black — darker than the brand navy, a true void */}
+      <color attach="background" args={["#04070c"]} />
 
       <ClockContext.Provider value={clock}>
         <ClockDriver
           clock={clock}
           frozen={reducedMotion}
           scrollProgress={scrollProgress}
-          onHero={onHero}
         />
 
-        {/* Lighting: white key + cyan rim (brand contamination on the O's edge) */}
-        {/* Strong white key so the O reads WHITE (the brand color); the cyan
-            rim only kisses the edge — it must never tint the face. */}
-        <ambientLight intensity={0.3} />
-        <directionalLight position={[4, 6, 8]} intensity={2.0} color="#ffffff" />
-        <directionalLight position={[-7, -2, 3]} intensity={1.1} color="#00d4d4" />
+        {/* Minimal ambient bed: the black metal must live off speculars
+            and, after activation, the bolt's own light. */}
+        <ambientLight intensity={0.2} />
+        <directionalLight position={[3, 5, 8]} intensity={1.25} color="#ffffff" />
+        <directionalLight position={[-6, -2, 4]} intensity={0.45} color="#00d4d4" />
 
-        <GridScan />
-        <Particles count={mobile ? 500 : 1200} />
+        <FluidVeil />
+        <Particles mobile={mobile} />
         <Emblem />
-        <Shockwave />
-        <Brackets />
         <CameraRig />
         {!reducedMotion && <Effects mobile={mobile} />}
       </ClockContext.Provider>

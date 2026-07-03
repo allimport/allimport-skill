@@ -1,35 +1,28 @@
 "use client";
 
 import { useMemo, useRef } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { SVGLoader } from "three/addons/loaders/SVGLoader.js";
-import {
-  BEATS,
-  seg,
-  pulse,
-  easeOutQuint,
-  easeInOutCubic,
-  linear,
-  clamp01,
-} from "./timeline";
+import { BEATS, seg, pulse, easeOutCubic, easeInOutCubic } from "./timeline";
 import { useIntroClock } from "./Scene";
-import { LETTERS, BOLT_D, HALO_D, O_CENTER, O_HALF_H } from "./logo-full-paths";
+import { LETTERS, BOLT_D, HALO_D, O_CENTER } from "./logo-full-paths";
 
 /**
- * The COMPLETE All Import logo as one 3D object — every letter, the o, the
- * bolt, and the halo are real extruded geometry traced from the official
- * wordmark (see logo-full-paths.ts). No DOM text: one world, one light.
+ * The complete All Import logo — the only object in the void.
  *
- * Assembly sequence (see timeline.ts):
- *   brackets (Brackets.tsx) → bolt strike → the o forms under a short scan
- *   → remaining letters emerge from the darkness, staggered outward from
- *   the o → the whole logo gains physical depth → idle. Mouse interaction
- *   starts only once assembly is complete (settle-gated, in CameraRig).
+ * Every letter, the bolt, and the halo are extruded geometry traced from
+ * the official wordmark (logo-full-paths.ts). Letters are premium black
+ * metal: they surface from darkness as a specular silhouette, then the
+ * bolt ACTIVATES as the scene's only emission and lights the logo with
+ * its own energy.
+ *
+ * Interaction (settle-gated): the mouse moves ONLY the logo — position
+ * X/Y plus a subtle tilt, smoothly lerped. Nothing else is interactive.
  */
 
 /** Logo band center height in world space. */
-export const CENTER_Y = 0.3;
+export const CENTER_Y = 0.15;
 
 /** Parse a normalized `d` string into three Shapes (holes auto-resolved). */
 export function shapesFromD(d: string): THREE.Shape[] {
@@ -56,23 +49,15 @@ const CYAN_EXTRUDE: THREE.ExtrudeGeometryOptions = {
   curveSegments: 24,
 };
 
-const BG = new THREE.Color("#0a0f1a");
-const WHITE = new THREE.Color("#ffffff");
-
-/** Letter emergence order: distance from the o — outward ripple. */
-const O_INDEX = LETTERS.findIndex((l) => l.name === "o");
-
 export default function Emblem() {
   const clock = useIntroClock();
+  const { pointer } = useThree();
   const group = useRef<THREE.Group>(null!);
-  const boltRef = useRef<THREE.Mesh>(null!);
   const boltMat = useRef<THREE.MeshStandardMaterial>(null!);
-  const haloRef = useRef<THREE.Mesh>(null!);
-  const flash = useRef<THREE.PointLight>(null!);
-  const beam = useRef<THREE.Mesh>(null!);
-  const beamMat = useRef<THREE.MeshBasicMaterial>(null!);
-  const letterRefs = useRef<(THREE.Mesh | null)[]>([]);
+  const haloMat = useRef<THREE.MeshStandardMaterial>(null!);
+  const boltLight = useRef<THREE.PointLight>(null!);
   const letterMats = useRef<(THREE.MeshPhysicalMaterial | null)[]>([]);
+  const drift = useRef({ x: 0, y: 0, rx: 0, ry: 0 });
 
   const letterGeos = useMemo(
     () =>
@@ -96,181 +81,107 @@ export default function Emblem() {
     return geo;
   }, []);
 
-  /** Emergence stagger: letters ripple OUTWARD from the o (index distance,
-      nearest first; ties resolve right-then-left for reading momentum). */
-  const staggerOrder = useMemo(() => {
-    return LETTERS.map((_, i) => i)
-      .filter((i) => i !== O_INDEX)
-      .sort((a, b) => {
-        const da = Math.abs(a - O_INDEX);
-        const db = Math.abs(b - O_INDEX);
-        return da !== db ? da - db : b - a;
-      })
-      .reduce<Record<number, number>>((acc, letterIdx, rank) => {
-        acc[letterIdx] = rank;
-        return acc;
-      }, {});
-  }, []);
-
-  /** Scan reveal clip plane for the o (and halo): short local sweep. */
-  const clipPlane = useMemo(
-    () =>
-      new THREE.Plane(
-        new THREE.Vector3(0, -1, 0),
-        CENTER_Y + O_CENTER[1] - O_HALF_H - 0.08,
-      ),
-    [],
-  );
-  const clipPlanes = useMemo(() => [clipPlane], [clipPlane]);
-
   useFrame(() => {
     const t = clock.t;
-    const letterCount = LETTERS.length - 1; // all but the o
 
-    // --- Ignition: the bolt strikes to its exact place in the logo.
-    const strikeIn = seg(
-      t,
-      [BEATS.ignition[0], BEATS.ignition[0] + 0.12],
-      easeOutQuint,
-    );
-    boltRef.current.visible = t >= BEATS.ignition[0];
-    boltRef.current.position.set(
-      1.8 * (1 - strikeIn),
-      3.0 * (1 - strikeIn),
-      -0.26,
-    );
-    const hit = pulse(t, BEATS.ignition[0] + 0.1, 0.28);
-    boltMat.current.emissiveIntensity = 0.85 + 6 * hit;
-    flash.current.intensity = 130 * hit;
-
-    // --- oForm: the o (and its halo) materialize under a short scan sweep.
-    const oP = seg(t, BEATS.oForm, easeInOutCubic);
-    const oBottom = CENTER_Y + O_CENTER[1] - O_HALF_H - 0.08;
-    const beamY = oBottom + oP * (2 * O_HALF_H + 0.16);
-    clipPlane.constant = beamY;
-    const oMesh = letterRefs.current[O_INDEX];
-    if (oMesh) oMesh.visible = t >= BEATS.oForm[0];
-    haloRef.current.visible = t >= BEATS.oForm[0];
-    const scanning = t >= BEATS.oForm[0] && oP < 1;
-    beam.current.visible = scanning;
-    if (scanning) {
-      beam.current.position.y = beamY;
-      beamMat.current.opacity = 0.55 * Math.sin(Math.PI * seg(t, BEATS.oForm, linear));
-    }
-
-    // --- Letters: emerge from the darkness, staggered outward from the o.
-    const [la, lb] = BEATS.letters;
-    const span = lb - la;
-    const per = 0.5; // each letter's emergence duration
-    LETTERS.forEach((l, i) => {
-      if (i === O_INDEX) return;
-      const mesh = letterRefs.current[i];
+    // --- Emerge: the logo surfaces from the void. Slight per-letter phase
+    // keeps it organic without reading as a letter-by-letter effect.
+    LETTERS.forEach((_, i) => {
       const mat = letterMats.current[i];
-      if (!mesh || !mat) return;
-      const rank = staggerOrder[i] ?? 0;
-      const start = la + (rank / Math.max(1, letterCount - 1)) * (span - per);
-      const p = easeOutQuint(clamp01((t - start) / per));
-      mesh.visible = p > 0;
-      mesh.position.z = -2.4 * (1 - p);
-      mat.color.lerpColors(BG, WHITE, p);
-      mat.emissiveIntensity = 0.04 * p;
+      if (!mat) return;
+      const phase = (i / LETTERS.length) * 0.25;
+      const p = seg(t, [BEATS.emerge[0] + phase, BEATS.emerge[1]], easeOutCubic);
+      mat.opacity = p;
     });
+    const emerged = seg(t, BEATS.emerge, easeOutCubic);
+    group.current.visible = t >= BEATS.emerge[0];
+    group.current.position.z = -1.4 * (1 - emerged);
 
-    // --- Volume: the assembled logo gains physical depth.
-    const vol = seg(t, BEATS.volume, easeInOutCubic);
-    group.current.scale.z = 0.35 + 0.65 * vol;
+    // --- Bolt activation: the only light in the void ignites. Soft ramp
+    // with a restrained overshoot — activation, not explosion.
+    const on = seg(t, BEATS.boltOn, easeInOutCubic);
+    const over = pulse(t, BEATS.boltOn[1], 0.35) * 0.5;
+    boltMat.current.opacity = Math.max(emerged, on);
+    boltMat.current.emissiveIntensity = 0.9 * on + over;
+    haloMat.current.opacity = on;
+    haloMat.current.emissiveIntensity = 0.35 * on;
+    boltLight.current.intensity = 24 * on + 10 * over;
 
-    // --- Micro-settle when the o completes: mass lands.
-    const settleDip = pulse(t, BEATS.oForm[1], 0.3);
-    group.current.position.y = CENTER_Y - 0.03 * settleDip;
+    // --- Stabilize: mass lands once the light is on.
+    const dip = pulse(t, BEATS.stabilize[0], 0.3);
+    const baseY = CENTER_Y - 0.025 * dip;
 
-    // --- Idle: controlled breath, only once assembled.
-    const idle = seg(t, BEATS.settle);
-    boltMat.current.emissiveIntensity += idle * 0.1 * Math.sin(t * 1.2);
-    group.current.rotation.y = idle * Math.sin(t * 0.3) * 0.04;
-    group.current.rotation.x = idle * Math.cos(t * 0.22) * 0.015;
+    // --- Interaction (settle-gated): mouse moves ONLY the logo.
+    const inter = seg(t, BEATS.settle);
+    const d = drift.current;
+    d.x += (pointer.x * 0.4 * inter - d.x) * 0.06;
+    d.y += (pointer.y * 0.25 * inter - d.y) * 0.06;
+    d.ry += (pointer.x * 0.12 * inter - d.ry) * 0.05;
+    d.rx += (-pointer.y * 0.08 * inter - d.rx) * 0.05;
+
+    group.current.position.x = d.x;
+    group.current.position.y = baseY + d.y;
+    group.current.rotation.y = d.ry;
+    group.current.rotation.x = d.rx;
   });
 
   return (
-    <>
-      <group ref={group} position={[0, CENTER_Y, 0]}>
-        {/* Every letter of "All Import" — real extruded typography */}
-        {LETTERS.map((l, i) => (
-          <mesh
-            key={l.name}
+    <group ref={group} position={[0, CENTER_Y, 0]} visible={false}>
+      {/* Letters: premium black metal, micro-reflectance */}
+      {LETTERS.map((l, i) => (
+        <mesh key={l.name} geometry={letterGeos[i]}>
+          <meshPhysicalMaterial
             ref={(m) => {
-              letterRefs.current[i] = m;
+              letterMats.current[i] = m;
             }}
-            geometry={letterGeos[i]}
-            visible={false}
-          >
-            <meshPhysicalMaterial
-              ref={(m) => {
-                letterMats.current[i] = m;
-              }}
-              color={i === O_INDEX ? "#ffffff" : "#0a0f1a"}
-              metalness={0.15}
-              roughness={0.22}
-              clearcoat={0.6}
-              clearcoatRoughness={0.25}
-              emissive="#ffffff"
-              emissiveIntensity={i === O_INDEX ? 0.04 : 0}
-              clippingPlanes={i === O_INDEX ? clipPlanes : null}
-            />
-          </mesh>
-        ))}
-
-        {/* Halo — the o's cyan rim, scan-revealed with it */}
-        <mesh ref={haloRef} geometry={haloGeo} position={[0, 0, -0.24]} visible={false}>
-          <meshStandardMaterial
-            color="#00d4d4"
-            emissive="#00d4d4"
-            emissiveIntensity={0.55}
-            roughness={0.4}
-            metalness={0}
-            clippingPlanes={clipPlanes}
+            color="#12181f"
+            metalness={0.9}
+            roughness={0.32}
+            clearcoat={1}
+            clearcoatRoughness={0.18}
+            transparent
+            opacity={0}
           />
         </mesh>
+      ))}
 
-        {/* Bolt — tip + tail + sliver, the signature strike */}
-        <mesh ref={boltRef} geometry={boltGeo} visible={false}>
-          <meshStandardMaterial
-            ref={boltMat}
-            color="#00d4d4"
-            emissive="#00d4d4"
-            emissiveIntensity={0.85}
-            roughness={0.3}
-            metalness={0}
-          />
-        </mesh>
-
-        <pointLight
-          ref={flash}
-          position={[O_CENTER[0], O_CENTER[1] + 0.3, 2]}
-          color="#7ff4f4"
-          intensity={0}
-          distance={12}
-          decay={2}
-        />
-      </group>
-
-      {/* Scan beam for the o — narrow, local, quiet */}
-      <mesh
-        ref={beam}
-        position={[O_CENTER[0], CENTER_Y + O_CENTER[1] - O_HALF_H, 0.5]}
-        visible={false}
-      >
-        <planeGeometry args={[1.6, 0.04]} />
-        <meshBasicMaterial
-          ref={beamMat}
+      {/* Halo — wakes with the bolt */}
+      <mesh geometry={haloGeo} position={[0, 0, -0.24]}>
+        <meshStandardMaterial
+          ref={haloMat}
           color="#00d4d4"
+          emissive="#00d4d4"
+          emissiveIntensity={0}
+          roughness={0.4}
+          metalness={0}
           transparent
           opacity={0}
-          depthWrite={false}
-          blending={THREE.AdditiveBlending}
-          toneMapped={false}
         />
       </mesh>
-    </>
+
+      {/* Bolt — dark until it becomes the scene's light source */}
+      <mesh geometry={boltGeo} position={[0, 0, -0.26]}>
+        <meshStandardMaterial
+          ref={boltMat}
+          color="#062a2a"
+          emissive="#00d4d4"
+          emissiveIntensity={0}
+          roughness={0.3}
+          metalness={0}
+          transparent
+          opacity={0}
+        />
+      </mesh>
+
+      {/* The bolt's own light: it illuminates the metal letters */}
+      <pointLight
+        ref={boltLight}
+        position={[O_CENTER[0], O_CENTER[1] + 0.4, 1.6]}
+        color="#33e4e4"
+        intensity={0}
+        distance={10}
+        decay={1.8}
+      />
+    </group>
   );
 }
