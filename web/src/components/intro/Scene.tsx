@@ -15,7 +15,7 @@ import GridScan from "./GridScan";
 import Shockwave from "./Shockwave";
 import CameraRig from "./CameraRig";
 import Effects from "./Effects";
-import { BEATS, INTRO_DURATION } from "./timeline";
+import { BEATS, HERO_START, HERO_END } from "./timeline";
 
 /**
  * Shared intro clock. A mutable ref object (not state) so 60fps reads never
@@ -38,18 +38,25 @@ function ClockDriver({
   clock,
   frozen,
   onWordmark,
+  onHero,
 }: {
   clock: IntroClock;
   frozen: boolean;
   onWordmark: () => void;
+  onHero: () => void;
 }) {
-  const fired = useRef(false);
+  const firedWordmark = useRef(false);
+  const firedHero = useRef(false);
 
   useFrame((_, dt) => {
     if (!frozen) clock.t += dt;
-    if (!fired.current && clock.t >= BEATS.wordmark[0]) {
-      fired.current = true;
+    if (!firedWordmark.current && clock.t >= BEATS.wordmark[0]) {
+      firedWordmark.current = true;
       onWordmark();
+    }
+    if (!firedHero.current && clock.t >= HERO_START) {
+      firedHero.current = true;
+      onHero();
     }
   });
 
@@ -60,20 +67,25 @@ export default function Scene({
   reducedMotion,
   mobile,
   onWordmark,
+  onHero,
 }: {
   reducedMotion: boolean;
   mobile: boolean;
   onWordmark: () => void;
+  onHero: () => void;
 }) {
   const clock = useMemo<IntroClock>(
-    () => ({ t: reducedMotion ? INTRO_DURATION + 10 : 0 }),
+    () => ({ t: reducedMotion ? HERO_END + 10 : 0 }),
     [reducedMotion],
   );
 
-  // Reduced motion: wordmark shows immediately.
+  // Reduced motion: wordmark and hero show immediately, final framing.
   useEffect(() => {
-    if (reducedMotion) onWordmark();
-  }, [reducedMotion, onWordmark]);
+    if (reducedMotion) {
+      onWordmark();
+      onHero();
+    }
+  }, [reducedMotion, onWordmark, onHero]);
 
   return (
     <Canvas
@@ -94,6 +106,7 @@ export default function Scene({
           clock={clock}
           frozen={reducedMotion}
           onWordmark={onWordmark}
+          onHero={onHero}
         />
 
         {/* Lighting: white key + cyan rim (brand contamination on the O's edge) */}

@@ -20,6 +20,15 @@
 
 export const INTRO_DURATION = 5.4;
 
+/**
+ * Hero transition — ADDITIVE, intro v1.0 frozen. The clock keeps running
+ * past the intro: pure idle holds 5.4–6.6s (the brand breathes untouched),
+ * then the camera finds a new viewpoint inside the SAME scene over
+ * 6.6–8.0s. Nothing restarts; heroP is 0 for the whole intro.
+ */
+export const HERO_START = 6.6;
+export const HERO_END = 8.0;
+
 export const BEATS = {
   atmosphereIn: [0.0, 1.2],
   scan: [1.0, 2.3],
