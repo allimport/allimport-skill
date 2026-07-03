@@ -12,7 +12,7 @@ export default function Effects({ mobile }: { mobile: boolean }) {
     // MSAA 4 on desktop: jagged letter edges are the #1 "WebGL demo" tell.
     <EffectComposer multisampling={mobile ? 0 : 4} resolutionScale={mobile ? 0.5 : 0.75}>
       <Bloom
-        intensity={0.65}
+        intensity={0.4}
         luminanceThreshold={0.6}
         luminanceSmoothing={0.25}
         mipmapBlur

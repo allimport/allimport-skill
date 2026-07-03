@@ -102,27 +102,24 @@ export default function Emblem() {
     const on = seg(t, BEATS.boltOn, easeInOutCubic);
     const over = pulse(t, BEATS.boltOn[1], 0.35) * 0.5;
     boltMat.current.opacity = Math.max(emerged, on);
-    boltMat.current.emissiveIntensity = 1.3 * on + over;
+    boltMat.current.emissiveIntensity = 1.0 * on + over * 0.6;
     haloMat.current.opacity = on;
-    haloMat.current.emissiveIntensity = 0.4 * on;
-    boltLight.current.intensity = 14 * on + 8 * over;
+    haloMat.current.emissiveIntensity = 0.3 * on;
+    boltLight.current.intensity = 8 * on + 5 * over;
 
     // --- Stabilize: mass lands once the light is on.
     const dip = pulse(t, BEATS.stabilize[0], 0.3);
     const baseY = CENTER_Y - 0.025 * dip;
 
-    // --- Interaction (settle-gated): mouse moves ONLY the logo.
+    // --- Interaction (settle-gated): mouse drifts the logo in X/Y only.
+    // No tilt — the logo always faces the viewer straight.
     const inter = seg(t, BEATS.settle);
     const d = drift.current;
-    d.x += (pointer.x * 0.4 * inter - d.x) * 0.06;
-    d.y += (pointer.y * 0.25 * inter - d.y) * 0.06;
-    d.ry += (pointer.x * 0.12 * inter - d.ry) * 0.05;
-    d.rx += (-pointer.y * 0.08 * inter - d.rx) * 0.05;
+    d.x += (pointer.x * 0.25 * inter - d.x) * 0.06;
+    d.y += (pointer.y * 0.15 * inter - d.y) * 0.06;
 
     group.current.position.x = d.x;
     group.current.position.y = baseY + d.y;
-    group.current.rotation.y = d.ry;
-    group.current.rotation.x = d.rx;
   });
 
   return (
@@ -136,10 +133,10 @@ export default function Emblem() {
               letterMats.current[i] = m;
             }}
             color="#ffffff"
-            metalness={0.15}
-            roughness={0.26}
-            clearcoat={0.6}
-            clearcoatRoughness={0.22}
+            metalness={0.12}
+            roughness={0.34}
+            clearcoat={0.35}
+            clearcoatRoughness={0.25}
             transparent
             opacity={0}
           />
