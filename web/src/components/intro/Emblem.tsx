@@ -120,8 +120,11 @@ export default function Emblem() {
     const d = drift.current;
     const tx = pointer.x * 0.16 * inter;
     const ty = pointer.y * 0.1 * inter;
-    const K = 2.0;
-    const C = 4.0;
+    // Solid aluminum on a magnetic field: low stiffness so acceleration
+    // starts late and lazy (never a pursuit), damping well over critical
+    // (2*sqrt(1.3) = 2.28) so it only ever finishes settling.
+    const K = 1.3;
+    const C = 3.4;
     d.vx += (K * (tx - d.x) - C * d.vx) * dt;
     d.vy += (K * (ty - d.y) - C * d.vy) * dt;
     d.x += d.vx * dt;
