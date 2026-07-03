@@ -57,7 +57,7 @@ export default function Emblem() {
   const haloMat = useRef<THREE.MeshStandardMaterial>(null!);
   const boltLight = useRef<THREE.PointLight>(null!);
   const letterMats = useRef<(THREE.MeshPhysicalMaterial | null)[]>([]);
-  const drift = useRef({ x: 0, y: 0, rx: 0, ry: 0 });
+  const drift = useRef({ x: 0, y: 0, vx: 0, vy: 0 });
 
   const letterGeos = useMemo(
     () =>
@@ -81,8 +81,9 @@ export default function Emblem() {
     return geo;
   }, []);
 
-  useFrame(() => {
+  useFrame((_, rawDt) => {
     const t = clock.t;
+    const dt = Math.min(rawDt, 1 / 30);
 
     // --- Emerge: the logo surfaces from the void. Slight per-letter phase
     // keeps it organic without reading as a letter-by-letter effect.
@@ -111,15 +112,27 @@ export default function Emblem() {
     const dip = pulse(t, BEATS.stabilize[0], 0.3);
     const baseY = CENTER_Y - 0.025 * dip;
 
-    // --- Interaction (settle-gated): mouse drifts the logo in X/Y only.
-    // No tilt — the logo always faces the viewer straight.
+    // --- Interaction (settle-gated): heavy mass suspended in a medium.
+    // Overdamped spring — real inertia, slow elegant return, zero bounce
+    // (damping 4.0 > 2*sqrt(stiffness 2.0)). Movement is never immediate:
+    // the mass starts late, drifts, and settles without oscillating.
     const inter = seg(t, BEATS.settle);
     const d = drift.current;
-    d.x += (pointer.x * 0.25 * inter - d.x) * 0.06;
-    d.y += (pointer.y * 0.15 * inter - d.y) * 0.06;
+    const tx = pointer.x * 0.16 * inter;
+    const ty = pointer.y * 0.1 * inter;
+    const K = 2.0;
+    const C = 4.0;
+    d.vx += (K * (tx - d.x) - C * d.vx) * dt;
+    d.vy += (K * (ty - d.y) - C * d.vy) * dt;
+    d.x += d.vx * dt;
+    d.y += d.vy * dt;
 
     group.current.position.x = d.x;
     group.current.position.y = baseY + d.y;
+    // Minimal momentum lean: driven by VELOCITY, not position — the logo
+    // leans only while moving and always rests perfectly straight.
+    group.current.rotation.y = d.vx * 0.04;
+    group.current.rotation.x = -d.vy * 0.03;
   });
 
   return (
