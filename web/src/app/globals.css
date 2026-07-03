@@ -136,9 +136,9 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 1.4rem;
+  gap: 1.6rem;
   padding: 0 8vw;
-  max-width: min(640px, 62vw);
+  max-width: min(560px, 55vw);
   pointer-events: none;
   visibility: hidden;
 }
@@ -157,11 +157,10 @@ body {
   animation: hero-rise 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Hierarchy cascade: headline → sub → CTAs → trust */
+/* Hierarchy cascade: headline → sub → CTAs */
 .hero-active .hero-headline { animation-delay: 0s; }
 .hero-active .hero-sub      { animation-delay: 0.14s; }
 .hero-active .hero-ctas     { animation-delay: 0.28s; }
-.hero-active .hero-trust    { animation-delay: 0.52s; }
 
 @keyframes hero-rise {
   to {
@@ -173,29 +172,28 @@ body {
 .hero-headline {
   display: flex;
   flex-direction: column;
-  gap: 0.1em;
+  gap: 0.08em;
   font-style: italic;
   font-weight: 800;
-  font-size: clamp(2rem, 4.6vw, 3.6rem);
-  line-height: 1.06;
+  font-size: clamp(2.3rem, 5.2vw, 4.2rem);
+  line-height: 1.04;
   letter-spacing: -0.02em;
   color: var(--white);
   text-wrap: balance;
 }
 
-/* The bolt's energy lives in the type */
+/* The differential marked by color alone — no glow competing with the emblem */
 .hh-accent {
   color: var(--cyan);
-  text-shadow: 0 0 24px rgba(0, 212, 212, 0.35);
 }
 
 .hero-sub {
   font-style: normal;
   font-weight: 700;
-  font-size: clamp(0.95rem, 1.5vw, 1.1rem);
-  line-height: 1.55;
-  color: rgba(255, 255, 255, 0.72);
-  max-width: 44ch;
+  font-size: clamp(0.9rem, 1.4vw, 1rem);
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.6);
+  max-width: 34ch;
 }
 
 .hero-ctas {
@@ -245,20 +243,6 @@ body {
 
 .cta-ghost:hover {
   border-color: var(--cyan);
-  color: var(--cyan);
-}
-
-.hero-trust {
-  font-style: normal;
-  font-weight: 700;
-  font-size: 0.78rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.45);
-}
-
-.hero-trust .dot {
-  margin: 0 0.6em;
   color: var(--cyan);
 }
 
