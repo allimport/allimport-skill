@@ -4,7 +4,6 @@ import { createContext, useContext, useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import Emblem from "./Emblem";
 import Particles from "./Particles";
-import FluidVeil from "./FluidVeil";
 import CameraRig from "./CameraRig";
 import Effects from "./Effects";
 import { BEATS, INTRO_DURATION, seg } from "./timeline";
@@ -74,7 +73,10 @@ export default function Scene({
       role="img"
     >
       {/* Deep spatial black — darker than the brand navy, a true void */}
-      <color attach="background" args={["#04070c"]} />
+      {/* Deep Field: near-absolute black. Fog is the EXACT background
+          color so distance fades honestly — no artificial haze tint. */}
+      <color attach="background" args={["#030407"]} />
+      <fog attach="fog" args={["#030407", 28, 65]} />
 
       <ClockContext.Provider value={clock}>
         <ClockDriver
@@ -89,7 +91,6 @@ export default function Scene({
         <directionalLight position={[3, 5, 8]} intensity={1.5} color="#ffffff" />
         <directionalLight position={[-6, -2, 4]} intensity={0.22} color="#00d4d4" />
 
-        <FluidVeil />
         <Particles mobile={mobile} />
         <Emblem />
         <CameraRig />
