@@ -15,15 +15,20 @@ import GridScan from "./GridScan";
 import Shockwave from "./Shockwave";
 import CameraRig from "./CameraRig";
 import Effects from "./Effects";
-import { BEATS, HERO_START, HERO_END } from "./timeline";
+import { BEATS, HERO_START, HERO_END, seg } from "./timeline";
 
 /**
  * Shared intro clock. A mutable ref object (not state) so 60fps reads never
  * re-render React. `reducedMotion` pins t past the end: the scene renders in
  * its settled Hero-ready pose with no sequence.
+ *
+ * `scroll` is the system's second input (0..1, first-scroll transition).
+ * It is GATED by the hero blend in ClockDriver, so during the frozen
+ * intro/Hero sequence scrolling cannot alter a single frame.
  */
 export interface IntroClock {
   t: number;
+  scroll: number;
 }
 
 const ClockContext = createContext<IntroClock | null>(null);
@@ -37,11 +42,13 @@ export function useIntroClock(): IntroClock {
 function ClockDriver({
   clock,
   frozen,
+  scrollProgress,
   onWordmark,
   onHero,
 }: {
   clock: IntroClock;
   frozen: boolean;
+  scrollProgress: { v: number };
   onWordmark: () => void;
   onHero: () => void;
 }) {
@@ -50,6 +57,9 @@ function ClockDriver({
 
   useFrame((_, dt) => {
     if (!frozen) clock.t += dt;
+    // Scroll input, gated by the hero blend: 0 for the entire intro, so
+    // early scrolling cannot disturb the frozen sequence — by construction.
+    clock.scroll = scrollProgress.v * seg(clock.t, [HERO_START, HERO_END]);
     if (!firedWordmark.current && clock.t >= BEATS.wordmark[0]) {
       firedWordmark.current = true;
       onWordmark();
@@ -66,16 +76,18 @@ function ClockDriver({
 export default function Scene({
   reducedMotion,
   mobile,
+  scrollProgress,
   onWordmark,
   onHero,
 }: {
   reducedMotion: boolean;
   mobile: boolean;
+  scrollProgress: { v: number };
   onWordmark: () => void;
   onHero: () => void;
 }) {
   const clock = useMemo<IntroClock>(
-    () => ({ t: reducedMotion ? HERO_END + 10 : 0 }),
+    () => ({ t: reducedMotion ? HERO_END + 10 : 0, scroll: 0 }),
     [reducedMotion],
   );
 
@@ -105,6 +117,7 @@ export default function Scene({
         <ClockDriver
           clock={clock}
           frozen={reducedMotion}
+          scrollProgress={scrollProgress}
           onWordmark={onWordmark}
           onHero={onHero}
         />

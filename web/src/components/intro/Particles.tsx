@@ -29,6 +29,8 @@ export default function Particles({ count = 1200 }: { count?: number }) {
     const t = clock.t;
     group.current.rotation.y += dt * 0.02;
     group.current.rotation.x += dt * 0.005;
+    // First scroll: slight downward drift — depth as you descend into it.
+    group.current.position.y = -1.5 * clock.scroll;
     mat.current.opacity = 0.32 * seg(t, BEATS.atmosphereIn);
   });
 

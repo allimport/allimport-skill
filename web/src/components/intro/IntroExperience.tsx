@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 /**
  * Intro → Hero experience. One living scene.
@@ -21,11 +21,18 @@ const Scene = dynamic(() => import("./Scene"), {
 const WA_URL = "https://wa.me/5493517383945";
 const IG_URL = "https://instagram.com/allimport.cba";
 
+/** First-scroll transition length, in viewport heights. */
+const SCROLL_RANGE_VH = 1.5;
+
 export default function IntroExperience() {
   const [wordmarkVisible, setWordmarkVisible] = useState(false);
   const [heroActive, setHeroActive] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
   const [mobile, setMobile] = useState(false);
+  // Shared mutable scroll progress — read by the 3D scene at 60fps without
+  // a single React re-render.
+  const scrollProgress = useRef({ v: 0 }).current;
 
   useEffect(() => {
     const rm = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -34,16 +41,32 @@ export default function IntroExperience() {
     setMobile(mb.matches);
   }, []);
 
+  useEffect(() => {
+    const onScroll = () => {
+      const p = Math.min(
+        1,
+        Math.max(0, window.scrollY / (window.innerHeight * SCROLL_RANGE_VH)),
+      );
+      scrollProgress.v = p;
+      document.documentElement.style.setProperty("--sp", p.toFixed(4));
+      setScrolled(p > 0.35);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, [scrollProgress]);
+
   const onWordmark = useCallback(() => setWordmarkVisible(true), []);
   const onHero = useCallback(() => setHeroActive(true), []);
 
   return (
     <div
-      className={`intro-root${wordmarkVisible ? " intro-done" : ""}${heroActive ? " hero-active" : ""}`}
+      className={`intro-root${wordmarkVisible ? " intro-done" : ""}${heroActive ? " hero-active" : ""}${scrolled ? " scrolled" : ""}`}
     >
       <Scene
         reducedMotion={reducedMotion}
         mobile={mobile}
+        scrollProgress={scrollProgress}
         onWordmark={onWordmark}
         onHero={onHero}
       />

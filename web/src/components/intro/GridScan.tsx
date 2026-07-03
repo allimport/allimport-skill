@@ -23,6 +23,7 @@ const vertex = /* glsl */ `
 const fragment = /* glsl */ `
   uniform float uTime;
   uniform float uOpacity;
+  uniform float uEvolve;
   varying vec2 vUv;
 
   float gridLine(float coord, float density) {
@@ -33,7 +34,11 @@ const fragment = /* glsl */ `
   void main() {
     vec2 uv = vUv;
 
-    float grid = max(gridLine(uv.x, 24.0), gridLine(uv.y, 14.0)) * 0.09;
+    // First scroll: the field activates — denser grid, slightly brighter,
+    // wider falloff. The territory wakes up as you enter it.
+    float dx = mix(24.0, 44.0, uEvolve);
+    float dy = mix(14.0, 26.0, uEvolve);
+    float grid = max(gridLine(uv.x, dx), gridLine(uv.y, dy)) * mix(0.09, 0.13, uEvolve);
 
     // traveling scanline band — ambient, barely there
     float scanPos = fract(uTime * 0.05);
@@ -41,7 +46,7 @@ const fragment = /* glsl */ `
 
     // radial falloff — vignette into the navy background
     float d = distance(uv, vec2(0.5, 0.52));
-    float falloff = smoothstep(0.75, 0.15, d);
+    float falloff = smoothstep(mix(0.75, 0.95, uEvolve), 0.15, d);
 
     float a = (grid + scan) * falloff * uOpacity;
     if (a < 0.004) discard;
@@ -58,6 +63,7 @@ export default function GridScan() {
     () => ({
       uTime: { value: 0 },
       uOpacity: { value: 0 },
+      uEvolve: { value: 0 },
     }),
     [],
   );
@@ -66,6 +72,7 @@ export default function GridScan() {
     const t = clock.t;
     mat.current.uniforms.uTime.value = t;
     mat.current.uniforms.uOpacity.value = seg(t, BEATS.atmosphereIn);
+    mat.current.uniforms.uEvolve.value = clock.scroll;
   });
 
   return (

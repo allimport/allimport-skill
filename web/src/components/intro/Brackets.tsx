@@ -3,7 +3,7 @@
 import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { BEATS, steps, pulse } from "./timeline";
+import { BEATS, steps, pulse, easeInOutCubic } from "./timeline";
 import { useIntroClock } from "./Scene";
 import { BRACKETS } from "./logo-paths";
 import { CENTER_Y, shapesFromD } from "./Emblem";
@@ -51,7 +51,13 @@ function Bracket({
     // Precision snap, not bounce: small scale kick, fast decay.
     const snap = pulse(t, landAt, 0.15);
     group.current.scale.setScalar(1 + snap * 0.12);
-    mat.current.emissiveIntensity = 1.1 + snap * 1.5;
+
+    // First scroll: the brackets change function — they spread toward the
+    // viewport edges and advance in z, framing the incoming content instead
+    // of the emblem. Chrome now, not event: emissive settles lower.
+    const s = easeInOutCubic(clock.scroll);
+    group.current.position.set(cx * (1 + 0.85 * s), cy * (1 + 0.85 * s), 2.2 * s);
+    mat.current.emissiveIntensity = 1.1 + snap * 1.5 - 0.4 * s;
   });
 
   return (

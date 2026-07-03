@@ -12,6 +12,11 @@
   box-sizing: border-box;
 }
 
+:root {
+  /* First-scroll progress (0..1), written by the scroll listener */
+  --sp: 0;
+}
+
 html,
 body {
   height: 100%;
@@ -19,6 +24,21 @@ body {
   color: var(--white);
   font-family: var(--font-brand), system-ui, sans-serif;
   overflow-x: hidden;
+}
+
+/* Scroll runway: 150vh transition + 100vh bracket-framed stage */
+.scroll-space {
+  height: 250vh;
+  pointer-events: none;
+}
+
+/* Section anchors, structure only — no content yet */
+.sections-root {
+  position: relative;
+}
+
+.section-slot {
+  min-height: 0;
 }
 
 /* ---- Intro overlay (wordmark) ---- */
@@ -146,6 +166,16 @@ body {
 .hero-active .hero {
   visibility: visible;
   pointer-events: auto;
+  /* First scroll: the hero exits mirroring its entrance — fade + rise.
+     Fully out by 40% of the transition. */
+  opacity: calc(1 - min(var(--sp) * 2.5, 1));
+  transform: translateY(calc(var(--sp) * -40px));
+}
+
+/* Past the threshold the hero is inert: no ghost clicks on faded CTAs */
+.scrolled .hero {
+  pointer-events: none;
+  visibility: hidden;
 }
 
 .hero > * {
