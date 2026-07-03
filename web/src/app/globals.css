@@ -88,7 +88,7 @@ body {
 }
 
 .intro-done .tagline {
-  animation: tag-in 0.9s ease-out 0.5s forwards;
+  animation: tag-in 0.9s ease-out 0.35s forwards;
 }
 
 @keyframes tag-in {

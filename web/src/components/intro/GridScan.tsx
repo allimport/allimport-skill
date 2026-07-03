@@ -33,11 +33,11 @@ const fragment = /* glsl */ `
   void main() {
     vec2 uv = vUv;
 
-    float grid = max(gridLine(uv.x, 24.0), gridLine(uv.y, 14.0)) * 0.16;
+    float grid = max(gridLine(uv.x, 24.0), gridLine(uv.y, 14.0)) * 0.09;
 
-    // traveling scanline band
-    float scanPos = fract(uTime * 0.07);
-    float scan = smoothstep(0.06, 0.0, abs(uv.y - scanPos)) * 0.10;
+    // traveling scanline band — ambient, barely there
+    float scanPos = fract(uTime * 0.05);
+    float scan = smoothstep(0.06, 0.0, abs(uv.y - scanPos)) * 0.06;
 
     // radial falloff — vignette into the navy background
     float d = distance(uv, vec2(0.5, 0.52));

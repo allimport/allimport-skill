@@ -5,24 +5,28 @@
  * (seconds since intro start). This keeps the sequence scrubbable and lets the
  * future Hero drive the same timeline from scroll without re-architecting.
  *
- * Beats (seconds) — direction B "Premium Scanner":
- *   0.0 – 0.8  atmosphere    grid + particles fade in, camera far
- *   0.8 – 2.4  scan          beam sweeps bottom→top, clipping-reveals the O
- *   2.4 – 3.0  ignition      bolt strikes in, flash, shockwave — scan verified
- *   3.0 – 3.7  frameIn       camera dolly, HUD brackets snap in (staccato)
- *   3.4 – 4.4  wordmark      DOM overlay reveals (driven via onWordmark)
- *   4.4 – 5.2  settle        blend to idle loop (Hero-ready state)
+ * Beats (seconds) — direction B "Premium Scanner", perception-tuned:
+ *   0.00 – 1.20  atmosphere   near-dark holds; grid/particles rise slowly
+ *   1.00 – 2.30  scan         LINEAR beam sweep — instrument, not animation
+ *   2.30 – 2.55  SILENCE      250ms of total stillness before the signature
+ *   2.55 – 3.00  ignition     bolt strikes in 120ms; flash; O micro-settles
+ *   3.15 – 3.75  frameIn      brackets snap in — precise, not bouncy
+ *   3.55 – 4.55  wordmark     name arrives after the frame starts
+ *   4.60 – 5.40  settle       blend to controlled idle (Hero-ready)
+ *
+ * The 2.30–2.55 gap is deliberate: tension → release makes the bolt read
+ * as the brand's signature (the cause), not an effect.
  */
 
-export const INTRO_DURATION = 5.2;
+export const INTRO_DURATION = 5.4;
 
 export const BEATS = {
-  atmosphereIn: [0.0, 0.8],
-  scan: [0.8, 2.4],
-  ignition: [2.4, 3.0],
-  frameIn: [3.0, 3.7],
-  wordmark: [3.4, 4.4],
-  settle: [4.4, 5.2],
+  atmosphereIn: [0.0, 1.2],
+  scan: [1.0, 2.3],
+  ignition: [2.55, 3.0],
+  frameIn: [3.15, 3.75],
+  wordmark: [3.55, 4.55],
+  settle: [4.6, 5.4],
 } as const;
 
 export type Ease = (x: number) => number;

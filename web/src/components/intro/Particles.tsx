@@ -29,7 +29,7 @@ export default function Particles({ count = 1200 }: { count?: number }) {
     const t = clock.t;
     group.current.rotation.y += dt * 0.02;
     group.current.rotation.x += dt * 0.005;
-    mat.current.opacity = 0.55 * seg(t, BEATS.atmosphereIn);
+    mat.current.opacity = 0.32 * seg(t, BEATS.atmosphereIn);
   });
 
   return (

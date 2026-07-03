@@ -4,14 +4,7 @@ import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { SVGLoader } from "three/addons/loaders/SVGLoader.js";
-import {
-  BEATS,
-  seg,
-  pulse,
-  easeOutQuint,
-  easeInOutCubic,
-  linear,
-} from "./timeline";
+import { BEATS, seg, pulse, easeOutQuint, linear } from "./timeline";
 import { useIntroClock } from "./Scene";
 import {
   RING_D,
@@ -120,8 +113,8 @@ export default function Emblem() {
   useFrame(() => {
     const t = clock.t;
 
-    // --- Scan beat: beam sweeps bottom→top, clipping plane follows it.
-    const scanP = seg(t, BEATS.scan, easeInOutCubic);
+    // --- Scan: LINEAR sweep — constant speed reads as instrument precision.
+    const scanP = seg(t, BEATS.scan, linear);
     const beamY = CENTER_Y - RING_R - 0.1 + scanP * (2 * RING_R + 0.2);
     clipPlane.constant = beamY;
 
@@ -131,14 +124,20 @@ export default function Emblem() {
     beam.current.visible = scanning;
     if (scanning) {
       beam.current.position.y = beamY;
-      const life = seg(t, BEATS.scan, linear);
-      beamMat.current.opacity = 0.9 * Math.sin(Math.PI * life);
+      // Quiet mechanism, not protagonist: capped at 0.55.
+      beamMat.current.opacity = 0.55 * Math.sin(Math.PI * scanP);
     }
 
-    // --- Ignition: the full cyan layer strikes in along the bolt's diagonal.
+    // --- Physical weight: the O micro-settles the instant the scan
+    // completes — a 35mm drop with exponential recovery reads as mass.
+    const settleDip = pulse(t, BEATS.scan[1], 0.3);
+    group.current.position.y = CENTER_Y - 0.035 * settleDip;
+
+    // --- Ignition (after 250ms of silence): the signature. 120ms strike —
+    // lightning is instant; anything slower is "an animation of lightning".
     const strikeIn = seg(
       t,
-      [BEATS.ignition[0], BEATS.ignition[0] + 0.25],
+      [BEATS.ignition[0], BEATS.ignition[0] + 0.12],
       easeOutQuint,
     );
     bolt.current.visible = t >= BEATS.ignition[0];
@@ -148,14 +147,17 @@ export default function Emblem() {
       -0.3,
     );
 
-    const hit = pulse(t, BEATS.ignition[0] + 0.22, 0.45);
-    boltMat.current.emissiveIntensity = 1.4 + 6 * hit;
-    flash.current.intensity = 90 * hit;
+    // Hard, short flash: high peak, fast decay — no bloom smear.
+    const hit = pulse(t, BEATS.ignition[0] + 0.1, 0.28);
+    flash.current.intensity = 140 * hit;
 
-    // --- Idle: slow breathing rotation once settled — the Hero-ready loop.
+    // --- Idle: controlled presence. ±10% slow emissive breath on the bolt;
+    // rotation capped at ~3° — alive, but dominated.
     const idle = seg(t, BEATS.settle);
-    group.current.rotation.y = idle * Math.sin(t * 0.5) * 0.16;
-    group.current.rotation.x = idle * Math.cos(t * 0.35) * 0.05;
+    boltMat.current.emissiveIntensity =
+      1.4 + 6 * hit + idle * 0.15 * Math.sin(t * 1.2);
+    group.current.rotation.y = idle * Math.sin(t * 0.3) * 0.05;
+    group.current.rotation.x = idle * Math.cos(t * 0.22) * 0.02;
   });
 
   return (

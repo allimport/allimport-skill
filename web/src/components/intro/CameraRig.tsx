@@ -21,12 +21,13 @@ export default function CameraRig() {
 
   useFrame(() => {
     const t = clock.t;
-    const dolly = seg(t, [BEATS.frameIn[0], BEATS.settle[1]], easeInOutCubic);
+    // Dolly starts AT the strike — the impact is what pulls you in.
+    const dolly = seg(t, [BEATS.ignition[0], BEATS.settle[0]], easeInOutCubic);
     const idle = seg(t, BEATS.settle);
 
-    // Smooth mouse parallax, only once settled.
-    sway.current.x += (pointer.x * 0.6 * idle - sway.current.x) * 0.04;
-    sway.current.y += (pointer.y * 0.35 * idle - sway.current.y) * 0.04;
+    // Restrained mouse parallax once settled: presence, not toy.
+    sway.current.x += (pointer.x * 0.25 * idle - sway.current.x) * 0.03;
+    sway.current.y += (pointer.y * 0.15 * idle - sway.current.y) * 0.03;
 
     camera.position.set(
       sway.current.x,

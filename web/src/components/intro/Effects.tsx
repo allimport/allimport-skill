@@ -11,7 +11,7 @@ export default function Effects({ mobile }: { mobile: boolean }) {
   return (
     <EffectComposer multisampling={0} resolutionScale={mobile ? 0.5 : 0.75}>
       <Bloom
-        intensity={0.9}
+        intensity={0.75}
         luminanceThreshold={0.85}
         luminanceSmoothing={0.2}
         mipmapBlur

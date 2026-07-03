@@ -48,9 +48,10 @@ function Bracket({
 
     const [a, b] = BEATS.frameIn;
     const landAt = a + ((index + 1) / 4) * (b - a);
-    const snap = pulse(t, landAt, 0.25);
-    group.current.scale.setScalar(1 + snap * 0.28);
-    mat.current.emissiveIntensity = 1.1 + snap * 3;
+    // Precision snap, not bounce: small scale kick, fast decay.
+    const snap = pulse(t, landAt, 0.15);
+    group.current.scale.setScalar(1 + snap * 0.12);
+    mat.current.emissiveIntensity = 1.1 + snap * 1.5;
   });
 
   return (

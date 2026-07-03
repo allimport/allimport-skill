@@ -17,8 +17,8 @@ export default function Shockwave() {
 
   useFrame(() => {
     const t = clock.t;
-    const start = BEATS.ignition[0] + 0.22;
-    const life = 1.1;
+    const start = BEATS.ignition[0] + 0.1;
+    const life = 0.8;
     const p = clamp01((t - start) / life);
     const active = t >= start && p < 1;
 
@@ -27,7 +27,7 @@ export default function Shockwave() {
 
     const e = easeOutCubic(p);
     mesh.current.scale.setScalar(0.5 + e * 9);
-    mat.current.opacity = (1 - p) * 0.65;
+    mat.current.opacity = (1 - p) * 0.5;
   });
 
   return (
