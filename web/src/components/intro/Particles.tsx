@@ -162,8 +162,8 @@ export default function Particles({ mobile }: { mobile: boolean }) {
         count={Math.max(3, Math.round(5 * m))}
         zRange={[-26, -18]}
         spread={[54, 30]}
-        size={0.55}
-        maxOpacity={0.3}
+        size={0.42}
+        maxOpacity={0.28}
         color="#f4f7fa"
         seed={27.3}
         sprite={sprite}

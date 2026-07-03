@@ -54,8 +54,9 @@ const fragment = /* glsl */ `
 
     // --- Layer 2: static luminance masses. Two octaves, huge scale —
     // the frequency is so low the eye cannot name a texture.
+    // Continuous power falloff — no threshold, so no nameable edges.
     float n = noise(vUv * 2.6) * 0.65 + noise(vUv * 5.2 + 7.3) * 0.35;
-    float mass = smoothstep(0.52, 0.95, n);
+    float mass = pow(max(n - 0.35, 0.0) / 0.65, 2.4);
     vec3 base = vec3(0.012, 0.02, 0.032) * mass * uReveal;
 
     // --- Interaction: inertial gravitational swell.
