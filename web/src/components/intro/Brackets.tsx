@@ -5,14 +5,14 @@ import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { BEATS, steps, pulse, easeInOutCubic } from "./timeline";
 import { useIntroClock } from "./Scene";
-import { BRACKETS } from "./logo-paths";
+import { BRACKETS } from "./logo-full-paths";
 import { CENTER_Y, shapesFromD } from "./Emblem";
 
 /**
- * The isotype's four corner brackets — REAL traced vector contours from
- * logo-paths.ts, extruded. Same staccato snap-in during the frame-in beat.
- * Each geometry is re-centered on its own bbox center so the snap pulse
- * scales around the bracket itself.
+ * The wordmark's four corner brackets — REAL traced vector contours from
+ * logo-full-paths.ts, extruded. Staccato snap-in during the frame-in beat
+ * (they open the assembly). Each geometry is re-centered on its own bbox
+ * center so the snap pulse scales around the bracket itself.
  */
 
 function Bracket({

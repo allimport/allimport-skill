@@ -40,15 +40,11 @@ const fragment = /* glsl */ `
     float dy = mix(14.0, 26.0, uEvolve);
     float grid = max(gridLine(uv.x, dx), gridLine(uv.y, dy)) * mix(0.045, 0.075, uEvolve);
 
-    // traveling scanline band — ambient, barely there
-    float scanPos = fract(uTime * 0.05);
-    float scan = smoothstep(0.06, 0.0, abs(uv.y - scanPos)) * 0.03;
-
     // radial falloff — vignette into the navy background
     float d = distance(uv, vec2(0.5, 0.52));
     float falloff = smoothstep(mix(0.62, 0.85, uEvolve), 0.15, d);
 
-    float a = (grid + scan) * falloff * uOpacity;
+    float a = grid * falloff * uOpacity;
     if (a < 0.004) discard;
 
     gl_FragColor = vec4(vec3(0.0, 0.83, 0.83), a);

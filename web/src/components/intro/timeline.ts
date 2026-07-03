@@ -5,20 +5,20 @@
  * (seconds since intro start). This keeps the sequence scrubbable and lets the
  * future Hero drive the same timeline from scroll without re-architecting.
  *
- * Beats (seconds) — direction B "Premium Scanner", perception-tuned:
- *   0.00 – 1.20  atmosphere   near-dark holds; grid/particles rise slowly
- *   1.00 – 2.30  scan         LINEAR beam sweep — instrument, not animation
- *   2.30 – 2.55  SILENCE      250ms of total stillness before the signature
- *   2.55 – 3.00  ignition     bolt strikes in 120ms; flash; O micro-settles
- *   3.15 – 3.75  frameIn      brackets snap in — precise, not bouncy
- *   3.55 – 4.55  wordmark     name arrives after the frame starts
- *   4.60 – 5.40  settle       blend to controlled idle (Hero-ready)
- *
- * The 2.30–2.55 gap is deliberate: tension → release makes the bolt read
- * as the brand's signature (the cause), not an effect.
+ * Beats (seconds) — FULL LOGO ASSEMBLY, perception-tuned:
+ *   0.00 – 0.90  atmosphere   near-dark holds; grid/particles rise slowly
+ *   0.90 – 1.50  frameIn      brackets snap in first — the stage is set
+ *   1.50 – 1.75  SILENCE      250ms of stillness before the signature
+ *   1.75 – 2.05  ignition     bolt strikes in 120ms; flash
+ *   2.05 – 2.65  oForm        the o materializes under a short scan sweep
+ *   2.75 – 3.90  letters      remaining letters emerge from the darkness,
+ *                             staggered outward from the o
+ *   3.90 – 4.60  volume       the assembled logo gains physical depth
+ *   4.60 – 5.30  settle       idle blend — mouse interaction begins ONLY
+ *                             here, once the logo is fully assembled
  */
 
-export const INTRO_DURATION = 5.4;
+export const INTRO_DURATION = 5.3;
 
 /**
  * Hero transition — ADDITIVE, intro v1.0 frozen. The clock keeps running
@@ -26,16 +26,17 @@ export const INTRO_DURATION = 5.4;
  * then the camera finds a new viewpoint inside the SAME scene over
  * 6.6–8.0s. Nothing restarts; heroP is 0 for the whole intro.
  */
-export const HERO_START = 6.6;
-export const HERO_END = 8.0;
+export const HERO_START = 6.5;
+export const HERO_END = 7.9;
 
 export const BEATS = {
-  atmosphereIn: [0.0, 1.2],
-  scan: [1.0, 2.3],
-  ignition: [2.55, 3.0],
-  frameIn: [3.15, 3.75],
-  wordmark: [3.55, 4.55],
-  settle: [4.6, 5.4],
+  atmosphereIn: [0.0, 0.9],
+  frameIn: [0.9, 1.5],
+  ignition: [1.75, 2.05],
+  oForm: [2.05, 2.65],
+  letters: [2.75, 3.9],
+  volume: [3.9, 4.6],
+  settle: [4.6, 5.3],
 } as const;
 
 export type Ease = (x: number) => number;

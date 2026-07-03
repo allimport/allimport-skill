@@ -47,7 +47,7 @@ body {
   min-height: 0;
 }
 
-/* ---- Intro overlay (wordmark) ---- */
+/* ---- Living scene root ---- */
 
 .intro-root {
   position: fixed;
@@ -55,116 +55,34 @@ body {
   background: var(--bg);
 }
 
-.intro-overlay {
+/* Screen-reader-only: the 3D logo's accessible name */
+.sr-only {
   position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  padding-bottom: 9vh;
-  pointer-events: none;
-  z-index: 10;
-}
-
-.wordmark {
-  font-style: italic;
-  font-weight: 800;
-  font-size: clamp(2.6rem, 8vw, 5.5rem);
-  letter-spacing: -0.02em;
-  line-height: 1;
-  display: flex;
-  gap: 0.28em;
-  color: var(--white);
-}
-
-.wordmark .word {
-  display: inline-block;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
   overflow: hidden;
-}
-
-.wordmark .word > span {
-  display: inline-block;
-  transform: translateY(110%);
-}
-
-.intro-done .wordmark .word > span {
-  animation: word-rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.intro-done .wordmark .word:nth-child(2) > span {
-  animation-delay: 0.12s;
-}
-
-@keyframes word-rise {
-  to {
-    transform: translateY(0);
-  }
-}
-
-.tagline {
-  margin-top: 1.1rem;
-  font-style: normal;
-  font-weight: 700;
-  font-size: clamp(0.72rem, 2vw, 0.95rem);
-  letter-spacing: 0.32em;
-  text-transform: uppercase;
-  color: var(--cyan);
-  opacity: 0;
-}
-
-.intro-done .tagline {
-  animation: tag-in 0.9s ease-out 0.35s forwards;
-}
-
-@keyframes tag-in {
-  to {
-    opacity: 0.92;
-  }
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
 }
 
 /* ---- Hero (joins the living scene — no screen change) ---- */
 
-/* Intro wordmark cedes: fades down as the camera reframes */
-.hero-active .intro-overlay {
-  opacity: 0;
-  transform: translateY(12px);
-  transition:
-    opacity 0.45s ease,
-    transform 0.45s ease;
-}
-
-/* Small persistent brand, top-left */
-.brand-mini {
-  position: absolute;
-  top: 28px;
-  left: 32px;
-  z-index: 20;
-  font-style: italic;
-  font-weight: 800;
-  font-size: 1.05rem;
-  letter-spacing: -0.01em;
-  color: var(--white);
-  opacity: 0;
-  transform: translateY(-8px);
-  pointer-events: none;
-}
-
-.hero-active .brand-mini {
-  animation: hero-rise 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.35s forwards;
-}
-
-/* Hero column: left, over the negative space the emblem frees up */
+/* Hero column: lower third, under the 3D logo risen to masthead */
 .hero {
   position: absolute;
   inset: 0;
   z-index: 15;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  gap: 1.6rem;
-  padding: 0 8vw;
-  max-width: min(620px, 58vw);
+  justify-content: flex-end;
+  padding-bottom: 9vh;
+  gap: 1.4rem;
+  padding-left: 8vw;
+  padding-right: 8vw;
+  max-width: min(680px, 70vw);
   pointer-events: none;
   visibility: hidden;
 }
@@ -289,9 +207,9 @@ body {
 @media (max-width: 768px) {
   .hero {
     max-width: 100%;
-    padding: 0 7vw;
-    justify-content: flex-end;
-    padding-bottom: 12vh;
+    padding-left: 7vw;
+    padding-right: 7vw;
+    padding-bottom: 10vh;
   }
 }
 
@@ -310,15 +228,8 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .intro-done .wordmark .word > span,
-  .intro-done .tagline,
-  .hero-active .hero > *,
-  .hero-active .brand-mini {
+  .hero-active .hero > * {
     animation-duration: 0.01s;
     animation-delay: 0s;
-  }
-
-  .hero-active .intro-overlay {
-    transition: none;
   }
 }

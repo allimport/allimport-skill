@@ -15,7 +15,7 @@ import GridScan from "./GridScan";
 import Shockwave from "./Shockwave";
 import CameraRig from "./CameraRig";
 import Effects from "./Effects";
-import { BEATS, HERO_START, HERO_END, seg } from "./timeline";
+import { HERO_START, HERO_END, seg } from "./timeline";
 
 /**
  * Shared intro clock. A mutable ref object (not state) so 60fps reads never
@@ -43,27 +43,20 @@ function ClockDriver({
   clock,
   frozen,
   scrollProgress,
-  onWordmark,
   onHero,
 }: {
   clock: IntroClock;
   frozen: boolean;
   scrollProgress: { v: number };
-  onWordmark: () => void;
   onHero: () => void;
 }) {
-  const firedWordmark = useRef(false);
   const firedHero = useRef(false);
 
   useFrame((_, dt) => {
     if (!frozen) clock.t += dt;
     // Scroll input, gated by the hero blend: 0 for the entire intro, so
-    // early scrolling cannot disturb the frozen sequence — by construction.
+    // early scrolling cannot disturb the assembly — by construction.
     clock.scroll = scrollProgress.v * seg(clock.t, [HERO_START, HERO_END]);
-    if (!firedWordmark.current && clock.t >= BEATS.wordmark[0]) {
-      firedWordmark.current = true;
-      onWordmark();
-    }
     if (!firedHero.current && clock.t >= HERO_START) {
       firedHero.current = true;
       onHero();
@@ -77,13 +70,11 @@ export default function Scene({
   reducedMotion,
   mobile,
   scrollProgress,
-  onWordmark,
   onHero,
 }: {
   reducedMotion: boolean;
   mobile: boolean;
   scrollProgress: { v: number };
-  onWordmark: () => void;
   onHero: () => void;
 }) {
   const clock = useMemo<IntroClock>(
@@ -91,13 +82,10 @@ export default function Scene({
     [reducedMotion],
   );
 
-  // Reduced motion: wordmark and hero show immediately, final framing.
+  // Reduced motion: assembled logo and hero immediately, final framing.
   useEffect(() => {
-    if (reducedMotion) {
-      onWordmark();
-      onHero();
-    }
-  }, [reducedMotion, onWordmark, onHero]);
+    if (reducedMotion) onHero();
+  }, [reducedMotion, onHero]);
 
   return (
     <Canvas
@@ -110,15 +98,16 @@ export default function Scene({
       camera={{ fov: 42, near: 0.1, far: 60, position: [0, 0, 15] }}
       style={{ position: "absolute", inset: 0 }}
     >
+      {/* Fog pushed out so narrow-viewport camera fits (z up to ~24 on
+          phones for the wide wordmark) without greying the logo. */}
       <color attach="background" args={["#0a0f1a"]} />
-      <fog attach="fog" args={["#0a0f1a", 18, 34]} />
+      <fog attach="fog" args={["#0a0f1a", 26, 46]} />
 
       <ClockContext.Provider value={clock}>
         <ClockDriver
           clock={clock}
           frozen={reducedMotion}
           scrollProgress={scrollProgress}
-          onWordmark={onWordmark}
           onHero={onHero}
         />
 

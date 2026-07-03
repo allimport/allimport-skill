@@ -5,6 +5,8 @@ import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { BEATS, clamp01, easeOutCubic } from "./timeline";
 import { useIntroClock } from "./Scene";
+import { CENTER_Y } from "./Emblem";
+import { O_CENTER } from "./logo-full-paths";
 
 /**
  * Impact shockwave: a thin ring that expands and fades right after the
@@ -31,7 +33,11 @@ export default function Shockwave() {
   });
 
   return (
-    <mesh ref={mesh} position={[0, 0.4, 0.2]} visible={false}>
+    <mesh
+      ref={mesh}
+      position={[O_CENTER[0], CENTER_Y + O_CENTER[1], 0.2]}
+      visible={false}
+    >
       <ringGeometry args={[0.94, 1.0, 64]} />
       <meshBasicMaterial
         ref={mat}

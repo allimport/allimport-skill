@@ -6,11 +6,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
 /**
  * Intro → Hero experience. One living scene.
  *
- * The intro (v1.0, frozen) plays; after the idle hold the camera finds a
- * new viewpoint and the Hero content joins the same frame — no screen
- * change, no full fade. The canvas never unmounts; the intro wordmark
- * cedes to a small top-left brand while the hero hierarchy cascades in:
- * headline → subheadline → WhatsApp → Instagram → trust line.
+ * The COMPLETE logo — every letter, the o, the bolt, the brackets — is 3D
+ * geometry inside the canvas (no DOM/Three mix for the brand). A sr-only
+ * <h1> carries the name for SEO and assistive tech. After the assembly
+ * settles, the camera finds the Hero viewpoint and the DOM copy cascades
+ * into the lower third: headline → subheadline → WhatsApp → Instagram.
  */
 
 const Scene = dynamic(() => import("./Scene"), {
@@ -25,7 +25,6 @@ const IG_URL = "https://instagram.com/allimport.cba";
 const SCROLL_RANGE_VH = 1.5;
 
 export default function IntroExperience() {
-  const [wordmarkVisible, setWordmarkVisible] = useState(false);
   const [heroActive, setHeroActive] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [reducedMotion, setReducedMotion] = useState(false);
@@ -56,38 +55,22 @@ export default function IntroExperience() {
     return () => window.removeEventListener("scroll", onScroll);
   }, [scrollProgress]);
 
-  const onWordmark = useCallback(() => setWordmarkVisible(true), []);
   const onHero = useCallback(() => setHeroActive(true), []);
 
   return (
     <div
-      className={`intro-root${wordmarkVisible ? " intro-done" : ""}${heroActive ? " hero-active" : ""}${scrolled ? " scrolled" : ""}`}
+      className={`intro-root${heroActive ? " hero-active" : ""}${scrolled ? " scrolled" : ""}`}
     >
+      {/* The logo lives entirely in 3D; this carries the name for
+          SEO and assistive tech. */}
+      <h1 className="sr-only">All Import</h1>
+
       <Scene
         reducedMotion={reducedMotion}
         mobile={mobile}
         scrollProgress={scrollProgress}
-        onWordmark={onWordmark}
         onHero={onHero}
       />
-
-      {/* Intro wordmark — cedes to the top-left brand when the Hero lands */}
-      <div className="intro-overlay">
-        <h1 className="wordmark" aria-label="All Import">
-          <span className="word" aria-hidden>
-            <span>All</span>
-          </span>
-          <span className="word" aria-hidden>
-            <span>Import</span>
-          </span>
-        </h1>
-        <p className="tagline">Importamos lo que todos quieren</p>
-      </div>
-
-      {/* Persistent small brand, top-left, from the Hero on */}
-      <div className="brand-mini" aria-hidden={!heroActive}>
-        All Import
-      </div>
 
       {/* Hero — joins the living scene, left column over negative space.
           Four words of headline; the logo stays the protagonist. */}
