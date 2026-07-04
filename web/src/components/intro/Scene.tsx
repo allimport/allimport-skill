@@ -5,6 +5,7 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import Emblem from "./Emblem";
 import Particles from "./Particles";
 import Atmosphere from "./Atmosphere";
+import Fluid from "./Fluid";
 import DepthField from "./DepthField";
 import CameraRig from "./CameraRig";
 import Effects from "./Effects";
@@ -96,6 +97,7 @@ export default function Scene({
         <DepthField />
         <Particles mobile={mobile} />
         <Atmosphere />
+        <Fluid />
         <Emblem />
         <CameraRig />
         {!reducedMotion && <Effects mobile={mobile} />}
