@@ -118,12 +118,12 @@ export default function Emblem() {
     // the mass starts late, drifts, and settles without oscillating.
     const inter = seg(t, BEATS.settle);
     const d = drift.current;
-    const tx = pointer.x * 0.16 * inter;
-    const ty = pointer.y * 0.1 * inter;
-    // Solid aluminum on a magnetic field: low stiffness so acceleration
-    // starts late and lazy (never a pursuit), damping well over critical
-    // (2*sqrt(1.3) = 2.28) so it only ever finishes settling.
-    const K = 1.3;
+    const tx = pointer.x * 0.12 * inter;
+    const ty = pointer.y * 0.075 * inter;
+    // Solid aluminum on a magnetic field: lower stiffness so acceleration
+    // starts even later and lazier (never a pursuit), damping well over
+    // critical (2*sqrt(1.0) = 2.0) so it only ever finishes settling.
+    const K = 1.0;
     const C = 3.4;
     d.vx += (K * (tx - d.x) - C * d.vx) * dt;
     d.vy += (K * (ty - d.y) - C * d.vy) * dt;
@@ -134,8 +134,8 @@ export default function Emblem() {
     group.current.position.y = baseY + d.y;
     // Minimal momentum lean: driven by VELOCITY, not position — the logo
     // leans only while moving and always rests perfectly straight.
-    group.current.rotation.y = d.vx * 0.04;
-    group.current.rotation.x = -d.vy * 0.03;
+    group.current.rotation.y = d.vx * 0.03;
+    group.current.rotation.x = -d.vy * 0.022;
   });
 
   return (
@@ -148,11 +148,14 @@ export default function Emblem() {
             ref={(m) => {
               letterMats.current[i] = m;
             }}
+            // Industrial ceramic (Apple / Nothing): pure dielectric white,
+            // matte front, thin sharp lacquer so the beveled EDGES catch
+            // light and the grazing side walls read a touch more reflective.
             color="#ffffff"
-            metalness={0.12}
-            roughness={0.34}
-            clearcoat={0.35}
-            clearcoatRoughness={0.25}
+            metalness={0}
+            roughness={0.5}
+            clearcoat={0.6}
+            clearcoatRoughness={0.12}
             transparent
             opacity={0}
           />
