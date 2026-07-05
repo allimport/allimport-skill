@@ -1,6 +1,13 @@
-# INTRO EXPERIENCE v2.0 — FREEZE SPEC
+# INTRO EXPERIENCE V2.0
 
-**Estado:** CONGELADO · **Commit de referencia:** `f04f11e` · **Rama:** `claude/allimport-skill-setup-0m43zg`
+## Estado
+
+- **Versión:** v2.0 — APROBADA Y CONGELADA
+- **Fecha:** 2026-07-05
+- **Commit de referencia:** `f04f11e`
+- **Rama:** `claude/allimport-skill-setup-0m43zg`
+- **Objetivo de esta versión:** Cerrar la Intro Experience como componente estable del producto.
+  Deja de estar en desarrollo. El resto de la web se construye encima sin riesgo de romperla.
 
 Este documento es la referencia oficial de la Intro Experience de All Import. Cualquier
 modificación futura debe compararse contra esta especificación antes de aplicarse. El código
