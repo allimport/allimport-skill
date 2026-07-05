@@ -57,7 +57,7 @@ const fragment = /* glsl */ `
     // Continuous power falloff — no threshold, so no nameable edges.
     float n = noise(vUv * 2.6) * 0.65 + noise(vUv * 5.2 + 7.3) * 0.35;
     float mass = pow(max(n - 0.35, 0.0) / 0.65, 2.4);
-    vec3 base = vec3(0.012, 0.02, 0.032) * mass * uReveal;
+    vec3 base = vec3(0.006, 0.01, 0.017) * mass * uReveal;
 
     // --- Interaction: inertial gravitational swell.
     vec2 c = uCenter * vec2(0.5, 0.32);
