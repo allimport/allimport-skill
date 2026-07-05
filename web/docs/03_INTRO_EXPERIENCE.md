@@ -19,7 +19,7 @@ Todo deriva de un reloj único; determinista. La interacción está gateada hast
 
 ## Interacción
 
-El logo responde como aluminio macizo suspendido en un campo magnético: arranca tarde y perezoso, nunca persigue el cursor, y al detenerse el usuario solo termina de acomodarse, sin rebote. Amplitud pequeña. En reposo queda perfectamente derecho; la única inclinación es consecuencia de la velocidad. El resto de la escena casi no reacciona: la cámara apenas respira, las estrellas no se mueven, el fondo gana densidad con inercia, el fluido altera su patrón interno sin seguir a nadie. Sensación buscada: masa, peso, control. Nunca "sigue el mouse".
+El logo responde como aluminio macizo suspendido en un campo magnético: arranca tarde y perezoso, nunca persigue el cursor, y al detenerse el usuario solo termina de acomodarse, sin rebote. Amplitud pequeña. En reposo queda perfectamente derecho; la única inclinación es consecuencia de la velocidad. El resto de la escena casi no reacciona: la cámara apenas respira, las estrellas no se mueven, el fondo gana densidad con inercia. El fluido, por decisión del dueño, ahora sigue el cursor con retardo pesado —un campo de energía que se arrastra tras el puntero— manteniéndose sutil y solo en la Intro. Sensación buscada para el logo: masa, peso, control. Nunca "sigue el mouse".
 
 ## Iluminación
 

@@ -89,8 +89,10 @@ export default function Fluid() {
   const clock = useIntroClock();
   const { pointer } = useThree();
   const mat = useRef<THREE.ShaderMaterial>(null!);
+  const mesh = useRef<THREE.Mesh>(null!);
   const prev = useRef({ x: 0, y: 0 });
   const kick = useRef(0);
+  const follow = useRef({ x: 0, y: 0 });
 
   const uniforms = useMemo(
     () => ({
@@ -116,10 +118,18 @@ export default function Fluid() {
     mat.current.uniforms.uTime.value = t;
     mat.current.uniforms.uKick.value = kick.current;
     mat.current.uniforms.uReveal.value = seg(t, BEATS.boltOn);
+
+    // The fluid follows the cursor with heavy lag — a trailing energy
+    // field, gated by settle so it only tracks once the logo is assembled.
+    const inter = seg(t, BEATS.settle);
+    const f = follow.current;
+    f.x += (pointer.x * 3.2 * inter - f.x) * 0.03;
+    f.y += (pointer.y * 2.0 * inter - f.y) * 0.03;
+    mesh.current.position.set(f.x, CENTER_Y + f.y, -1.2);
   });
 
   return (
-    <mesh position={[0, CENTER_Y, -1.2]}>
+    <mesh ref={mesh} position={[0, CENTER_Y, -1.2]}>
       <planeGeometry args={[4.4, 2.6]} />
       <shaderMaterial
         ref={mat}
