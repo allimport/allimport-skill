@@ -379,7 +379,7 @@ export default function Catalog() {
           Lo que tenemos ahora.
         </Reveal>
         <Reveal as="p" className="cat-sub" delay={140}>
-          Pocas cosas, elegidas una por una. Tocá para ver de cerca.
+          Pocas cosas, elegidas una por una.
         </Reveal>
       </div>
 
