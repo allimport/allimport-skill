@@ -1,11 +1,10 @@
 import Reveal from "@/components/site/Reveal";
+import Catalog from "@/components/site/Catalog";
 import {
-  PRODUCTS,
   STEPS,
   COMPARE,
   TESTIMONIALS,
   waLink,
-  formatPrice,
   INSTAGRAM_URL,
   INSTAGRAM_HANDLE,
   CITY,
@@ -82,38 +81,9 @@ function ComoFunciona() {
   );
 }
 
-/* Productos — the catalog. Each card links straight to WhatsApp. */
+/* Productos — the catalog deck ("La Vitrina"). Spec: docs 10 + brief. */
 function Productos() {
-  return (
-    <section id="productos" className="sec">
-      <Reveal as="p" className="eyebrow">
-        Catálogo
-      </Reveal>
-      <Reveal as="h2" className="h2" delay={80}>
-        Lo que tenemos ahora.
-      </Reveal>
-      <div className="grid">
-        {PRODUCTS.map((p, i) => (
-          <Reveal className="card" key={p.id} delay={60 + (i % 3) * 70}>
-            <div className="card-top">
-              <span className="card-tag">{p.tag}</span>
-              <span className="card-price">{formatPrice(p.price)}</span>
-            </div>
-            <h3 className="card-name">{p.name}</h3>
-            <p className="card-blurb">{p.blurb}</p>
-            <a
-              className="card-cta"
-              href={waLink(`Hola! Me interesa: ${p.name} (${formatPrice(p.price)}). ¿Está disponible?`)}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {WA_ICON} Lo quiero
-            </a>
-          </Reveal>
-        ))}
-      </div>
-    </section>
-  );
+  return <Catalog />;
 }
 
 /* Comparativa — justify the desire rationally. */

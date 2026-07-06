@@ -176,75 +176,386 @@ body {
   color: rgba(255, 255, 255, 0.6);
 }
 
-/* Product grid */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.4rem;
-  margin-top: 3rem;
+/* ---- Catálogo "La Vitrina" (deck horizontal, spec doc 10 + brief) ---- */
+
+.cat-head {
+  padding-bottom: 1.5rem;
 }
-.card {
+.cat-sub {
+  margin-top: 1rem;
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.deck-wrap {
+  position: relative;
+}
+.deck {
+  --card-w: min(78vw, 420px);
+  display: flex;
+  gap: clamp(14px, 2.5vw, 28px);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 14px calc(50vw - var(--card-w) / 2) 30px;
+  list-style: none;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  cursor: grab;
+  outline: none;
+}
+.deck::-webkit-scrollbar {
+  display: none;
+}
+.deck:active {
+  cursor: grabbing;
+}
+.deck:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 4px;
+  border-radius: 8px;
+}
+.deck > li {
+  flex: 0 0 var(--card-w);
+  scroll-snap-align: center;
+}
+
+/* Non-protagonist cards recede: smaller, dimmer, behind. Weighted settle. */
+.deck > li .pcard {
+  transform: scale(0.94);
+  opacity: 0.55;
+  transition:
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.deck > li.is-active .pcard {
+  transform: none;
+  opacity: 1;
+}
+
+.pcard {
   display: flex;
   flex-direction: column;
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 16px;
-  padding: 1.5rem;
+  width: 100%;
+  padding: 0;
+  text-align: left;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 22px;
   background: rgba(255, 255, 255, 0.02);
-  transition: border-color 0.2s ease, transform 0.2s ease;
+  color: inherit;
+  font: inherit;
+  overflow: hidden;
+  cursor: pointer;
 }
-.card:hover {
-  border-color: rgba(0, 212, 212, 0.4);
-  transform: translateY(-2px);
+.pcard:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
 }
-.card-top {
+
+/* Photo area: 4:5 always reserved — zero CLS when real photos land. */
+.pmedia {
+  aspect-ratio: 4 / 5;
+  width: 100%;
+  overflow: hidden;
+  background: #0b1120;
+}
+.pmedia img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+/* Dignified void until the Vitrina Nocturna photos arrive. */
+.pmedia--ghost {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
+  justify-content: center;
+  padding: 12%;
+  background: radial-gradient(ellipse at 50% 42%, #111b30 0%, #0a0f1a 72%);
 }
-.card-tag {
-  font-size: 0.68rem;
+.pmedia-ghost-name {
+  font-style: italic;
+  font-weight: 800;
+  font-size: clamp(1.3rem, 4.5vw, 1.9rem);
+  line-height: 1.15;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.16);
+}
+
+.pcard-body {
+  display: flex;
+  flex-direction: column;
+  padding: 1.1rem 1.25rem 1.3rem;
+}
+.pcard-tag {
+  font-size: 0.66rem;
   font-weight: 700;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.38);
 }
-.card-price {
+.pcard-name {
+  margin-top: 0.55rem;
+  font-weight: 700;
+  font-size: 1.18rem;
+  color: var(--white);
+}
+.pcard-blurb {
+  margin-top: 0.4rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.55);
+}
+.pcard-foot {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin-top: 0.9rem;
+}
+.pcard-price {
   font-style: italic;
   font-weight: 800;
   font-size: 1.15rem;
   color: var(--cyan);
 }
-.card-name {
-  margin-top: 1rem;
+.pcard-state {
+  font-size: 0.72rem;
   font-weight: 700;
-  font-size: 1.2rem;
-  color: var(--white);
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.55);
 }
-.card-blurb {
-  margin-top: 0.5rem;
-  margin-bottom: 1.4rem;
-  font-size: 0.92rem;
-  line-height: 1.55;
-  color: rgba(255, 255, 255, 0.58);
-  flex: 1;
-}
-.card-cta {
-  display: inline-flex;
+
+/* Closing card: catalogue-as-service. The only brand card of the deck. */
+.pcard--ask {
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  font-weight: 700;
-  font-size: 0.92rem;
-  padding: 0.72rem 1rem;
-  border-radius: 10px;
-  background: var(--cyan);
-  color: #042626;
-  text-decoration: none;
-  transition: background-color 0.15s ease;
+  text-align: center;
+  gap: 1.1rem;
+  min-height: 100%;
+  padding: 2.4rem 1.8rem;
+  cursor: default;
 }
-.card-cta:hover {
-  background: #3de4e4;
+.ask-bolt {
+  color: var(--cyan);
+  opacity: 0.85;
+  filter: drop-shadow(0 0 18px rgba(0, 212, 212, 0.35));
+}
+.ask-title {
+  font-weight: 800;
+  font-size: 1.35rem;
+  color: var(--white);
+}
+.ask-text {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.55);
+  max-width: 28ch;
+}
+
+/* Thin progress line — position without pagination-dot e-commerce idiom. */
+.deck-progress {
+  width: min(220px, 40vw);
+  height: 2px;
+  margin: 0.4rem auto 0;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+.deck-progress span {
+  display: block;
+  height: 100%;
+  background: var(--cyan);
+  transform-origin: left;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ---- Expanded product view (native dialog, shared-element) ---- */
+
+.pd {
+  border: none;
+  padding: 0;
+  background: transparent;
+  max-width: none;
+  max-height: none;
+  inset: 0;
+  margin: auto;
+}
+.pd::backdrop {
+  background: rgba(3, 6, 11, 0.8);
+}
+.pd-panel {
+  position: relative;
+  width: min(94vw, 560px);
+  max-height: min(88svh, 880px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 24px;
+  background: #0c1322;
+}
+.pd-grab {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  height: 26px;
+  touch-action: none;
+  cursor: grab;
+}
+.pd-grab::before {
+  content: "";
+  position: absolute;
+  top: 9px;
+  left: 50%;
+  width: 44px;
+  height: 4px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateX(-50%);
+}
+.pd-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 4;
+  width: 38px;
+  height: 38px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(4, 7, 12, 0.55);
+  color: var(--white);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+}
+.pd-close:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
+.pd-panel .pmedia {
+  aspect-ratio: 4 / 5;
+  max-height: 46svh;
+  margin-top: -26px;
+}
+.pd-gallery {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  margin-top: -26px;
+}
+.pd-gallery::-webkit-scrollbar {
+  display: none;
+}
+.pd-gallery img {
+  flex: 0 0 100%;
+  scroll-snap-align: center;
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.pd-body {
+  padding: 1.4rem 1.5rem 1.7rem;
+}
+.pd-name {
+  margin-top: 0.5rem;
+  font-weight: 800;
+  font-size: 1.5rem;
+  color: var(--white);
+}
+.pd-blurb {
+  margin-top: 0.45rem;
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: rgba(255, 255, 255, 0.6);
+}
+.pd-facts {
+  margin: 1.1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+.pd-facts li {
+  position: relative;
+  padding-left: 1.1rem;
+  margin-top: 0.45rem;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.68);
+}
+.pd-facts li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--cyan);
+}
+.pd-state {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.2rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.75);
+}
+.pd-state-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cyan);
+}
+.pd-state--off .pd-state-dot {
+  background: transparent;
+  border: 1.5px solid var(--cyan);
+}
+.pd-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+.chip {
+  padding: 0.5rem 0.95rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.75);
+  font: inherit;
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    border-color 0.25s ease,
+    color 0.25s ease;
+}
+.chip--on {
+  border-color: var(--cyan);
+  color: var(--cyan);
+}
+.chip:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 2px;
+}
+.pd-cta-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+.pd-price {
+  font-style: italic;
+  font-weight: 800;
+  font-size: 1.5rem;
+  color: var(--cyan);
+}
+.pd-reassure {
+  margin-top: 0.8rem;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.45);
 }
 
 /* Comparativa */
@@ -410,7 +721,6 @@ body {
 
 @media (max-width: 860px) {
   .steps,
-  .grid,
   .quotes {
     grid-template-columns: 1fr;
   }
@@ -425,8 +735,14 @@ body {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .reveal {
+  .reveal,
+  .deck > li .pcard,
+  .deck-progress span,
+  .chip {
     transition: none;
+  }
+  .deck {
+    scroll-behavior: auto;
   }
 }
 

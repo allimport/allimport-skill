@@ -15,21 +15,64 @@ export function waLink(text: string): string {
   return `https://wa.me/${WHATSAPP}?text=${encodeURIComponent(text)}`;
 }
 
+export function formatPrice(n: number): string {
+  return "$" + n.toLocaleString("es-AR");
+}
+
+/**
+ * Availability. Honest states only — no numeric stock counters, no fake
+ * scarcity (doc 10 §9). `scarcity` is a free-text note set ONLY when true.
+ */
+export type ProductState = "disponible" | "ingresando" | "proximo";
+
+export const STATE_LABEL: Record<ProductState, string> = {
+  disponible: "Disponible en Córdoba",
+  ingresando: "En camino — llega pronto",
+  proximo: "Próximo ingreso",
+};
+
+export const STATE_CTA: Record<ProductState, string> = {
+  disponible: "Hablemos por WhatsApp",
+  ingresando: "Reservalo por WhatsApp",
+  proximo: "Avisame cuando llegue",
+};
+
 export interface Product {
   id: string;
   name: string;
   tag: string;
   price: number;
   blurb: string;
+  state: ProductState;
+  /** Up to three concrete claims the buyer can verify in hand. */
+  facts: string[];
+  sizes?: string[];
+  variants?: { label: string; options: string[] };
+  /** Honest scarcity note — set only when it is actually true. */
+  scarcity?: string;
+  /** Gallery paths under /products/{id}/ — empty until real photos land. */
+  images: string[];
 }
 
+/**
+ * Deck order IS the curation (doc 10 §7): the shirt anchors (highest desire,
+ * growth focus), then audio, then energy/charge as a family, then lifestyle.
+ */
 export const PRODUCTS: Product[] = [
   {
     id: "remera",
-    name: "Remera Argentina",
+    name: "Camiseta Argentina",
     tag: "Indumentaria",
     price: 45000,
     blurb: "Calidad jugador. La misma que mirás en la tele, en tu ropero.",
+    state: "disponible",
+    facts: [
+      "Tela y costuras calidad jugador — tocala antes de pagar",
+      "Escudo y detalles bordados, no estampados",
+      "La revisás en mano, con tiempo",
+    ],
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    images: [],
   },
   {
     id: "tws",
@@ -37,27 +80,13 @@ export const PRODUCTS: Product[] = [
     tag: "Audio",
     price: 32000,
     blurb: "Cancelación de ruido y estuche de carga. Idénticos al original.",
-  },
-  {
-    id: "battery",
-    name: "Batería Magnética 5000mAh",
-    tag: "Energía",
-    price: 35000,
-    blurb: "Se pega al teléfono y carga sin cables. Fina, liviana, premium.",
-  },
-  {
-    id: "cable-lightning",
-    name: "Cargador USB-C a Lightning + 20W",
-    tag: "Carga",
-    price: 28000,
-    blurb: "Carga rápida real. Cable reforzado y adaptador incluido.",
-  },
-  {
-    id: "cable-usbc",
-    name: "Cargador USB-C a USB-C + 20W",
-    tag: "Carga",
-    price: 28000,
-    blurb: "Para Android y notebooks. Potencia completa, precio justo.",
+    state: "disponible",
+    facts: [
+      "Cancelación de ruido activa — probala en el encuentro",
+      "Estuche con carga inalámbrica",
+      "Emparejamiento instantáneo al abrir",
+    ],
+    images: [],
   },
   {
     id: "parlante",
@@ -65,19 +94,94 @@ export const PRODUCTS: Product[] = [
     tag: "Audio",
     price: 35000,
     blurb: "Sonido potente y luces reactivas. Resistente, portátil, fuerte.",
+    state: "disponible",
+    facts: [
+      "Sonido que sorprende para el tamaño — escuchalo en mano",
+      "Luces RGB que siguen la música",
+      "Batería para toda la juntada",
+    ],
+    images: [],
+  },
+  {
+    id: "battery",
+    name: "Batería Magnética 5000mAh",
+    tag: "Energía",
+    price: 35000,
+    blurb: "Se pega al teléfono y carga sin cables. Fina, liviana, premium.",
+    state: "disponible",
+    facts: [
+      "Se adhiere sola al teléfono — probalo en el momento",
+      "5000mAh: un ciclo completo de carga",
+      "Fina y liviana, entra en cualquier bolsillo",
+    ],
+    images: [],
+  },
+  {
+    id: "cable-lightning",
+    name: "Cargador USB-C a Lightning + 20W",
+    tag: "Carga",
+    price: 28000,
+    blurb: "Carga rápida real. Cable reforzado y adaptador incluido.",
+    state: "disponible",
+    facts: [
+      "Carga rápida real de 20W",
+      "Cable trenzado reforzado",
+      "Cubo incluido, listo para usar",
+    ],
+    images: [],
+  },
+  {
+    id: "cable-usbc",
+    name: "Cargador USB-C a USB-C + 20W",
+    tag: "Carga",
+    price: 28000,
+    blurb: "Para Android y notebooks. Potencia completa, precio justo.",
+    state: "disponible",
+    facts: [
+      "Carga rápida real de 20W",
+      "Para Android y notebooks",
+      "Cable reforzado + cubo incluido",
+    ],
+    images: [],
   },
   {
     id: "vaper",
-    name: "Vaper Elf Bar",
+    name: "Vaper Descartable Premium",
     tag: "Lifestyle",
     price: 35000,
     blurb: "Sabores intensos, larga duración. Descartable y listo para usar.",
+    state: "disponible",
+    facts: [
+      "Sellado de fábrica — lo abrís vos",
+      "Larga duración real",
+      "Consultá sabores disponibles",
+    ],
+    images: [],
   },
 ];
 
-export function formatPrice(n: number): string {
-  return "$" + n.toLocaleString("es-AR");
+/**
+ * Pre-built WhatsApp inquiry: the conversation starts specific (product,
+ * price, size/variant), so the user types nothing and the seller answers
+ * with certainty. The ask adapts to the availability state.
+ */
+export function productInquiry(
+  p: Product,
+  sel?: { size?: string; variant?: string },
+): string {
+  const parts = [`Hola! Me interesa: ${p.name} (${formatPrice(p.price)})`];
+  if (sel?.size) parts.push(`talle ${sel.size}`);
+  if (sel?.variant) parts.push(sel.variant);
+  const ask =
+    p.state === "proximo"
+      ? "¿Me avisás cuando llegue?"
+      : p.state === "ingresando"
+        ? "¿Me lo reservás?"
+        : "¿Cuándo lo puedo ver?";
+  return `${parts.join(", ")}. ${ask}`;
 }
+
+export const ASK_CARD_MESSAGE = "Hola! Busco algo que no está en el catálogo: ";
 
 export interface Step {
   n: string;
