@@ -1,4 +1,5 @@
 import IntroExperience from "@/components/intro/IntroExperience";
+import Hero from "@/components/site/Hero";
 import SectionsScaffold from "@/components/sections";
 import { waLink } from "@/components/site/data";
 
@@ -7,6 +8,10 @@ export default function Home() {
     <main>
       {/* Fixed living scene: the frozen 3D Intro is the brand hero */}
       <IntroExperience />
+
+      {/* Hero: a sibling overlay over the Intro idle — promise + one CTA,
+          gone before the first scroll opens the world. Never touches intro/*. */}
+      <Hero />
 
       {/* One screen of pure Intro, then the transition drives the reframe */}
       <div className="scroll-space" aria-hidden />
