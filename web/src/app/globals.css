@@ -442,7 +442,11 @@ body {
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  padding: 0 7vw clamp(9vh, 14vh, 16vh);
+  /* vmin, not vh/vw: the Intro frames the logo (and its glow) to the
+     constrained viewport axis (doc 03), so clearance below it must track
+     whichever dimension is tighter — otherwise short/wide viewports read
+     clearance against the wrong axis and the block creeps into the glow. */
+  padding: 0 7vmin clamp(8vmin, 15vmin, 17vmin);
   pointer-events: none;
   opacity: 0;
 }
@@ -455,7 +459,7 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(1.2rem, 2.8vh, 2rem);
+  gap: clamp(1rem, 2.6vmin, 2rem);
   max-width: min(92vw, 40rem);
   text-align: center;
   transform: translateY(calc(var(--sp) * -3vh));
@@ -463,7 +467,7 @@ body {
 .hero-promise {
   font-style: italic;
   font-weight: 700;
-  font-size: clamp(1.35rem, 3.8vw, 2.1rem);
+  font-size: clamp(1.2rem, 3.4vmin, 2.1rem);
   line-height: 1.16;
   letter-spacing: -0.01em;
   color: var(--white);
