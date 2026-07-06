@@ -32,10 +32,17 @@ function prefersReducedMotion(): boolean {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
-function Bolt({ className }: { className?: string }) {
+function Bolt({
+  className,
+  style,
+}: {
+  className?: string;
+  style?: React.CSSProperties;
+}) {
   return (
     <svg
       className={className}
+      style={style}
       viewBox="0 0 24 24"
       width="34"
       height="34"
@@ -47,27 +54,99 @@ function Bolt({ className }: { className?: string }) {
   );
 }
 
-/** Product media: real photo when it exists, dignified ghost until then.
- *  The 4:5 box is always reserved — zero CLS when photos land. */
-function Media({ p, sizes }: { p: Product; sizes: string }) {
-  if (p.images.length > 0) {
-    return (
-      <div className="pmedia">
-        <Image
-          src={p.images[0]}
-          alt={p.name}
-          width={820}
-          height={1025}
-          sizes={sizes}
-          loading="lazy"
-        />
-      </div>
-    );
-  }
+/** Deterministic per-product pose for the ghost watermark: each card reads
+ *  unique without breaking the system (abstract identity, no fourth color). */
+const GHOST_POSE = [
+  { x: 64, y: 20, s: 4.2, r: -12 },
+  { x: 22, y: 66, s: 3.4, r: 9 },
+  { x: 71, y: 58, s: 3.8, r: -6 },
+  { x: 26, y: 24, s: 3.0, r: 15 },
+  { x: 57, y: 72, s: 4.5, r: -18 },
+  { x: 33, y: 42, s: 2.8, r: 5 },
+  { x: 67, y: 33, s: 3.5, r: -9 },
+];
+
+/** Vitrina-Nocturna void until real photos land: gradient + grain + the
+ *  brand bolt as a faint watermark. Never the product name (brief §1). */
+function Ghost({ seed }: { seed: number }) {
+  const pose = GHOST_POSE[seed % GHOST_POSE.length];
   return (
     <div className="pmedia pmedia--ghost" aria-hidden>
-      <span className="pmedia-ghost-name">{p.name}</span>
+      <Bolt
+        className="pmedia-bolt"
+        style={{
+          left: `${pose.x}%`,
+          top: `${pose.y}%`,
+          transform: `translate(-50%, -50%) scale(${pose.s}) rotate(${pose.r}deg)`,
+        }}
+      />
     </div>
+  );
+}
+
+/** Card media: real photo when it exists, ghost until then.
+ *  The 4:5 box is always reserved — zero CLS when photos land. */
+function Media({ p, sizes, seed }: { p: Product; sizes: string; seed: number }) {
+  if (p.images.length === 0) return <Ghost seed={seed} />;
+  return (
+    <div className="pmedia">
+      <Image
+        src={p.images[0]}
+        alt={p.name}
+        width={820}
+        height={1025}
+        sizes={sizes}
+        loading="lazy"
+      />
+    </div>
+  );
+}
+
+/** Expanded-view gallery. Always the same architecture regardless of how
+ *  many photos exist today: snap track + thin segment indicators (shown
+ *  only with 2+). Zoom is architecture-ready via the data-zoom hook and
+ *  the reserved gal-zoom class — intentionally not implemented yet. */
+function Gallery({ p, seed }: { p: Product; seed: number }) {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const [idx, setIdx] = useState(0);
+
+  const onScroll = useCallback(() => {
+    const t = trackRef.current;
+    if (!t) return;
+    setIdx(Math.round(t.scrollLeft / t.clientWidth));
+  }, []);
+
+  if (p.images.length === 0) {
+    return (
+      <figure className="gal" data-zoom="off">
+        <Ghost seed={seed} />
+      </figure>
+    );
+  }
+
+  return (
+    <figure className="gal" data-zoom="off">
+      <div className="gal-track" ref={trackRef} onScroll={onScroll}>
+        {p.images.map((src) => (
+          <div className="gal-slide gal-zoom" key={src}>
+            <Image
+              src={src}
+              alt={p.name}
+              width={820}
+              height={1025}
+              sizes="(max-width: 860px) 94vw, 560px"
+            />
+          </div>
+        ))}
+      </div>
+      {p.images.length > 1 && (
+        <div className="gal-seg" aria-hidden>
+          {p.images.map((src, i) => (
+            <span key={src} className={i === idx ? "on" : undefined} />
+          ))}
+        </div>
+      )}
+    </figure>
   );
 }
 
@@ -104,6 +183,10 @@ export default function Catalog() {
           bestDist = d;
           best = i;
         }
+        // Micro-parallax: the object drifts inside its card as the deck
+        // moves — the photo has its own mass (doc 02). Consumed in CSS.
+        const par = Math.max(-1, Math.min(1, (c - centre) / deck.clientWidth));
+        el.style.setProperty("--par", par.toFixed(3));
       });
       setActive(best);
       if (keyTarget.current === best) keyTarget.current = null;
@@ -324,17 +407,15 @@ export default function Catalog() {
                 aria-haspopup="dialog"
                 aria-label={`${p.name}, ${formatPrice(p.price)}. Ver de cerca`}
               >
-                <Media p={p} sizes="(max-width: 860px) 78vw, 420px" />
+                <Media p={p} sizes="(max-width: 860px) 78vw, 420px" seed={i} />
                 <span className="pcard-body">
                   <span className="pcard-tag">{p.tag}</span>
                   <span className="pcard-name">{p.name}</span>
                   <span className="pcard-blurb">{p.blurb}</span>
-                  <span className="pcard-foot">
-                    <span className="pcard-price">{formatPrice(p.price)}</span>
-                    {p.state !== "disponible" && (
-                      <span className="pcard-state">{STATE_LABEL[p.state]}</span>
-                    )}
-                  </span>
+                  <span className="pcard-price">{formatPrice(p.price)}</span>
+                  {p.state !== "disponible" && (
+                    <span className="pcard-state">{STATE_LABEL[p.state]}</span>
+                  )}
                 </span>
               </button>
             </li>
@@ -394,22 +475,7 @@ export default function Catalog() {
               ×
             </button>
 
-            {open.images.length > 1 ? (
-              <div className="pd-gallery">
-                {open.images.map((src) => (
-                  <Image
-                    key={src}
-                    src={src}
-                    alt={open.name}
-                    width={820}
-                    height={1025}
-                    sizes="(max-width: 860px) 94vw, 560px"
-                  />
-                ))}
-              </div>
-            ) : (
-              <Media p={open} sizes="(max-width: 860px) 94vw, 560px" />
-            )}
+            <Gallery p={open} seed={PRODUCTS.indexOf(open)} />
 
             <div className="pd-body">
               <p className="pcard-tag">{open.tag}</p>
@@ -468,18 +534,18 @@ export default function Catalog() {
                 </div>
               )}
 
-              <div className="pd-cta-row">
+              <div className="pd-buy">
                 <span className="pd-price">{formatPrice(open.price)}</span>
                 <a
-                  className="btn btn-primary"
+                  className="btn btn-primary pd-cta"
                   href={inquiryHref}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   {STATE_CTA[open.state]}
                 </a>
+                <p className="pd-reassure">La ves en mano. Recién ahí pagás.</p>
               </div>
-              <p className="pd-reassure">La ves en mano. Recién ahí pagás.</p>
             </div>
           </div>
         )}

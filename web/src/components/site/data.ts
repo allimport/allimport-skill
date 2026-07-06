@@ -26,8 +26,8 @@ export function formatPrice(n: number): string {
 export type ProductState = "disponible" | "ingresando" | "proximo";
 
 export const STATE_LABEL: Record<ProductState, string> = {
-  disponible: "Disponible en Córdoba",
-  ingresando: "En camino — llega pronto",
+  disponible: "Disponible para entrega inmediata",
+  ingresando: "Ingresando",
   proximo: "Próximo ingreso",
 };
 
