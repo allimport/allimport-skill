@@ -191,7 +191,10 @@ body {
   position: relative;
 }
 .deck {
-  --card-w: min(82vw, 420px);
+  /* The piece is always seen whole: width also bows to viewport height
+     (media is 4:5 + ~200px body), with a floor so it never turns tiny.
+     Official 4:5 aspect untouched. */
+  --card-w: min(82vw, 420px, max(252px, calc(80svh - 220px)));
   display: flex;
   gap: clamp(20px, 3vw, 36px);
   overflow-x: auto;
@@ -219,17 +222,22 @@ body {
   scroll-snap-align: center;
 }
 
-/* Non-protagonist cards recede: smaller, dimmer, behind. Weighted settle. */
+/* Non-protagonist cards recede: smaller, quieter, slightly desaturated
+   and flatter — the eye lands on the protagonist by itself. No blur,
+   no heavy opacity. Weighted settle. */
 .deck > li .pcard {
   transform: scale(0.94);
-  opacity: 0.55;
+  opacity: 0.62;
+  filter: saturate(0.8) contrast(0.95);
   transition:
     transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
-    opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .deck > li.is-active .pcard {
   transform: none;
   opacity: 1;
+  filter: none;
 }
 
 .pcard {
@@ -408,8 +416,32 @@ body {
   inset: 0;
   margin: auto;
 }
+/* The room dims like a light fading, not a switch (vitrina, not modal).
+   @starting-style degrades gracefully where unsupported: no fade. */
 .pd::backdrop {
-  background: rgba(3, 6, 11, 0.8);
+  background: rgba(2, 4, 8, 0.88);
+  opacity: 1;
+  transition: opacity 0.45s ease;
+}
+@starting-style {
+  .pd[open]::backdrop {
+    opacity: 0;
+  }
+}
+/* Staged reveal: the glass opens with the piece (FLIP), the information
+   settles in after — promise-then-CTA rhythm, same as the Hero. */
+.pd[open] .pd-body {
+  animation: pd-rise 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.16s both;
+}
+@keyframes pd-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
 .pd-panel {
   position: relative;
@@ -631,9 +663,9 @@ body {
   height: auto;
   display: block;
 }
-/* Zoom hook: reserved, intentionally inert until zoom ships. */
-.gal[data-zoom="on"] .gal-zoom {
-  cursor: zoom-in;
+.gal-track:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: -2px;
 }
 /* Thin segments, not e-commerce dots. */
 .gal-seg {
@@ -846,6 +878,12 @@ body {
   .pmedia img,
   .pmedia-bolt {
     translate: none;
+  }
+  .pd::backdrop {
+    transition: none;
+  }
+  .pd[open] .pd-body {
+    animation: none;
   }
 }
 

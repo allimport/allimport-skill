@@ -102,10 +102,9 @@ function Media({ p, sizes, seed }: { p: Product; sizes: string; seed: number }) 
   );
 }
 
-/** Expanded-view gallery. Always the same architecture regardless of how
- *  many photos exist today: snap track + thin segment indicators (shown
- *  only with 2+). Zoom is architecture-ready via the data-zoom hook and
- *  the reserved gal-zoom class — intentionally not implemented yet. */
+/** Expanded-view gallery. Same architecture regardless of how many photos
+ *  exist today: snap track + thin segment indicators (shown only with 2+).
+ *  Fully keyboard-operable: the track takes focus, arrows move one photo. */
 function Gallery({ p, seed }: { p: Product; seed: number }) {
   const trackRef = useRef<HTMLDivElement>(null);
   const [idx, setIdx] = useState(0);
@@ -116,19 +115,40 @@ function Gallery({ p, seed }: { p: Product; seed: number }) {
     setIdx(Math.round(t.scrollLeft / t.clientWidth));
   }, []);
 
+  const onKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+    e.preventDefault();
+    const t = trackRef.current;
+    if (!t) return;
+    const next = Math.round(t.scrollLeft / t.clientWidth) + (e.key === "ArrowRight" ? 1 : -1);
+    t.scrollTo({
+      left: next * t.clientWidth,
+      behavior: prefersReducedMotion() ? "auto" : "smooth",
+    });
+  }, []);
+
   if (p.images.length === 0) {
     return (
-      <figure className="gal" data-zoom="off">
+      <figure className="gal">
         <Ghost seed={seed} />
       </figure>
     );
   }
 
   return (
-    <figure className="gal" data-zoom="off">
-      <div className="gal-track" ref={trackRef} onScroll={onScroll}>
+    <figure className="gal">
+      <div
+        className="gal-track"
+        ref={trackRef}
+        onScroll={onScroll}
+        onKeyDown={onKeyDown}
+        tabIndex={p.images.length > 1 ? 0 : -1}
+        role="group"
+        aria-roledescription="galería"
+        aria-label={`Fotos de ${p.name}`}
+      >
         {p.images.map((src) => (
-          <div className="gal-slide gal-zoom" key={src}>
+          <div className="gal-slide" key={src}>
             <Image
               src={src}
               alt={p.name}
@@ -299,8 +319,29 @@ export default function Catalog() {
     setOpen(p);
   }, []);
 
+  // Weighted close: the vitrina settles shut (same easing as everything),
+  // never vanishes in a frame. Reduced motion closes immediately.
+  const closing = useRef(false);
   const close = useCallback(() => {
-    dlgRef.current?.close();
+    const dlg = dlgRef.current;
+    const panel = panelRef.current;
+    if (!dlg || !dlg.open || closing.current) return;
+    if (!panel || prefersReducedMotion()) {
+      dlg.close();
+      return;
+    }
+    closing.current = true;
+    const anim = panel.animate(
+      [
+        { transform: "none", opacity: 1 },
+        { transform: "scale(0.97) translateY(8px)", opacity: 0 },
+      ],
+      { duration: 260, easing: EASE },
+    );
+    anim.onfinish = () => {
+      closing.current = false;
+      dlg.close();
+    };
   }, []);
 
   useEffect(() => {
@@ -403,9 +444,19 @@ export default function Catalog() {
               <button
                 type="button"
                 className="pcard"
-                onClick={(e) => openProduct(p, e.currentTarget)}
+                onClick={(e) =>
+                  // Look vs open are different gestures: a side card first
+                  // comes to the centre; only the protagonist opens.
+                  active === i
+                    ? openProduct(p, e.currentTarget)
+                    : scrollToCard(i)
+                }
                 aria-haspopup="dialog"
-                aria-label={`${p.name}, ${formatPrice(p.price)}. Ver de cerca`}
+                aria-label={
+                  active === i
+                    ? `${p.name}, ${formatPrice(p.price)}. Ver de cerca`
+                    : `${p.name}. Traer al centro`
+                }
               >
                 <Media p={p} sizes="(max-width: 860px) 78vw, 420px" seed={i} />
                 <span className="pcard-body">
@@ -452,6 +503,11 @@ export default function Catalog() {
         className="pd"
         ref={dlgRef}
         onClose={() => setOpen(null)}
+        onCancel={(e) => {
+          // Escape also closes with weight, never in a single frame.
+          e.preventDefault();
+          close();
+        }}
         onClick={(e) => {
           if (e.target === dlgRef.current) close();
         }}
