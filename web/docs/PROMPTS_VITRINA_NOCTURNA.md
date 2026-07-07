@@ -261,16 +261,44 @@ Disposable vape packaging box at lower-center with generous dark negative space 
 ---
 
 ## 7. Camiseta Argentina
-**Estado:** BLOQUEADO — sin foto base disponible
+**Foto base:** `WA0012.jpg` (flat lay frente completo)
+**Referencias adicionales:** `WA0008.jpg` (macro escudo) · `WA0010.jpg` (detalle chest) · `WA0011.jpg` (vista lateral puesto)
 
-Fotos necesarias antes de poder generar prompts:
+**P1 — Hero**
+```
+Sky blue and white vertical stripe Argentina football jersey floating centered front face forward, gold shield crest and champion badge on white center stripe, seamless graphite blue-black background (#0d1220), single softbox key light 45° upper-left carving vertical stripe shadows across fabric surface, soft cool cyan rim light from right, contact shadow lower-right, 85mm, 5200K neutral-cold, 4:5, no text, no logos as focal point
+```
 
-| # | Descripción |
-|---|---|
-| Foto 1 | Flat lay sobre superficie oscura, escudo y número centrados, tela completamente estirada sin arrugas |
-| Foto 2 | Camiseta colgada en percha mostrando el frente completo, fondo liso |
-| Foto 3 | Macro del escudo bordado a 5–10cm, luz rasante para resaltar el relieve del bordado |
+**P2 — Hero alternativo**
+```
+Sky blue and white vertical stripe Argentina football jersey floating at 10° clockwise tilt, front face forward with dynamic lean, gold crest catching key light against white center stripe, seamless graphite blue-black background (#0d1220), single softbox key light 45° upper-left casting angular shadow behind jersey, soft cool cyan rim light from right, contact shadow lower-right, 85mm, 5200K neutral-cold, 4:5, no text, no logos as focal point
+```
+
+**P3 — Detalle premium**
+```
+Close-up of Argentina football jersey chest area, gold shield crest and gold champion badge centered in frame, diamond-weave mesh fabric texture visible, seamless graphite blue-black background (#0d1220), raking softbox key light 45° upper-left revealing fabric weave and badge relief, soft cool cyan rim light from right, contact shadow lower-right, 85mm macro, 5200K neutral-cold, 4:5, no text
+```
+
+**P4 — Vista 3/4**
+```
+Three-quarter front view of sky blue and white vertical stripe Argentina football jersey, front face and left sleeve visible showing garment construction, navy collar and sleeve cuff trim visible, seamless graphite blue-black background (#0d1220), single softbox key light 45° upper-left, soft cool cyan rim light from right, contact shadow lower-right, 85mm, 5200K neutral-cold, 4:5, no text, no logos as focal point
+```
+
+**P5 — Vista frontal elegante**
+```
+Perfectly centered frontal view of sky blue and white vertical stripe Argentina football jersey, absolute bilateral symmetry, white center stripe with gold shield crest centered in frame, seamless graphite blue-black background (#0d1220), single softbox key light 45° upper-left, soft cool cyan rim light from right, contact shadow lower-right, 85mm, 5200K neutral-cold, 4:5, no text, no logos as focal point
+```
+
+**P6 — Close-up textura/materiales**
+```
+Extreme macro of Argentina football jersey gold shield crest surface filling the entire frame, gold relief detail and three stars above crest visible, diamond-weave mesh fabric pattern surrounding crest, seamless graphite blue-black background (#0d1220), intense raking key light 45° upper-left, soft cool cyan rim light from right, 85mm macro, 5200K neutral-cold, 4:5, no text
+```
+
+**P7 — Galería**
+```
+Sky blue and white vertical stripe Argentina football jersey positioned at lower-center with generous dark negative space above, seamless graphite blue-black background (#0d1220), single softbox key light 45° upper-left, soft cool cyan rim light from right, contact shadow lower-right, 85mm, 5200K neutral-cold, 4:5, no text, no logos as focal point
+```
 
 ---
 
-*42 prompts · 6 productos activos · 1 bloqueado · estándar visual unificado*
+*49 prompts · 7 productos activos · estándar visual unificado*
