@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Reveal from "@/components/site/Reveal";
+import { assetPath } from "@/lib/site";
 import {
   PRODUCTS,
   type Product,
@@ -91,7 +92,7 @@ function Media({ p, sizes, seed }: { p: Product; sizes: string; seed: number }) 
   return (
     <div className="pmedia">
       <Image
-        src={p.images[0]}
+        src={assetPath(p.images[0])}
         alt={p.name}
         width={820}
         height={1025}
@@ -150,7 +151,7 @@ function Gallery({ p, seed }: { p: Product; seed: number }) {
         {p.images.map((src) => (
           <div className="gal-slide" key={src}>
             <Image
-              src={src}
+              src={assetPath(src)}
               alt={p.name}
               width={820}
               height={1025}

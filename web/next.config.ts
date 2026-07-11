@@ -11,6 +11,9 @@ const nextConfig: NextConfig = {
   assetPrefix: basePath || undefined,
   images: { unoptimized: true },
   trailingSlash: true,
+  // next/image does NOT prepend basePath to runtime src strings; expose the
+  // prefix to both server and client bundles so lib/site can apply it.
+  env: { NEXT_PUBLIC_BASE_PATH: basePath },
 };
 
 export default nextConfig;
