@@ -118,13 +118,14 @@ export default function Emblem() {
     // the mass starts late, drifts, and settles without oscillating.
     const inter = seg(t, BEATS.settle);
     const d = drift.current;
-    const tx = pointer.x * 0.12 * inter;
-    const ty = pointer.y * 0.075 * inter;
-    // Solid aluminum on a magnetic field: lower stiffness so acceleration
-    // starts even later and lazier (never a pursuit), damping well over
-    // critical (2*sqrt(1.0) = 2.0) so it only ever finishes settling.
-    const K = 1.0;
-    const C = 3.4;
+    // Visible follow (owner request): the logo clearly chases the pointer —
+    // wide travel, real inertia, and the overdamped spring still returns it
+    // slowly to center with zero bounce.
+    const tx = pointer.x * 0.5 * inter;
+    const ty = pointer.y * 0.3 * inter;
+    // Overdamped: C (3.6) > 2*sqrt(K 2.2) ≈ 2.97 — drifts, never oscillates.
+    const K = 2.2;
+    const C = 3.6;
     d.vx += (K * (tx - d.x) - C * d.vx) * dt;
     d.vy += (K * (ty - d.y) - C * d.vy) * dt;
     d.x += d.vx * dt;
@@ -132,10 +133,10 @@ export default function Emblem() {
 
     group.current.position.x = d.x;
     group.current.position.y = baseY + d.y;
-    // Minimal momentum lean: driven by VELOCITY, not position — the logo
-    // leans only while moving and always rests perfectly straight.
-    group.current.rotation.y = d.vx * 0.03;
-    group.current.rotation.x = -d.vy * 0.022;
+    // Momentum lean: driven by VELOCITY, not position — the logo leans
+    // while moving and always rests perfectly straight.
+    group.current.rotation.y = d.vx * 0.12;
+    group.current.rotation.x = -d.vy * 0.09;
   });
 
   return (

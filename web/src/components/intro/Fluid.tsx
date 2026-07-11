@@ -8,19 +8,15 @@ import { useIntroClock } from "./Scene";
 import { CENTER_Y } from "./Emblem";
 
 /**
- * Fluid — polished-obsidian energy field behind the logo.
+ * Fluid — white energy field that answers the hand (owner request).
  *
- * Not smoke, water, fire, or fog: the void itself, slightly deformed. A
- * single quad, domain-warped fbm (coords bent by a second noise → organic,
- * never a repeating texture, never a nameable shape). It breathes in place
- * (no lateral drift) and stays radially confined to ~50% of the logo width,
- * centered — never covers letters, never crosses the bolt (it sits behind).
- *
- * Base is near-black, a hair above the background — visible only where
- * internal energy passes, as tiny cells of cold white OR electric cyan
- * (never both, never saturated). The pointer only injects a brief phase
- * kick into the internal pattern (decays < 1s); it never follows the cursor
- * or the logo. The logo stays the protagonist.
+ * A single quad, domain-warped fbm. At rest it is almost invisible — a
+ * faint breathing in the void. When the pointer / finger MOVES, the field
+ * wakes: cold white energy cells bloom, the whole body trails the cursor
+ * with lag, and the noise field is smeared along the motion direction so
+ * it visibly DEFORMS with the gesture. When the hand stops, the energy
+ * decays smoothly (~1.5 s) back to rest. Sits behind the logo (additive,
+ * no depth write) — the logo remains the protagonist.
  */
 
 const vertex = /* glsl */ `
@@ -34,7 +30,8 @@ const vertex = /* glsl */ `
 const fragment = /* glsl */ `
   uniform float uTime;
   uniform float uReveal;   // intro fade-in
-  uniform float uKick;     // pointer-speed perturbation, decays < 1s
+  uniform float uKick;     // pointer speed, fast attack / slow decay
+  uniform vec2  uVel;      // smoothed pointer velocity (deform direction)
   varying vec2 vUv;
 
   float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7)))*43758.5453); }
@@ -53,30 +50,33 @@ const fragment = /* glsl */ `
   void main(){
     vec2 uv = vUv - 0.5;
 
-    // Radial confinement: concentrated at the logo center, soft edges.
+    // Radial confinement — expands a little while energized.
     float d = length(uv * vec2(1.2, 1.9));
-    float mask = smoothstep(0.5, 0.06, d);
+    float mask = smoothstep(0.52 + uKick * 0.10, 0.05, d);
     if (mask < 0.004) discard;
 
-    // Breathing warp: coordinates bent by a slow in-place noise field.
+    // Breathing warp + directional smear: coordinates are dragged along
+    // the motion vector, so the pattern visibly deforms with the gesture.
     float br = 0.5 + 0.5 * sin(uTime * 0.15);
+    vec2 smear = uVel * (1.4 * uKick);
     vec2 q = vec2(
-      fbm(uv * 2.4 + vec2(0.0, uTime * 0.03)),
-      fbm(uv * 2.4 + vec2(5.2, -uTime * 0.025))
+      fbm(uv * 2.4 - smear + vec2(0.0, uTime * 0.05)),
+      fbm(uv * 2.4 - smear * 0.6 + vec2(5.2, -uTime * 0.04))
     );
-    float warp = fbm(uv * 2.6 + q * (1.1 + 0.25 * br) + uKick * 0.6);
+    float warp = fbm(uv * 2.6 + q * (1.1 + 0.6 * uKick + 0.25 * br) - smear);
 
     // Base: near-black obsidian, a hair above the void.
     vec3 base = vec3(0.010, 0.016, 0.024) * mask;
 
-    // Internal energy: tiny cells that resolve to cold white OR cyan,
-    // never both. A slow selector decides which per region.
-    float cell = smoothstep(0.58, 0.74, warp);
-    float sel = fbm(uv * 1.6 + vec2(uTime * 0.02, 0.0)); // white<->cyan chooser
-    vec3 white = vec3(0.6, 0.68, 0.78);
-    vec3 cyan  = vec3(0.0, 0.62, 0.68);
-    vec3 energy = mix(cyan, white, smoothstep(0.45, 0.62, sel));
-    float amt = cell * mask * (0.16 + 0.06 * br + uKick * 0.14);
+    // Energy cells: cold white, with a cyan fringe chosen per region.
+    float cell = smoothstep(0.52 - uKick * 0.10, 0.72, warp);
+    float sel = fbm(uv * 1.6 + vec2(uTime * 0.02, 0.0));
+    vec3 white = vec3(0.85, 0.92, 1.0);
+    vec3 cyan  = vec3(0.05, 0.72, 0.78);
+    vec3 energy = mix(cyan, white, smoothstep(0.4, 0.6, sel));
+
+    // Rest: whisper. Motion: bloom — the fluid APPEARS with the hand.
+    float amt = cell * mask * (0.05 + 0.04 * br + 0.85 * uKick);
 
     vec3 col = base + energy * amt;
     float a = (max(col.r, max(col.g, col.b)) ) * uReveal;
@@ -92,6 +92,7 @@ export default function Fluid() {
   const mesh = useRef<THREE.Mesh>(null!);
   const prev = useRef({ x: 0, y: 0 });
   const kick = useRef(0);
+  const vel = useRef(new THREE.Vector2());
   const follow = useRef({ x: 0, y: 0 });
 
   const uniforms = useMemo(
@@ -99,6 +100,7 @@ export default function Fluid() {
       uTime: { value: 0 },
       uReveal: { value: 0 },
       uKick: { value: 0 },
+      uVel: { value: new THREE.Vector2() },
     }),
     [],
   );
@@ -106,25 +108,32 @@ export default function Fluid() {
   useFrame((_, dt) => {
     const t = clock.t;
 
-    // Pointer speed → brief internal perturbation, fast up / slow decay.
+    // Pointer speed → energy. Fast attack, ~1.5 s smooth decay.
     const dx = pointer.x - prev.current.x;
     const dy = pointer.y - prev.current.y;
     prev.current.x = pointer.x;
     prev.current.y = pointer.y;
     const speed = Math.hypot(dx, dy) / Math.max(dt, 1e-4);
-    const target = clamp01(speed * 0.25);
-    kick.current += (target - kick.current) * (target > kick.current ? 0.4 : 0.06);
+    const target = clamp01(speed * 0.4);
+    kick.current += (target - kick.current) * (target > kick.current ? 0.5 : 0.035);
+
+    // Smoothed motion direction for the shader's deformation smear.
+    vel.current.x += (dx / Math.max(dt, 1e-4) * 0.25 - vel.current.x) * 0.12;
+    vel.current.y += (dy / Math.max(dt, 1e-4) * 0.25 - vel.current.y) * 0.12;
 
     mat.current.uniforms.uTime.value = t;
     mat.current.uniforms.uKick.value = kick.current;
+    (mat.current.uniforms.uVel.value as THREE.Vector2)
+      .set(vel.current.x, vel.current.y)
+      .clampLength(0, 1);
     mat.current.uniforms.uReveal.value = seg(t, BEATS.boltOn);
 
-    // The fluid follows the cursor with heavy lag — a trailing energy
-    // field, gated by settle so it only tracks once the logo is assembled.
+    // The fluid trails the cursor — a following energy field, gated by
+    // settle so it only tracks once the logo is assembled.
     const inter = seg(t, BEATS.settle);
     const f = follow.current;
-    f.x += (pointer.x * 3.2 * inter - f.x) * 0.03;
-    f.y += (pointer.y * 2.0 * inter - f.y) * 0.03;
+    f.x += (pointer.x * 3.2 * inter - f.x) * 0.06;
+    f.y += (pointer.y * 2.0 * inter - f.y) * 0.06;
     mesh.current.position.set(f.x, CENTER_Y + f.y, -1.2);
   });
 
