@@ -1,32 +1,37 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * Hero overlay — a sibling DOM layer OVER the frozen Intro, never part of
- * intro/*. It exists only during the idle state, before the first scroll:
- * a single promise and one WhatsApp CTA emerge from the void once the Intro
- * assembly settles, then cede with weight as the first scroll begins.
+ * intro/*. The logo owns the first screen ALONE: on load nothing else is
+ * shown. The promise and the CTA are revealed by the user's own first
+ * scroll (scrubbed fade + rise), then hand over to the content stage.
  *
- * Spec: web/docs/08_HERO.md. Continuity: 03 (Intro, frozen) and 04 (scroll).
- * It touches no intro/* file and adds no new effect — it reuses the existing
- * motion language (weight, no bounce) and the single accent colour (cyan).
+ * Spec: web/docs/08_HERO.md + owner direction (hero-first choreography).
+ * It touches no intro/* file; motion is scroll-scrubbed in CSS via --sp.
  */
 
 // The Intro assembly settles into idle at ~5.0s (deterministic clock, doc 03
-// timeline: Settle → Idle 4.30–5.00s). The Hero content chains off that idle;
-// it must never appear before the logo is home.
+// timeline: Settle → Idle 4.30–5.00s). Reveal is scroll-driven, but never
+// before the logo is home — the ready gate holds until then.
 const IDLE_AT_MS = 5200;
 
-// First-scroll fade range, as a fraction of viewport height. The Hero is fully
-// gone well before the content stage rises (the runway is a full 100vh).
-const FADE_RANGE_FACTOR = 0.55;
+// First-scroll progress range: --sp spans the full runway (one viewport),
+// so the reveal window and the hand-off to content share one variable.
+const FADE_RANGE_FACTOR = 1.0;
+
+/** Reveal window (in --sp): promise fades in from IN_START, everything is
+ *  gone again by OUT_END as the content stage arrives. */
+const IN_START = 0.05;
+const OUT_END = 0.96;
 
 export default function Hero() {
   const [ready, setReady] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
 
-  // Emerge, chained to the Intro idle. Reduced motion: the Intro shows its
-  // static final pose, so the Hero appears at once — no staged emerge.
+  // Ready gate, chained to the Intro idle. Reduced motion: the Intro shows
+  // its static final pose, so the gate opens at once.
   useEffect(() => {
     const reduced = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
@@ -36,8 +41,8 @@ export default function Hero() {
   }, []);
 
   // Own the first-scroll progress var (--sp). Written at 60fps via rAF, read
-  // by CSS only — no React re-render. Drives the Hero's fade and, in globals,
-  // hides the sticky WhatsApp button while the Hero owns the single CTA.
+  // by CSS only — no React re-render. Also gates the CTA's pointer-events
+  // (class, not state) so the invisible button never intercepts the canvas.
   useEffect(() => {
     const root = document.documentElement;
     let raf = 0;
@@ -46,6 +51,10 @@ export default function Hero() {
       const range = window.innerHeight * FADE_RANGE_FACTOR;
       const sp = Math.min(1, Math.max(0, window.scrollY / range));
       root.style.setProperty("--sp", String(sp));
+      rootRef.current?.classList.toggle(
+        "hero--live",
+        sp > IN_START && sp < OUT_END,
+      );
     };
     const onScroll = () => {
       if (!raf) raf = window.requestAnimationFrame(update);
@@ -59,12 +68,16 @@ export default function Hero() {
   }, []);
 
   return (
-    <div className={`hero${ready ? " hero--ready" : ""}`} aria-hidden={!ready}>
+    <div
+      className={`hero${ready ? " hero--ready" : ""}`}
+      ref={rootRef}
+      aria-hidden={!ready}
+    >
       <div className="hero-inner">
         <p className="hero-promise">
-          Importado, en tu mano.
+          Del mundo, a tu mano.
           <br />
-          Antes de pagar.
+          Primero lo tocás, después lo pagás.
         </p>
         <span className="hero-cta-wrap">
           {/* Conversion-first: the Hero's single CTA sends the visitor to the

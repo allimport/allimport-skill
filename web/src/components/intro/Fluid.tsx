@@ -60,12 +60,16 @@ const fragment = /* glsl */ `
     // Metaball field: gaussian per trail sample. Older samples are weaker
     // and slightly wider — the ink relaxes as it dissolves.
     float field = 0.0;
+    float fOff = 0.0; // same field, sampled toward the light — for volume
+    vec2 L = vec2(-0.016, 0.022);
     for (int i = 0; i < N; i++) {
       vec3 tp = uTrail[i];
       if (tp.z <= 0.001) continue;
+      float r = 0.055 + 0.07 * (1.0 - tp.z);
       vec2 d = p - tp.xy;
-      float r = 0.075 + 0.10 * (1.0 - tp.z);
       field += tp.z * exp(-dot(d, d) / (r * r));
+      vec2 d2 = p + L - tp.xy;
+      fOff += tp.z * exp(-dot(d2, d2) / (r * r));
     }
 
     // Organic wobble: the ink's edge is never a clean circle.
@@ -77,8 +81,13 @@ const fragment = /* glsl */ `
     float ink = min(body + halo, 1.0);
     if (ink < 0.004) discard;
 
+    // Volume: the offset sample acts as a light probe — the side facing
+    // the key light brightens, the far side falls into its own shadow.
+    float relief = clamp((fOff - field) * 2.2, -0.45, 0.6);
+    float shade = 0.78 + relief;
+
     // Cold white with the faintest cyan breath at the edges.
-    vec3 col = mix(vec3(0.35, 0.85, 0.9), vec3(0.94, 0.97, 1.0), body);
+    vec3 col = mix(vec3(0.35, 0.85, 0.9), vec3(0.94, 0.97, 1.0), body) * shade;
     gl_FragColor = vec4(col * ink * uReveal, ink * uReveal);
   }
 `;
@@ -148,7 +157,7 @@ export default function Fluid() {
   });
 
   return (
-    <mesh ref={mesh} position={[0, 0, -1.2]}>
+    <mesh ref={mesh} position={[0, 0, 1.15]}>
       <planeGeometry args={[1, 1]} />
       <shaderMaterial
         ref={mat}

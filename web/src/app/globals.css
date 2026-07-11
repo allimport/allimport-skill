@@ -939,7 +939,6 @@ body {
   gap: clamp(1rem, 2.6vmin, 2rem);
   max-width: min(92vw, 40rem);
   text-align: center;
-  transform: translateY(calc(var(--sp) * -3vh));
 }
 .hero-promise {
   font-style: italic;
@@ -950,11 +949,30 @@ body {
   color: var(--white);
   text-shadow: 0 2px 44px rgba(0, 0, 0, 0.62);
   opacity: 0;
-  transform: translateY(14px);
 }
 .hero-cta-wrap {
   opacity: 0;
-  transform: translateY(14px);
+}
+/* Scrubbed by the scroll itself — weight without a timeline. The promise
+   enters first; the CTA follows a beat deeper into the scroll. */
+.hero--ready .hero-promise {
+  --in: clamp(0, (var(--sp) - 0.05) * 4.5, 1);
+  --out: clamp(0, (0.96 - var(--sp)) * 6, 1);
+  opacity: min(var(--in), var(--out));
+  transform: translateY(calc((1 - var(--in)) * 34px));
+}
+.hero--ready .hero-cta-wrap {
+  --in: clamp(0, (var(--sp) - 0.11) * 4.5, 1);
+  --out: clamp(0, (0.96 - var(--sp)) * 6, 1);
+  opacity: min(var(--in), var(--out));
+  transform: translateY(calc((1 - var(--in)) * 40px));
+}
+/* The invisible CTA must never eat the canvas's pointer events. */
+.hero .hero-cta {
+  pointer-events: none;
+}
+.hero--live .hero-cta {
+  pointer-events: auto;
 }
 .hero-cta {
   pointer-events: auto;
@@ -982,31 +1000,10 @@ body {
   outline-offset: 3px;
 }
 
-/* Staged emerge, chained to the Intro idle. Promise first, CTA after — each
-   arrives late, never simultaneous, never bouncing (doc 08 §6). Animation is
-   used (not transition) so it never fights the CTA's hover transform. */
-@keyframes hero-emerge {
-  from {
-    opacity: 0;
-    transform: translateY(14px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-.hero--ready .hero-promise {
-  animation: hero-emerge 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.06s both;
-}
-.hero--ready .hero-cta-wrap {
-  animation: hero-emerge 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.42s both;
-}
-
 @media (prefers-reduced-motion: reduce) {
+  /* Opacity may still scrub with scroll; the rise is dropped. */
   .hero--ready .hero-promise,
   .hero--ready .hero-cta-wrap {
-    animation: none;
-    opacity: 1;
     transform: none;
   }
 }

@@ -32,12 +32,13 @@ export function shapesFromD(d: string): THREE.Shape[] {
 }
 
 const LETTER_EXTRUDE: THREE.ExtrudeGeometryOptions = {
-  depth: 0.34,
+  // Finer body, sharper lacquered edge: reads as a machined physical piece.
+  depth: 0.26,
   bevelEnabled: true,
-  bevelThickness: 0.045,
-  bevelSize: 0.045,
-  bevelSegments: 3,
-  curveSegments: 24,
+  bevelThickness: 0.055,
+  bevelSize: 0.05,
+  bevelSegments: 5,
+  curveSegments: 32,
 };
 
 const CYAN_EXTRUDE: THREE.ExtrudeGeometryOptions = {
@@ -56,6 +57,7 @@ export default function Emblem() {
   const boltMat = useRef<THREE.MeshStandardMaterial>(null!);
   const haloMat = useRef<THREE.MeshStandardMaterial>(null!);
   const boltLight = useRef<THREE.PointLight>(null!);
+  const sweepLight = useRef<THREE.PointLight>(null!);
   const letterMats = useRef<(THREE.MeshPhysicalMaterial | null)[]>([]);
   const drift = useRef({ x: 0, y: 0, vx: 0, vy: 0 });
 
@@ -121,15 +123,23 @@ export default function Emblem() {
     // The logo TURNS toward the pointer but never leaves its place (owner
     // request): the spring drives rotation only. Real inertia, slow return
     // to face straight ahead, zero bounce.
-    const tx = pointer.x * 0.42 * inter; // target yaw (rad)
-    const ty = pointer.y * 0.26 * inter; // target pitch (rad)
-    // Overdamped: C (3.6) > 2*sqrt(K 2.2) ≈ 2.97 — drifts, never oscillates.
-    const K = 2.2;
-    const C = 3.6;
+    const tx = pointer.x * 0.16 * inter; // target yaw (rad)
+    const ty = pointer.y * 0.1 * inter; // target pitch (rad)
+    // Heavy mass: low stiffness, damping far over critical
+    // (2*sqrt(0.9) = 1.9) — slow, elegant, never nervous, never trembling.
+    const K = 0.9;
+    const C = 3.2;
     d.vx += (K * (tx - d.x) - C * d.vx) * dt;
     d.vy += (K * (ty - d.y) - C * d.vy) * dt;
     d.x += d.vx * dt;
     d.y += d.vy * dt;
+
+    // Colour sweep: a soft cyan reflection glides slowly across the
+    // surface, edge to edge and back — a light passing over lacquer,
+    // never a hue snap. Brand cyan only.
+    const sweep = seg(t, BEATS.boltOn);
+    sweepLight.current.position.x = Math.sin(t * 0.16) * 3.4;
+    sweepLight.current.intensity = 5.5 * sweep;
 
     // Anchored in place: position is the resting pose, always.
     group.current.position.x = 0;
@@ -152,10 +162,12 @@ export default function Emblem() {
             // matte front, thin sharp lacquer so the beveled EDGES catch
             // light and the grazing side walls read a touch more reflective.
             color="#ffffff"
-            metalness={0}
-            roughness={0.5}
-            clearcoat={0.6}
-            clearcoatRoughness={0.12}
+            metalness={0.06}
+            roughness={0.3}
+            clearcoat={1}
+            clearcoatRoughness={0.06}
+            reflectivity={0.9}
+            envMapIntensity={0.85}
             transparent
             opacity={0}
           />
@@ -189,6 +201,16 @@ export default function Emblem() {
           opacity={0}
         />
       </mesh>
+
+      {/* Colour sweep: cyan reflection travelling across the surface */}
+      <pointLight
+        ref={sweepLight}
+        position={[0, CENTER_Y + 0.9, 2.6]}
+        color="#00d4d4"
+        intensity={0}
+        distance={7.5}
+        decay={2.2}
+      />
 
       {/* The bolt's own light: BEHIND the logo, at the bolt's position —
           a backlight. Nearby letters catch cyan on their edges and the
