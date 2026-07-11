@@ -55,8 +55,8 @@ export interface Product {
 }
 
 /**
- * Deck order IS the curation (doc 10 §7): the shirt anchors (highest desire,
- * growth focus), then audio, then energy/charge as a family, then lifestyle.
+ * Deck order IS the curation (doc 10 §7): shirts anchor (highest desire),
+ * then Apple accessories, then audio, then energy/charge, then lifestyle.
  */
 export const PRODUCTS: Product[] = [
   {
@@ -72,7 +72,32 @@ export const PRODUCTS: Product[] = [
       "La revisás en mano, con tiempo",
     ],
     sizes: ["S", "M", "L", "XL", "XXL"],
-    images: [],
+    images: [
+      "/products/remera/01.webp",
+      "/products/remera/02.webp",
+      "/products/remera/03.webp",
+      "/products/remera/04.webp",
+    ],
+  },
+  {
+    id: "remera-messi",
+    name: "Camiseta Messi 10",
+    tag: "Indumentaria",
+    price: 45000,
+    blurb: "La número 10. Con el nombre que todos quieren en la espalda.",
+    state: "disponible",
+    facts: [
+      "Nombre y número bordados — no estampados",
+      "Misma tela calidad jugador que la selección",
+      "La revisás en mano antes de pagar",
+    ],
+    sizes: ["S", "M", "L", "XL", "XXL"],
+    images: [
+      "/products/remera-messi/01.webp",
+      "/products/remera-messi/02.webp",
+      "/products/remera-messi/03.webp",
+      "/products/remera-messi/04.webp",
+    ],
   },
   {
     id: "tws",
@@ -86,7 +111,33 @@ export const PRODUCTS: Product[] = [
       "Estuche con carga inalámbrica",
       "Emparejamiento instantáneo al abrir",
     ],
-    images: [],
+    images: [
+      "/products/tws/01.webp",
+      "/products/tws/02.webp",
+      "/products/tws/03.webp",
+      "/products/tws/04.webp",
+      "/products/tws/05.webp",
+      "/products/tws/06.webp",
+    ],
+  },
+  {
+    id: "combo",
+    name: "Kit iPhone Premium",
+    tag: "Accesorios",
+    price: 55000,
+    blurb: "Todo junto, listo para usar. Cable Lightning, cubo 20W y más.",
+    state: "disponible",
+    facts: [
+      "Kit completo — sin comprar nada por separado",
+      "Carga rápida real de 20W incluida",
+      "Lo revisás en mano antes de pagar",
+    ],
+    images: [
+      "/products/combo/01.webp",
+      "/products/combo/02.webp",
+      "/products/combo/03.webp",
+      "/products/combo/04.webp",
+    ],
   },
   {
     id: "parlante",
@@ -100,7 +151,14 @@ export const PRODUCTS: Product[] = [
       "Luces RGB que siguen la música",
       "Batería para toda la juntada",
     ],
-    images: [],
+    images: [
+      "/products/parlante/01.webp",
+      "/products/parlante/02.webp",
+      "/products/parlante/03.webp",
+      "/products/parlante/04.webp",
+      "/products/parlante/05.webp",
+      "/products/parlante/06.webp",
+    ],
   },
   {
     id: "battery",
@@ -114,7 +172,13 @@ export const PRODUCTS: Product[] = [
       "5000mAh: un ciclo completo de carga",
       "Fina y liviana, entra en cualquier bolsillo",
     ],
-    images: [],
+    images: [
+      "/products/battery/01.webp",
+      "/products/battery/02.webp",
+      "/products/battery/03.webp",
+      "/products/battery/04.webp",
+      "/products/battery/05.webp",
+    ],
   },
   {
     id: "cable-lightning",
@@ -128,7 +192,13 @@ export const PRODUCTS: Product[] = [
       "Cable trenzado reforzado",
       "Cubo incluido, listo para usar",
     ],
-    images: [],
+    images: [
+      "/products/cable-lightning/01.webp",
+      "/products/cable-lightning/02.webp",
+      "/products/cable-lightning/03.webp",
+      "/products/cable-lightning/04.webp",
+      "/products/cable-lightning/05.webp",
+    ],
   },
   {
     id: "cable-usbc",
@@ -142,7 +212,13 @@ export const PRODUCTS: Product[] = [
       "Para Android y notebooks",
       "Cable reforzado + cubo incluido",
     ],
-    images: [],
+    images: [
+      "/products/cable-usbc/01.webp",
+      "/products/cable-usbc/02.webp",
+      "/products/cable-usbc/03.webp",
+      "/products/cable-usbc/04.webp",
+      "/products/cable-usbc/05.webp",
+    ],
   },
   {
     id: "vaper",
@@ -156,7 +232,13 @@ export const PRODUCTS: Product[] = [
       "Larga duración real",
       "Consultá sabores disponibles",
     ],
-    images: [],
+    images: [
+      "/products/vaper/01.webp",
+      "/products/vaper/02.webp",
+      "/products/vaper/03.webp",
+      "/products/vaper/04.webp",
+      "/products/vaper/05.webp",
+    ],
   },
 ];
 
