@@ -1028,3 +1028,20 @@ body {
 }
 
 
+
+/* Skip navigation — visible on focus only */
+.skip-link {
+  position: fixed;
+  top: -100%;
+  left: 1rem;
+  z-index: 9999;
+  padding: 0.5rem 1rem;
+  background: var(--cyan);
+  color: #000;
+  font-weight: 700;
+  border-radius: 4px;
+  transition: top 0.2s;
+}
+.skip-link:focus {
+  top: 1rem;
+}

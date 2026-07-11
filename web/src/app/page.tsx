@@ -6,6 +6,8 @@ import { waLink } from "@/components/site/data";
 export default function Home() {
   return (
     <main>
+      <a href="#productos" className="skip-link">Ir al catálogo</a>
+
       {/* Fixed living scene: the frozen 3D Intro is the brand hero */}
       <IntroExperience />
 

@@ -14,6 +14,19 @@ export const metadata: Metadata = {
   title: "All Import — Importamos lo que todos quieren",
   description:
     "Importamos lo que todos quieren. Al precio que nadie ofrece. Tecnología e indumentaria en Córdoba, entrega en mano.",
+  openGraph: {
+    title: "All Import — Importamos lo que todos quieren",
+    description:
+      "Importamos lo que todos quieren. Al precio que nadie ofrece. Tecnología e indumentaria en Córdoba, entrega en mano.",
+    locale: "es_AR",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "All Import — Importamos lo que todos quieren",
+    description:
+      "Importamos lo que todos quieren. Al precio que nadie ofrece. Tecnología e indumentaria en Córdoba, entrega en mano.",
+  },
 };
 
 export const viewport: Viewport = {
