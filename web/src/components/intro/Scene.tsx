@@ -9,6 +9,7 @@ import Fluid from "./Fluid";
 import DepthField from "./DepthField";
 import CameraRig from "./CameraRig";
 import Effects from "./Effects";
+import TouchDrive from "./TouchDrive";
 import { BEATS, INTRO_DURATION, seg } from "./timeline";
 
 /**
@@ -82,6 +83,7 @@ export default function Scene({
       <fog attach="fog" args={["#030407", 28, 65]} />
 
       <ClockContext.Provider value={clock}>
+        <TouchDrive />
         <ClockDriver
           clock={clock}
           frozen={reducedMotion}
