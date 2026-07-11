@@ -6,28 +6,25 @@ on:
       - claude/allimport-skill-setup-0m43zg
   workflow_dispatch:
 
+# gh-pages branch deploy (not the Pages artifact API): creating the branch
+# auto-enables Pages serving from it, and this repo's GITHUB_TOKEN cannot
+# create a Pages site via the API ("Resource not accessible by integration",
+# see run 29161085736). Branch mode needs only contents: write.
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
   group: pages
   cancel-in-progress: true
 
 jobs:
-  build:
+  build-deploy:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: web
     steps:
       - uses: actions/checkout@v4
-      # Creates/enables the Pages site with the workflow token if it does not
-      # exist yet — deploy-pages fails with 404 otherwise.
-      - uses: actions/configure-pages@v5
-        with:
-          enablement: true
       - uses: actions/setup-node@v4
         with:
           node-version: 20
@@ -37,16 +34,11 @@ jobs:
       - run: npm run build
         env:
           BASE_PATH: /allimport-skill
-      - uses: actions/upload-pages-artifact@v3
+      # _next/ starts with an underscore; without .nojekyll, Jekyll drops it.
+      - run: touch out/.nojekyll
+      - name: Push out/ to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: web/out
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: web/out
+          force_orphan: true
