@@ -118,11 +118,11 @@ export default function Emblem() {
     // the mass starts late, drifts, and settles without oscillating.
     const inter = seg(t, BEATS.settle);
     const d = drift.current;
-    // Visible follow (owner request): the logo clearly chases the pointer —
-    // wide travel, real inertia, and the overdamped spring still returns it
-    // slowly to center with zero bounce.
-    const tx = pointer.x * 0.5 * inter;
-    const ty = pointer.y * 0.3 * inter;
+    // The logo TURNS toward the pointer but never leaves its place (owner
+    // request): the spring drives rotation only. Real inertia, slow return
+    // to face straight ahead, zero bounce.
+    const tx = pointer.x * 0.42 * inter; // target yaw (rad)
+    const ty = pointer.y * 0.26 * inter; // target pitch (rad)
     // Overdamped: C (3.6) > 2*sqrt(K 2.2) ≈ 2.97 — drifts, never oscillates.
     const K = 2.2;
     const C = 3.6;
@@ -131,12 +131,11 @@ export default function Emblem() {
     d.x += d.vx * dt;
     d.y += d.vy * dt;
 
-    group.current.position.x = d.x;
-    group.current.position.y = baseY + d.y;
-    // Momentum lean: driven by VELOCITY, not position — the logo leans
-    // while moving and always rests perfectly straight.
-    group.current.rotation.y = d.vx * 0.12;
-    group.current.rotation.x = -d.vy * 0.09;
+    // Anchored in place: position is the resting pose, always.
+    group.current.position.x = 0;
+    group.current.position.y = baseY;
+    group.current.rotation.y = d.x;
+    group.current.rotation.x = -d.y;
   });
 
   return (

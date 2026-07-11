@@ -3,21 +3,26 @@
 import { useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import { BEATS, seg, clamp01 } from "./timeline";
+import { BEATS, seg } from "./timeline";
 import { useIntroClock } from "./Scene";
-import { CENTER_Y } from "./Emblem";
 
 /**
- * Fluid — white energy field that answers the hand (owner request).
+ * Fluid — white ink trail that follows the hand (reference: statue.mp4).
  *
- * A single quad, domain-warped fbm. At rest it is almost invisible — a
- * faint breathing in the void. When the pointer / finger MOVES, the field
- * wakes: cold white energy cells bloom, the whole body trails the cursor
- * with lag, and the noise field is smeared along the motion direction so
- * it visibly DEFORMS with the gesture. When the hand stops, the energy
- * decays smoothly (~1.5 s) back to rest. Sits behind the logo (additive,
- * no depth write) — the logo remains the protagonist.
+ * A viewport-sized quad behind the logo renders a metaball field built
+ * from the last N pointer positions: as the cursor / finger moves, a
+ * soft-edged white ink blob appears under it, SMEARS along the path
+ * (consecutive blobs fuse into one elongated body), wobbles organically
+ * (fbm), and each sample dissolves in under a second — exactly the
+ * ink-in-water behaviour of the reference. At rest nothing is drawn.
+ *
+ * Trail points live in a fixed ring buffer uploaded as a uniform array —
+ * no allocations per frame, no textures, no ping-pong FBOs.
  */
+
+const N = 24;
+/** Seconds for a trail sample to dissolve completely. */
+const LIFE = 0.85;
 
 const vertex = /* glsl */ `
   varying vec2 vUv;
@@ -28,10 +33,11 @@ const vertex = /* glsl */ `
 `;
 
 const fragment = /* glsl */ `
+  #define N ${N}
+  uniform vec3 uTrail[N];  // xy = position (aspect-corrected NDC), z = strength 0..1
   uniform float uTime;
-  uniform float uReveal;   // intro fade-in
-  uniform float uKick;     // pointer speed, fast attack / slow decay
-  uniform vec2  uVel;      // smoothed pointer velocity (deform direction)
+  uniform float uAspect;
+  uniform float uReveal;
   varying vec2 vUv;
 
   float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7)))*43758.5453); }
@@ -43,103 +49,107 @@ const fragment = /* glsl */ `
   }
   float fbm(vec2 p){
     float v=0.0, a=0.5;
-    for(int i=0;i<4;i++){ v+=a*noise(p); p=p*2.02+vec2(3.1,1.7); a*=0.5; }
+    for(int i=0;i<3;i++){ v+=a*noise(p); p=p*2.03+vec2(1.7,9.2); a*=0.5; }
     return v;
   }
 
   void main(){
-    vec2 uv = vUv - 0.5;
+    // Aspect-corrected space so blobs stay round on any viewport.
+    vec2 p = (vUv - 0.5) * vec2(uAspect, 1.0) * 2.0;
 
-    // Radial confinement — expands a little while energized.
-    float d = length(uv * vec2(1.2, 1.9));
-    float mask = smoothstep(0.52 + uKick * 0.10, 0.05, d);
-    if (mask < 0.004) discard;
+    // Metaball field: gaussian per trail sample. Older samples are weaker
+    // and slightly wider — the ink relaxes as it dissolves.
+    float field = 0.0;
+    for (int i = 0; i < N; i++) {
+      vec3 tp = uTrail[i];
+      if (tp.z <= 0.001) continue;
+      vec2 d = p - tp.xy;
+      float r = 0.075 + 0.10 * (1.0 - tp.z);
+      field += tp.z * exp(-dot(d, d) / (r * r));
+    }
 
-    // Breathing warp + directional smear: coordinates are dragged along
-    // the motion vector, so the pattern visibly deforms with the gesture.
-    float br = 0.5 + 0.5 * sin(uTime * 0.15);
-    vec2 smear = uVel * (1.4 * uKick);
-    vec2 q = vec2(
-      fbm(uv * 2.4 - smear + vec2(0.0, uTime * 0.05)),
-      fbm(uv * 2.4 - smear * 0.6 + vec2(5.2, -uTime * 0.04))
-    );
-    float warp = fbm(uv * 2.6 + q * (1.1 + 0.6 * uKick + 0.25 * br) - smear);
+    // Organic wobble: the ink's edge is never a clean circle.
+    field *= 0.8 + 0.45 * fbm(p * 5.0 + uTime * 0.35);
 
-    // Base: near-black obsidian, a hair above the void.
-    vec3 base = vec3(0.010, 0.016, 0.024) * mask;
+    // Soft threshold → ink body with a translucent halo.
+    float body = smoothstep(0.32, 1.15, field);
+    float halo = smoothstep(0.10, 0.55, field) * 0.22;
+    float ink = min(body + halo, 1.0);
+    if (ink < 0.004) discard;
 
-    // Energy cells: cold white, with a cyan fringe chosen per region.
-    float cell = smoothstep(0.52 - uKick * 0.10, 0.72, warp);
-    float sel = fbm(uv * 1.6 + vec2(uTime * 0.02, 0.0));
-    vec3 white = vec3(0.85, 0.92, 1.0);
-    vec3 cyan  = vec3(0.05, 0.72, 0.78);
-    vec3 energy = mix(cyan, white, smoothstep(0.4, 0.6, sel));
-
-    // Rest: whisper. Motion: bloom — the fluid APPEARS with the hand.
-    float amt = cell * mask * (0.05 + 0.04 * br + 0.85 * uKick);
-
-    vec3 col = base + energy * amt;
-    float a = (max(col.r, max(col.g, col.b)) ) * uReveal;
-    if (a < 0.003) discard;
-    gl_FragColor = vec4(col * uReveal, a);
+    // Cold white with the faintest cyan breath at the edges.
+    vec3 col = mix(vec3(0.35, 0.85, 0.9), vec3(0.94, 0.97, 1.0), body);
+    gl_FragColor = vec4(col * ink * uReveal, ink * uReveal);
   }
 `;
 
 export default function Fluid() {
   const clock = useIntroClock();
-  const { pointer } = useThree();
+  const { pointer, viewport, camera } = useThree();
   const mat = useRef<THREE.ShaderMaterial>(null!);
   const mesh = useRef<THREE.Mesh>(null!);
-  const prev = useRef({ x: 0, y: 0 });
-  const kick = useRef(0);
-  const vel = useRef(new THREE.Vector2());
-  const follow = useRef({ x: 0, y: 0 });
+  const prev = useRef({ x: 10, y: 10 });
+  // Ring buffer: [x, y, age] per sample; age < 0 = empty slot.
+  const trail = useRef(
+    Array.from({ length: N }, () => ({ x: 0, y: 0, age: -1 })),
+  );
+  const head = useRef(0);
 
   const uniforms = useMemo(
     () => ({
+      uTrail: { value: Array.from({ length: N }, () => new THREE.Vector3()) },
       uTime: { value: 0 },
+      uAspect: { value: 1 },
       uReveal: { value: 0 },
-      uKick: { value: 0 },
-      uVel: { value: new THREE.Vector2() },
     }),
     [],
   );
 
   useFrame((_, dt) => {
     const t = clock.t;
+    const inter = seg(t, BEATS.settle);
 
-    // Pointer speed → energy. Fast attack, ~1.5 s smooth decay.
+    // Record a sample whenever the pointer moved as a continuous gesture.
+    // Large jumps (finger lift resets to center, cursor re-entering the
+    // window elsewhere) are teleports, not strokes — no ink for those.
     const dx = pointer.x - prev.current.x;
     const dy = pointer.y - prev.current.y;
+    const step = Math.hypot(dx, dy);
+    if (inter > 0 && step > 0.004 && step < 0.35) {
+      const s = trail.current[head.current];
+      s.x = pointer.x;
+      s.y = pointer.y;
+      s.age = 0;
+      head.current = (head.current + 1) % N;
+    }
     prev.current.x = pointer.x;
     prev.current.y = pointer.y;
-    const speed = Math.hypot(dx, dy) / Math.max(dt, 1e-4);
-    const target = clamp01(speed * 0.4);
-    kick.current += (target - kick.current) * (target > kick.current ? 0.5 : 0.035);
 
-    // Smoothed motion direction for the shader's deformation smear.
-    vel.current.x += (dx / Math.max(dt, 1e-4) * 0.25 - vel.current.x) * 0.12;
-    vel.current.y += (dy / Math.max(dt, 1e-4) * 0.25 - vel.current.y) * 0.12;
+    // Age + upload. Strength eases out so the ink dissolves smoothly.
+    const aspect = viewport.width / viewport.height;
+    const arr = uniforms.uTrail.value as THREE.Vector3[];
+    for (let i = 0; i < N; i++) {
+      const s = trail.current[i];
+      if (s.age >= 0) s.age += dt;
+      const k = s.age < 0 ? 0 : Math.max(0, 1 - s.age / LIFE);
+      arr[i].set(s.x * aspect, s.y, k * k * inter);
+    }
 
     mat.current.uniforms.uTime.value = t;
-    mat.current.uniforms.uKick.value = kick.current;
-    (mat.current.uniforms.uVel.value as THREE.Vector2)
-      .set(vel.current.x, vel.current.y)
-      .clampLength(0, 1);
+    mat.current.uniforms.uAspect.value = aspect;
     mat.current.uniforms.uReveal.value = seg(t, BEATS.boltOn);
 
-    // The fluid trails the cursor — a following energy field, gated by
-    // settle so it only tracks once the logo is assembled.
-    const inter = seg(t, BEATS.settle);
-    const f = follow.current;
-    f.x += (pointer.x * 3.2 * inter - f.x) * 0.06;
-    f.y += (pointer.y * 2.0 * inter - f.y) * 0.06;
-    mesh.current.position.set(f.x, CENTER_Y + f.y, -1.2);
+    // Fill the camera's view at this depth — the ink can appear anywhere
+    // the hand goes, like the reference.
+    const dist = camera.position.z - mesh.current.position.z;
+    const h =
+      2 * dist * Math.tan((((camera as THREE.PerspectiveCamera).fov ?? 42) * Math.PI) / 360);
+    mesh.current.scale.set(h * aspect, h, 1);
   });
 
   return (
-    <mesh ref={mesh} position={[0, CENTER_Y, -1.2]}>
-      <planeGeometry args={[4.4, 2.6]} />
+    <mesh ref={mesh} position={[0, 0, -1.2]}>
+      <planeGeometry args={[1, 1]} />
       <shaderMaterial
         ref={mat}
         vertexShader={vertex}
