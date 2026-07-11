@@ -23,6 +23,12 @@
    the document's scrollHeight. */
 html {
   background: var(--bg);
+  scroll-behavior: smooth;
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 body {
@@ -32,9 +38,13 @@ body {
   overflow-x: hidden;
 }
 
-/* Scroll runway: one screen of pure Intro before the content rises */
+/* Scroll runway: one screen of pure Intro before the content rises. Must be
+   a FULL viewport: anything less puts the content's top edge above the fold
+   at scroll 0, covering the bottom-anchored Hero CTA. svh (not vh) so the
+   mobile URL bar doesn't add dead space to the runway. */
 .scroll-space {
   height: 100vh;
+  height: 100svh;
   pointer-events: none;
 }
 
@@ -822,6 +832,16 @@ body {
 .footer-meta {
   font-size: 0.85rem;
   color: rgba(255, 255, 255, 0.45);
+}
+.footer-pay {
+  flex-basis: 100%;
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.45);
+}
+.footer-pay strong {
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.72);
 }
 
 /* Sticky WhatsApp (mobile-first, shown on all) — hidden while the Hero owns

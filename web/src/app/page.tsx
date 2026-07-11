@@ -1,11 +1,72 @@
 import IntroExperience from "@/components/intro/IntroExperience";
 import Hero from "@/components/site/Hero";
 import SectionsScaffold from "@/components/sections";
-import { waLink } from "@/components/site/data";
+import {
+  PRODUCTS,
+  waLink,
+  INSTAGRAM_URL,
+  WHATSAPP,
+} from "@/components/site/data";
+import { SITE_URL, absUrl } from "@/lib/site";
+
+/**
+ * JSON-LD: LocalBusiness (delivery-in-hand shop in Córdoba) + the catalog as
+ * an ItemList of Products. Rendered server-side into the static export so
+ * crawlers get it without JS. Prices in ARS; availability mirrors data.ts
+ * (only "disponible" products exist today → InStock).
+ */
+const JSON_LD = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "LocalBusiness",
+      "@id": `${SITE_URL}/#business`,
+      name: "All Import",
+      description:
+        "Productos importados con entrega en mano en Córdoba, Argentina. Ves el producto antes de pagar.",
+      image: absUrl("/og.jpg"),
+      url: `${SITE_URL}/`,
+      telephone: `+${WHATSAPP}`,
+      sameAs: [INSTAGRAM_URL],
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: "Córdoba",
+        addressCountry: "AR",
+      },
+      priceRange: "$$",
+    },
+    {
+      "@type": "ItemList",
+      "@id": `${SITE_URL}/#catalog`,
+      name: "Catálogo All Import",
+      itemListElement: PRODUCTS.map((p, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        item: {
+          "@type": "Product",
+          name: p.name,
+          description: p.blurb,
+          image: absUrl(p.images[0]),
+          offers: {
+            "@type": "Offer",
+            price: p.price,
+            priceCurrency: "ARS",
+            availability: "https://schema.org/InStock",
+            seller: { "@id": `${SITE_URL}/#business` },
+          },
+        },
+      })),
+    },
+  ],
+};
 
 export default function Home() {
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
+      />
       <a href="#productos" className="skip-link">Ir al catálogo</a>
 
       {/* Fixed living scene: the frozen 3D Intro is the brand hero */}

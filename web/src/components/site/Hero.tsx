@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { waLink } from "@/components/site/data";
 
 /**
  * Hero overlay — a sibling DOM layer OVER the frozen Intro, never part of
@@ -68,13 +67,11 @@ export default function Hero() {
           Antes de pagar.
         </p>
         <span className="hero-cta-wrap">
-          <a
-            className="hero-cta"
-            href={waLink("Hola All Import! Quiero hacer una consulta.")}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Hablemos
+          {/* Conversion-first: the Hero's single CTA sends the visitor to the
+              catalog (the products sell the visit); WhatsApp stays one tap
+              away via the sticky button that fades in on first scroll. */}
+          <a className="hero-cta" href="#productos">
+            Ver productos
           </a>
         </span>
       </div>

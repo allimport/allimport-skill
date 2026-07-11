@@ -184,7 +184,8 @@ function CtaFinal() {
   );
 }
 
-/* Footer — brand presence + minimal contact. */
+/* Footer — brand presence + minimal contact + the last objection closed
+   (payment & no-risk), in one quiet line. */
 function Footer() {
   return (
     <footer id="footer" className="footer">
@@ -192,6 +193,10 @@ function Footer() {
       <span className="footer-meta">
         {CITY} · {INSTAGRAM_HANDLE}
       </span>
+      <p className="footer-pay">
+        <strong>Efectivo, transferencia o Mercado Pago.</strong> Lo ves en
+        mano y, si no te convence, no pagás. Así de simple.
+      </p>
     </footer>
   );
 }
