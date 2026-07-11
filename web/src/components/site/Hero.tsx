@@ -46,11 +46,20 @@ export default function Hero() {
   useEffect(() => {
     const root = document.documentElement;
     let raf = 0;
+    const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
     const update = () => {
       raf = 0;
       const range = window.innerHeight * FADE_RANGE_FACTOR;
       const sp = Math.min(1, Math.max(0, window.scrollY / range));
       root.style.setProperty("--sp", String(sp));
+      // Reveal values computed HERE (plain 0..1 numbers): CSS math over
+      // unregistered custom properties is flaky across engines — inline
+      // numbers are not. Promise first, CTA a beat later, both cede
+      // before the content stage arrives.
+      const out = clamp01((OUT_END - sp) * 6);
+      root.style.setProperty("--hIn", String(clamp01((sp - IN_START) * 4.5)));
+      root.style.setProperty("--hCta", String(clamp01((sp - 0.12) * 4.5)));
+      root.style.setProperty("--hOut", String(out));
       rootRef.current?.classList.toggle(
         "hero--live",
         sp > IN_START && sp < OUT_END,

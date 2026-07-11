@@ -1,9 +1,7 @@
 "use client";
 
-import { createContext, useContext, useEffect, useMemo, useRef } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import * as THREE from "three";
-import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+import { createContext, useContext, useMemo, useRef } from "react";
+import { Canvas, useFrame } from "@react-three/fiber";
 import Emblem from "./Emblem";
 import Particles from "./Particles";
 import Atmosphere from "./Atmosphere";
@@ -19,28 +17,6 @@ import { BEATS, INTRO_DURATION, seg } from "./timeline";
  * No grid, no HUD, no frames — spatial black, a galaxy field, a dark
  * fluid veil, and the logo lit by its own bolt.
  */
-
-/**
- * Image-based lighting: a neutral studio environment (PMREM) gives the
- * lacquered letters real reflections — the surface reads as physical
- * material instead of flat shading. Intensity kept low so the void stays
- * a void.
- */
-function StudioEnvironment() {
-  const { gl, scene } = useThree();
-  useEffect(() => {
-    const pmrem = new THREE.PMREMGenerator(gl);
-    const tex = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
-    scene.environment = tex;
-    scene.environmentIntensity = 0.5;
-    return () => {
-      scene.environment = null;
-      tex.dispose();
-      pmrem.dispose();
-    };
-  }, [gl, scene]);
-  return null;
-}
 
 export interface IntroClock {
   t: number;
@@ -116,14 +92,12 @@ export default function Scene({
 
         {/* Minimal ambient bed: the black metal must live off speculars
             and, after activation, the bolt's own light. */}
-        <StudioEnvironment />
-        <ambientLight intensity={0.18} />
-        {/* Key: high and slightly right — long soft speculars on the lacquer */}
-        <directionalLight position={[3, 5, 8]} intensity={1.7} color="#ffffff" />
-        {/* Cool fill from the lower left */}
-        <directionalLight position={[-6, -2, 4]} intensity={0.2} color="#00d4d4" />
-        {/* Rim from behind-above: separates the piece from the void */}
-        <directionalLight position={[-2, 4, -6]} intensity={0.9} color="#bfe9ee" />
+        <ambientLight intensity={0.25} />
+        <directionalLight position={[3, 5, 8]} intensity={1.5} color="#ffffff" />
+        <directionalLight position={[-6, -2, 4]} intensity={0.22} color="#00d4d4" />
+        {/* Léve separation from the void: a whisper of cool rim from
+            behind — depth only, never a look change. */}
+        <directionalLight position={[-2, 4, -6]} intensity={0.3} color="#9fd8de" />
 
         <DepthField />
         <Particles mobile={mobile} />

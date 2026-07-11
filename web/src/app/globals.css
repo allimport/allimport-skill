@@ -65,7 +65,7 @@ body {
 .sec {
   max-width: 1120px;
   margin: 0 auto;
-  padding: clamp(4.5rem, 12vh, 9rem) 7vw;
+  padding: clamp(3.25rem, 8.5vh, 6rem) 7vw;
 }
 
 .sec-narrow {
@@ -158,7 +158,7 @@ body {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.6rem;
-  margin-top: 3rem;
+  margin-top: 2.2rem;
 }
 .step {
   border: 1px solid rgba(255, 255, 255, 0.09);
@@ -189,7 +189,7 @@ body {
 /* ---- Catálogo "La Vitrina" (deck horizontal, spec doc 10 + brief) ---- */
 
 .cat-head {
-  padding-bottom: 2.75rem;
+  padding-bottom: 2rem;
 }
 .cat-sub {
   margin-top: 1.2rem;
@@ -770,8 +770,8 @@ body {
 /* CTA final */
 .sec-cta {
   text-align: center;
-  padding-top: clamp(6rem, 16vh, 11rem);
-  padding-bottom: clamp(6rem, 16vh, 11rem);
+  padding-top: clamp(4.5rem, 11vh, 7.5rem);
+  padding-bottom: clamp(4.5rem, 11vh, 7.5rem);
 }
 .sec-cta .h2 {
   margin: 0 auto;
@@ -923,7 +923,8 @@ body {
      constrained viewport axis (doc 03), so clearance below it must track
      whichever dimension is tighter — otherwise short/wide viewports read
      clearance against the wrong axis and the block creeps into the glow. */
-  padding: 0 7vmin clamp(8vmin, 15vmin, 17vmin);
+  padding: 0 7vmin 16vh;
+  padding-bottom: 16svh;
   pointer-events: none;
   opacity: 0;
 }
@@ -954,18 +955,15 @@ body {
   opacity: 0;
 }
 /* Scrubbed by the scroll itself — weight without a timeline. The promise
-   enters first; the CTA follows a beat deeper into the scroll. */
+   enters first; the CTA follows a beat deeper into the scroll. Values
+   (--hIn/--hCta/--hOut, plain 0..1) are computed in Hero.tsx. */
 .hero--ready .hero-promise {
-  --in: clamp(0, (var(--sp) - 0.05) * 4.5, 1);
-  --out: clamp(0, (0.96 - var(--sp)) * 6, 1);
-  opacity: min(var(--in), var(--out));
-  transform: translateY(calc((1 - var(--in)) * 34px));
+  opacity: calc(var(--hIn, 0) * var(--hOut, 1));
+  transform: translateY(calc((1 - var(--hIn, 0)) * 34px));
 }
 .hero--ready .hero-cta-wrap {
-  --in: clamp(0, (var(--sp) - 0.11) * 4.5, 1);
-  --out: clamp(0, (0.96 - var(--sp)) * 6, 1);
-  opacity: min(var(--in), var(--out));
-  transform: translateY(calc((1 - var(--in)) * 40px));
+  opacity: calc(var(--hCta, 0) * var(--hOut, 1));
+  transform: translateY(calc((1 - var(--hCta, 0)) * 40px));
 }
 /* The invisible CTA must never eat the canvas's pointer events. */
 .hero .hero-cta {

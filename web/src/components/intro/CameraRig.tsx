@@ -31,8 +31,8 @@ export default function CameraRig() {
     const s = easeInOutCubic(clock.scroll);
 
     // A whisper of response — the logo does the moving, not the camera.
-    sway.current.x += (pointer.x * 0.025 * inter - sway.current.x) * 0.018;
-    sway.current.y += (pointer.y * 0.016 * inter - sway.current.y) * 0.018;
+    sway.current.x += (pointer.x * 0.06 * inter - sway.current.x) * 0.03;
+    sway.current.y += (pointer.y * 0.04 * inter - sway.current.y) * 0.03;
 
     camera.position.set(
       sway.current.x,
