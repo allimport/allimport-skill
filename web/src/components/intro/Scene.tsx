@@ -83,6 +83,9 @@ export default function Scene({
       <fog attach="fog" args={["#030407", 28, 65]} />
 
       <ClockContext.Provider value={clock}>
+        {/* Only addition over the original hero: feeds the shared pointer
+            from window touches so the original interaction also answers
+            the finger (pointercancel kills R3F's own stream on mobile). */}
         <TouchDrive />
         <ClockDriver
           clock={clock}
@@ -95,9 +98,6 @@ export default function Scene({
         <ambientLight intensity={0.25} />
         <directionalLight position={[3, 5, 8]} intensity={1.5} color="#ffffff" />
         <directionalLight position={[-6, -2, 4]} intensity={0.22} color="#00d4d4" />
-        {/* Léve separation from the void: a whisper of cool rim from
-            behind — depth only, never a look change. */}
-        <directionalLight position={[-2, 4, -6]} intensity={0.18} color="#9fd8de" />
 
         <DepthField />
         <Particles mobile={mobile} />

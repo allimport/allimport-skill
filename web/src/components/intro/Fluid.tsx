@@ -3,30 +3,25 @@
 import { useMemo, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import { BEATS, seg } from "./timeline";
+import { BEATS, seg, clamp01 } from "./timeline";
 import { useIntroClock } from "./Scene";
 import { CENTER_Y } from "./Emblem";
 
 /**
- * Fluid — white ink the hand can play with, living ON the logo band.
+ * Fluid — polished-obsidian energy field behind the logo.
  *
- * A fixed quad covering just the wordmark band (never the viewport)
- * renders a metaball field from the last N pointer samples: moving the
- * mouse / finger over the logo draws a soft-edged white ink body that
- * smears along the stroke, shows volume (lit upper-left, self-shadowed
- * lower-right), and dissolves in about a second. Outside the band the
- * pointer simply draws nothing — the effect stays localized, the logo
- * stays the protagonist.
+ * Not smoke, water, fire, or fog: the void itself, slightly deformed. A
+ * single quad, domain-warped fbm (coords bent by a second noise → organic,
+ * never a repeating texture, never a nameable shape). It breathes in place
+ * (no lateral drift) and stays radially confined to ~50% of the logo width,
+ * centered — never covers letters, never crosses the bolt (it sits behind).
  *
- * Ring buffer in a uniform array: no FBOs, no per-frame allocations.
+ * Base is near-black, a hair above the background — visible only where
+ * internal energy passes, as tiny cells of cold white OR electric cyan
+ * (never both, never saturated). The pointer only injects a brief phase
+ * kick into the internal pattern (decays < 1s); it never follows the cursor
+ * or the logo. The logo stays the protagonist.
  */
-
-const N = 24;
-/** Seconds for a trail sample to dissolve completely. */
-const LIFE = 1.4;
-/** Band the ink lives in, world units (logo is ~7 wide). */
-const BAND_W = 7.8;
-const BAND_H = 3.0;
 
 const vertex = /* glsl */ `
   varying vec2 vUv;
@@ -37,10 +32,9 @@ const vertex = /* glsl */ `
 `;
 
 const fragment = /* glsl */ `
-  #define N ${N}
-  uniform vec3 uTrail[N];  // xy = band-local coords, z = strength 0..1
   uniform float uTime;
-  uniform float uReveal;
+  uniform float uReveal;   // intro fade-in
+  uniform float uKick;     // pointer-speed perturbation, decays < 1s
   varying vec2 vUv;
 
   float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7)))*43758.5453); }
@@ -52,110 +46,81 @@ const fragment = /* glsl */ `
   }
   float fbm(vec2 p){
     float v=0.0, a=0.5;
-    for(int i=0;i<3;i++){ v+=a*noise(p); p=p*2.03+vec2(1.7,9.2); a*=0.5; }
+    for(int i=0;i<4;i++){ v+=a*noise(p); p=p*2.02+vec2(3.1,1.7); a*=0.5; }
     return v;
   }
 
   void main(){
-    // Band-local space: x ∈ [-A, A] (A = band aspect), y ∈ [-1, 1].
-    vec2 p = (vUv - 0.5) * vec2(${(BAND_W / BAND_H).toFixed(3)}, 1.0) * 2.0;
+    vec2 uv = vUv - 0.5;
 
-    float field = 0.0;
-    float fOff = 0.0; // light-offset sample → volume
-    vec2 L = vec2(-0.05, 0.07);
-    for (int i = 0; i < N; i++) {
-      vec3 tp = uTrail[i];
-      if (tp.z <= 0.001) continue;
-      float r = 0.24 + 0.18 * (1.0 - tp.z);
-      vec2 d = p - tp.xy;
-      field += tp.z * exp(-dot(d, d) / (r * r));
-      vec2 d2 = p + L - tp.xy;
-      fOff += tp.z * exp(-dot(d2, d2) / (r * r));
-    }
+    // Radial confinement: concentrated at the logo center, soft edges.
+    float d = length(uv * vec2(1.2, 1.9));
+    float mask = smoothstep(0.5, 0.06, d);
+    if (mask < 0.004) discard;
 
-    // Organic edge wobble.
-    field *= 0.82 + 0.36 * fbm(p * 2.6 + uTime * 0.3);
+    // Breathing warp: coordinates bent by a slow in-place noise field.
+    float br = 0.5 + 0.5 * sin(uTime * 0.15);
+    vec2 q = vec2(
+      fbm(uv * 2.4 + vec2(0.0, uTime * 0.03)),
+      fbm(uv * 2.4 + vec2(5.2, -uTime * 0.025))
+    );
+    float warp = fbm(uv * 2.6 + q * (1.1 + 0.25 * br) + uKick * 0.6);
 
-    // Soft body + faint halo; edge fade so ink never touches the band rim.
-    float rim = smoothstep(1.0, 0.82, abs(p.y)) *
-                smoothstep(${(BAND_W / BAND_H).toFixed(3)}, ${(BAND_W / BAND_H - 0.35).toFixed(3)}, abs(p.x));
-    float body = smoothstep(0.3, 1.0, field) * rim;
-    float halo = smoothstep(0.12, 0.5, field) * 0.12 * rim;
-    float ink = min(body + halo, 1.0);
-    if (ink < 0.004) discard;
+    // Base: near-black obsidian, a hair above the void.
+    vec3 base = vec3(0.010, 0.016, 0.024) * mask;
 
-    // Volume shading from the offset sample.
-    float relief = clamp((fOff - field) * 2.4, -0.5, 0.55);
-    float shade = 0.78 + relief;
+    // Internal energy: tiny cells that resolve to cold white OR cyan,
+    // never both. A slow selector decides which per region.
+    float cell = smoothstep(0.58, 0.74, warp);
+    float sel = fbm(uv * 1.6 + vec2(uTime * 0.02, 0.0)); // white<->cyan chooser
+    vec3 white = vec3(0.6, 0.68, 0.78);
+    vec3 cyan  = vec3(0.0, 0.62, 0.68);
+    vec3 energy = mix(cyan, white, smoothstep(0.45, 0.62, sel));
+    float amt = cell * mask * (0.16 + 0.06 * br + uKick * 0.14);
 
-    vec3 col = mix(vec3(0.4, 0.82, 0.86), vec3(0.9, 0.94, 0.99), body) * shade;
-    float a = ink * 0.85 * uReveal;
-    gl_FragColor = vec4(col * a, a);
+    vec3 col = base + energy * amt;
+    float a = (max(col.r, max(col.g, col.b)) ) * uReveal;
+    if (a < 0.003) discard;
+    gl_FragColor = vec4(col * uReveal, a);
   }
 `;
 
 export default function Fluid() {
   const clock = useIntroClock();
-  const { pointer, camera, size } = useThree();
+  const { pointer } = useThree();
   const mat = useRef<THREE.ShaderMaterial>(null!);
-  const prev = useRef({ x: 10, y: 10 });
-  // Ring buffer: [x, y, age] per sample (band-local coords); age<0 = empty.
-  const trail = useRef(
-    Array.from({ length: N }, () => ({ x: 0, y: 0, age: -1 })),
-  );
-  const head = useRef(0);
+  const prev = useRef({ x: 0, y: 0 });
+  const kick = useRef(0);
 
   const uniforms = useMemo(
     () => ({
-      uTrail: { value: Array.from({ length: N }, () => new THREE.Vector3()) },
       uTime: { value: 0 },
       uReveal: { value: 0 },
+      uKick: { value: 0 },
     }),
     [],
   );
 
   useFrame((_, dt) => {
     const t = clock.t;
-    const inter = seg(t, BEATS.settle);
 
-    // Pointer NDC → world at the band's depth → band-local coords.
-    const cam = camera as THREE.PerspectiveCamera;
-    const dist = cam.position.z - 0.9;
-    const halfH = dist * Math.tan((cam.fov * Math.PI) / 360);
-    const halfW = halfH * (size.width / size.height);
-    const bx = (pointer.x * halfW) / (BAND_H / 2); // scaled like shader space
-    const by = (pointer.y * halfH - CENTER_Y) / (BAND_H / 2);
-
-    const dx = bx - prev.current.x;
-    const dy = by - prev.current.y;
-    const step = Math.hypot(dx, dy);
-    const inBand =
-      Math.abs(bx) < BAND_W / BAND_H + 0.3 && Math.abs(by) < 1.3;
-    if (inter > 0 && inBand && step > 0.006 && step < 1.4) {
-      const s = trail.current[head.current];
-      s.x = bx;
-      s.y = by;
-      s.age = 0;
-      head.current = (head.current + 1) % N;
-    }
-    prev.current.x = bx;
-    prev.current.y = by;
-
-    const arr = uniforms.uTrail.value as THREE.Vector3[];
-    for (let i = 0; i < N; i++) {
-      const s = trail.current[i];
-      if (s.age >= 0) s.age += dt;
-      const k = s.age < 0 ? 0 : Math.max(0, 1 - s.age / LIFE);
-      arr[i].set(s.x, s.y, k * k * inter);
-    }
+    // Pointer speed → brief internal perturbation, fast up / slow decay.
+    const dx = pointer.x - prev.current.x;
+    const dy = pointer.y - prev.current.y;
+    prev.current.x = pointer.x;
+    prev.current.y = pointer.y;
+    const speed = Math.hypot(dx, dy) / Math.max(dt, 1e-4);
+    const target = clamp01(speed * 0.25);
+    kick.current += (target - kick.current) * (target > kick.current ? 0.4 : 0.06);
 
     mat.current.uniforms.uTime.value = t;
+    mat.current.uniforms.uKick.value = kick.current;
     mat.current.uniforms.uReveal.value = seg(t, BEATS.boltOn);
   });
 
   return (
-    <mesh position={[0, CENTER_Y, 0.9]}>
-      <planeGeometry args={[BAND_W, BAND_H]} />
+    <mesh position={[0, CENTER_Y, -1.2]}>
+      <planeGeometry args={[4.4, 2.6]} />
       <shaderMaterial
         ref={mat}
         vertexShader={vertex}

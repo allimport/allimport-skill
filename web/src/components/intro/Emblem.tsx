@@ -103,14 +103,10 @@ export default function Emblem() {
     const on = seg(t, BEATS.boltOn, easeInOutCubic);
     const over = pulse(t, BEATS.boltOn[1], 0.35) * 0.5;
     boltMat.current.opacity = Math.max(emerged, on);
+    boltMat.current.emissiveIntensity = 1.0 * on + over * 0.6;
     haloMat.current.opacity = on;
     haloMat.current.emissiveIntensity = 0.3 * on;
-    // Slow breath of the bolt's light: the cyan gradient it casts on the
-    // letters travels smoothly across the surface — the original colour
-    // effect, kept alive after the intro instead of freezing.
-    const breath = 1 + 0.3 * (0.5 + 0.5 * Math.sin(t * 0.45)) * on;
-    boltLight.current.intensity = (8 * on + 5 * over) * breath;
-    boltMat.current.emissiveIntensity = (1.0 * on + over * 0.6) * breath;
+    boltLight.current.intensity = 8 * on + 5 * over;
 
     // --- Stabilize: mass lands once the light is on.
     const dip = pulse(t, BEATS.stabilize[0], 0.3);
@@ -122,25 +118,24 @@ export default function Emblem() {
     // the mass starts late, drifts, and settles without oscillating.
     const inter = seg(t, BEATS.settle);
     const d = drift.current;
-    // The logo TURNS toward the pointer but never leaves its place (owner
-    // request): the spring drives rotation only. Real inertia, slow return
-    // to face straight ahead, zero bounce.
-    const tx = pointer.x * 0.4 * inter; // target yaw (rad)
-    const ty = pointer.y * 0.24 * inter; // target pitch (rad)
-    // Clearly alive, still heavy: sub-second response, damping over
-    // critical (2*sqrt(2.4) = 3.1) — inertia, zero vibration, slow return.
-    const K = 2.4;
-    const C = 3.5;
+    const tx = pointer.x * 0.12 * inter;
+    const ty = pointer.y * 0.075 * inter;
+    // Solid aluminum on a magnetic field: lower stiffness so acceleration
+    // starts even later and lazier (never a pursuit), damping well over
+    // critical (2*sqrt(1.0) = 2.0) so it only ever finishes settling.
+    const K = 1.0;
+    const C = 3.4;
     d.vx += (K * (tx - d.x) - C * d.vx) * dt;
     d.vy += (K * (ty - d.y) - C * d.vy) * dt;
     d.x += d.vx * dt;
     d.y += d.vy * dt;
 
-    // Anchored in place: position is the resting pose, always.
-    group.current.position.x = 0;
-    group.current.position.y = baseY;
-    group.current.rotation.y = d.x;
-    group.current.rotation.x = -d.y;
+    group.current.position.x = d.x;
+    group.current.position.y = baseY + d.y;
+    // Minimal momentum lean: driven by VELOCITY, not position — the logo
+    // leans only while moving and always rests perfectly straight.
+    group.current.rotation.y = d.vx * 0.03;
+    group.current.rotation.x = -d.vy * 0.022;
   });
 
   return (
