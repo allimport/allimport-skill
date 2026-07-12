@@ -65,7 +65,7 @@ body {
 .sec {
   max-width: 1120px;
   margin: 0 auto;
-  padding: clamp(3.25rem, 8.5vh, 6rem) 7vw;
+  padding: clamp(2.75rem, 7vh, 5rem) 7vw;
 }
 
 .sec-narrow {
@@ -124,7 +124,7 @@ body {
 
 /* Trust bar */
 .sec-trust {
-  padding-top: clamp(3rem, 8vh, 5rem);
+  padding-top: clamp(2rem, 5vh, 3.25rem);
   padding-bottom: 0;
 }
 .trust-row {
@@ -770,8 +770,8 @@ body {
 /* CTA final */
 .sec-cta {
   text-align: center;
-  padding-top: clamp(4.5rem, 11vh, 7.5rem);
-  padding-bottom: clamp(4.5rem, 11vh, 7.5rem);
+  padding-top: clamp(3.5rem, 9vh, 6rem);
+  padding-bottom: clamp(3.5rem, 9vh, 6rem);
 }
 .sec-cta .h2 {
   margin: 0 auto;
@@ -820,7 +820,7 @@ body {
   gap: 1rem;
   max-width: 1120px;
   margin: 0 auto;
-  padding: 2.6rem 7vw 3.4rem;
+  padding: 2rem 7vw 2.6rem;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 .footer-brand {
@@ -923,8 +923,8 @@ body {
      constrained viewport axis (doc 03), so clearance below it must track
      whichever dimension is tighter — otherwise short/wide viewports read
      clearance against the wrong axis and the block creeps into the glow. */
-  padding: 0 7vmin 16vh;
-  padding-bottom: 16svh;
+  padding: 0 7vmin 23vh;
+  padding-bottom: 23svh;
   pointer-events: none;
   opacity: 0;
 }

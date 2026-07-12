@@ -36,7 +36,7 @@ const LETTER_EXTRUDE: THREE.ExtrudeGeometryOptions = {
   bevelEnabled: true,
   bevelThickness: 0.045,
   bevelSize: 0.045,
-  bevelSegments: 4,
+  bevelSegments: 3,
   curveSegments: 24,
 };
 
@@ -108,7 +108,7 @@ export default function Emblem() {
     // Slow breath of the bolt's light: the cyan gradient it casts on the
     // letters travels smoothly across the surface — the original colour
     // effect, kept alive after the intro instead of freezing.
-    const breath = 1 + 0.32 * Math.sin(t * 0.45) * on;
+    const breath = 1 + 0.3 * (0.5 + 0.5 * Math.sin(t * 0.45)) * on;
     boltLight.current.intensity = (8 * on + 5 * over) * breath;
     boltMat.current.emissiveIntensity = (1.0 * on + over * 0.6) * breath;
 
@@ -125,12 +125,12 @@ export default function Emblem() {
     // The logo TURNS toward the pointer but never leaves its place (owner
     // request): the spring drives rotation only. Real inertia, slow return
     // to face straight ahead, zero bounce.
-    const tx = pointer.x * 0.3 * inter; // target yaw (rad)
-    const ty = pointer.y * 0.18 * inter; // target pitch (rad)
-    // Heavy but alive: responds within a second, damping over critical
-    // (2*sqrt(2.0) = 2.83) — inertia without nervousness, slow return.
-    const K = 2.0;
-    const C = 3.4;
+    const tx = pointer.x * 0.4 * inter; // target yaw (rad)
+    const ty = pointer.y * 0.24 * inter; // target pitch (rad)
+    // Clearly alive, still heavy: sub-second response, damping over
+    // critical (2*sqrt(2.4) = 3.1) — inertia, zero vibration, slow return.
+    const K = 2.4;
+    const C = 3.5;
     d.vx += (K * (tx - d.x) - C * d.vx) * dt;
     d.vy += (K * (ty - d.y) - C * d.vy) * dt;
     d.x += d.vx * dt;

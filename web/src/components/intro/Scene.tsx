@@ -97,7 +97,7 @@ export default function Scene({
         <directionalLight position={[-6, -2, 4]} intensity={0.22} color="#00d4d4" />
         {/* Léve separation from the void: a whisper of cool rim from
             behind — depth only, never a look change. */}
-        <directionalLight position={[-2, 4, -6]} intensity={0.3} color="#9fd8de" />
+        <directionalLight position={[-2, 4, -6]} intensity={0.18} color="#9fd8de" />
 
         <DepthField />
         <Particles mobile={mobile} />

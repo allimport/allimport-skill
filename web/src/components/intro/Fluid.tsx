@@ -23,10 +23,10 @@ import { CENTER_Y } from "./Emblem";
 
 const N = 24;
 /** Seconds for a trail sample to dissolve completely. */
-const LIFE = 1.05;
+const LIFE = 1.4;
 /** Band the ink lives in, world units (logo is ~7 wide). */
-const BAND_W = 8.4;
-const BAND_H = 4.2;
+const BAND_W = 7.8;
+const BAND_H = 3.0;
 
 const vertex = /* glsl */ `
   varying vec2 vUv;
@@ -66,7 +66,7 @@ const fragment = /* glsl */ `
     for (int i = 0; i < N; i++) {
       vec3 tp = uTrail[i];
       if (tp.z <= 0.001) continue;
-      float r = 0.20 + 0.16 * (1.0 - tp.z);
+      float r = 0.24 + 0.18 * (1.0 - tp.z);
       vec2 d = p - tp.xy;
       field += tp.z * exp(-dot(d, d) / (r * r));
       vec2 d2 = p + L - tp.xy;
@@ -79,14 +79,14 @@ const fragment = /* glsl */ `
     // Soft body + faint halo; edge fade so ink never touches the band rim.
     float rim = smoothstep(1.0, 0.82, abs(p.y)) *
                 smoothstep(${(BAND_W / BAND_H).toFixed(3)}, ${(BAND_W / BAND_H - 0.35).toFixed(3)}, abs(p.x));
-    float body = smoothstep(0.36, 1.1, field) * rim;
-    float halo = smoothstep(0.14, 0.6, field) * 0.16 * rim;
+    float body = smoothstep(0.3, 1.0, field) * rim;
+    float halo = smoothstep(0.12, 0.5, field) * 0.12 * rim;
     float ink = min(body + halo, 1.0);
     if (ink < 0.004) discard;
 
     // Volume shading from the offset sample.
-    float relief = clamp((fOff - field) * 1.8, -0.35, 0.45);
-    float shade = 0.8 + relief;
+    float relief = clamp((fOff - field) * 2.4, -0.5, 0.55);
+    float shade = 0.78 + relief;
 
     vec3 col = mix(vec3(0.4, 0.82, 0.86), vec3(0.9, 0.94, 0.99), body) * shade;
     float a = ink * 0.85 * uReveal;
@@ -131,7 +131,7 @@ export default function Fluid() {
     const step = Math.hypot(dx, dy);
     const inBand =
       Math.abs(bx) < BAND_W / BAND_H + 0.3 && Math.abs(by) < 1.3;
-    if (inter > 0 && inBand && step > 0.012 && step < 1.4) {
+    if (inter > 0 && inBand && step > 0.006 && step < 1.4) {
       const s = trail.current[head.current];
       s.x = bx;
       s.y = by;

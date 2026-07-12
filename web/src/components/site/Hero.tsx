@@ -84,9 +84,9 @@ export default function Hero() {
     >
       <div className="hero-inner">
         <p className="hero-promise">
-          Del mundo, a tu mano.
+          Importado de verdad.
           <br />
-          Primero lo tocás, después lo pagás.
+          En tu mano antes de pagar.
         </p>
         <span className="hero-cta-wrap">
           {/* Conversion-first: the Hero's single CTA sends the visitor to the
