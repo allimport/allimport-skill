@@ -51,13 +51,17 @@ const CYAN_EXTRUDE: THREE.ExtrudeGeometryOptions = {
 
 export default function Emblem() {
   const clock = useIntroClock();
-  const { pointer } = useThree();
+  const { pointer, camera, size } = useThree();
   const group = useRef<THREE.Group>(null!);
   const boltMat = useRef<THREE.MeshStandardMaterial>(null!);
   const haloMat = useRef<THREE.MeshStandardMaterial>(null!);
   const boltLight = useRef<THREE.PointLight>(null!);
   const letterMats = useRef<(THREE.MeshPhysicalMaterial | null)[]>([]);
   const drift = useRef({ x: 0, y: 0, vx: 0, vy: 0 });
+  // Colour wave: touching the logo makes cyan energy propagate through the
+  // letters from the exact contact point. t < 0 = no wave running.
+  const wave = useRef({ origin: 0, t: -1 });
+  const wasInside = useRef(false);
 
   const letterGeos = useMemo(
     () =>
@@ -74,6 +78,17 @@ export default function Emblem() {
     geo.translate(0, 0, -CYAN_EXTRUDE.depth! / 2);
     return geo;
   }, []);
+
+  // Per-letter horizontal centers (logo-local == world, group sits at x=0):
+  // the wave travels letter by letter from the contact point.
+  const letterCenters = useMemo(
+    () =>
+      letterGeos.map((g) => {
+        g.computeBoundingBox();
+        return (g.boundingBox!.min.x + g.boundingBox!.max.x) / 2;
+      }),
+    [letterGeos],
+  );
 
   const haloGeo = useMemo(() => {
     const geo = new THREE.ExtrudeGeometry(shapesFromD(HALO_D), CYAN_EXTRUDE);
@@ -130,6 +145,48 @@ export default function Emblem() {
     d.x += d.vx * dt;
     d.y += d.vy * dt;
 
+    // --- Colour wave (owner request): contact with the logo ignites a
+    // gradual cyan activation that PROPAGATES through the letters from the
+    // touch point — the fluid's energy waking the material, not a glow.
+    const cam = camera as THREE.PerspectiveCamera;
+    const vDist = cam.position.z;
+    const vHalfH = vDist * Math.tan((cam.fov * Math.PI) / 360);
+    const vHalfW = vHalfH * (size.width / size.height);
+    const wx = pointer.x * vHalfW;
+    const wy = pointer.y * vHalfH;
+    const inside =
+      Math.abs(wx) < 3.7 && wy > CENTER_Y - 0.9 && wy < CENTER_Y + 1.0;
+    // Trigger on ENTERING the logo (mouse crossing in, or a touch landing
+    // on it). Re-triggerable once the previous wave has travelled a beat —
+    // consecutive taps each launch their own wave.
+    if (inter > 0.5 && inside && !wasInside.current &&
+        (wave.current.t < 0 || wave.current.t > 1.0)) {
+      wave.current.origin = Math.max(-3.5, Math.min(3.5, wx));
+      wave.current.t = 0;
+    }
+    wasInside.current = inside;
+
+    if (wave.current.t >= 0) {
+      wave.current.t += dt;
+      const front = wave.current.t * 4.2; // units/s across the wordmark
+      const dieOff = Math.max(0, 1 - wave.current.t / 2.4);
+      LETTERS.forEach((_, i) => {
+        const m = letterMats.current[i];
+        if (!m) return;
+        const dxL = Math.abs(letterCenters[i] - wave.current.origin);
+        const act =
+          Math.exp(-((dxL - front) * (dxL - front)) / 0.5) * dieOff;
+        m.emissiveIntensity = act * 0.55;
+      });
+      if (wave.current.t > 2.4) {
+        wave.current.t = -1;
+        LETTERS.forEach((_, i) => {
+          const m = letterMats.current[i];
+          if (m) m.emissiveIntensity = 0;
+        });
+      }
+    }
+
     group.current.position.x = d.x;
     group.current.position.y = baseY + d.y;
     // Minimal momentum lean: driven by VELOCITY, not position — the logo
@@ -152,6 +209,8 @@ export default function Emblem() {
             // matte front, thin sharp lacquer so the beveled EDGES catch
             // light and the grazing side walls read a touch more reflective.
             color="#ffffff"
+            emissive="#00d4d4"
+            emissiveIntensity={0}
             metalness={0}
             roughness={0.5}
             clearcoat={0.6}
