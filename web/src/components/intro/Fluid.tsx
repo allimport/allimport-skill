@@ -59,7 +59,7 @@ const fragment = /* glsl */ `
   }
   float fbm(vec2 p){
     float v=0.0, a=0.5;
-    for(int i=0;i<3;i++){ v+=a*noise(p); p=p*2.03+vec2(1.7,9.2); a*=0.5; }
+    for(int i=0;i<4;i++){ v+=a*noise(p); p=p*2.03+vec2(1.7,9.2); a*=0.5; }
     return v;
   }
 
@@ -83,7 +83,7 @@ const fragment = /* glsl */ `
       if (tp.z <= 0.001) continue;
       // Thin thread: young ink is a fine line, the dying tail relaxes
       // slightly wider and fainter.
-      float r = 0.055 + 0.05 * (1.0 - tp.z);
+      float r = 0.04 + 0.042 * (1.0 - tp.z);
       vec2 d = q - tp.xy;
       field += tp.z * exp(-dot(d, d) / (r * r));
       vec2 d2 = q + L - tp.xy;
@@ -98,8 +98,9 @@ const fragment = /* glsl */ `
 
     // Internal currents: high-frequency liquid texture flowing through
     // the body — energy, not flat paint.
-    float cur = fbm(q * 9.0 + uTime * 0.9 + uVel * 2.0);
-    float inner = 0.72 + 0.56 * cur;
+    float cur = fbm(q * 11.0 + uTime * 0.9 + uVel * 2.0);
+    float fine = noise(q * 26.0 - uTime * 1.3);
+    float inner = 0.68 + 0.5 * cur + 0.16 * (fine - 0.5);
 
     // Volume from the light-offset sample.
     float relief = clamp((fOff - field) * 2.6, -0.5, 0.5);
@@ -118,6 +119,7 @@ export default function Fluid() {
   const mat = useRef<THREE.ShaderMaterial>(null!);
   const mesh = useRef<THREE.Mesh>(null!);
   const prev = useRef({ x: 10, y: 10 });
+  const smooth = useRef({ x: 10, y: 10 });
   const vel = useRef(new THREE.Vector2());
   const trail = useRef(
     Array.from({ length: N }, () => ({ x: 0, y: 0, age: -1 })),
@@ -156,9 +158,19 @@ export default function Fluid() {
     // cursor re-entering the window) draw nothing. Multiple consecutive
     // touches each start a fresh stroke.
     if (inter > 0 && step > 0.004 && step < 0.6) {
+      // Inertia: the recorded head chases the hand with weight (lagged
+      // follower) — the ribbon flows behind the gesture instead of
+      // snapping to it. Teleports reset the follower.
+      if (Math.hypot(px - smooth.current.x, py - smooth.current.y) > 0.6) {
+        smooth.current.x = px;
+        smooth.current.y = py;
+      } else {
+        smooth.current.x += (px - smooth.current.x) * 0.42;
+        smooth.current.y += (py - smooth.current.y) * 0.42;
+      }
       const s = trail.current[head.current];
-      s.x = px;
-      s.y = py;
+      s.x = smooth.current.x;
+      s.y = smooth.current.y;
       s.age = 0;
       head.current = (head.current + 1) % N;
     }

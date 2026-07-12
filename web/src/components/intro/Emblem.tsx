@@ -59,9 +59,62 @@ export default function Emblem() {
   const letterMats = useRef<(THREE.MeshPhysicalMaterial | null)[]>([]);
   const drift = useRef({ x: 0, y: 0, vx: 0, vy: 0 });
   // Colour wave: touching the logo makes cyan energy propagate through the
-  // letters from the exact contact point. t < 0 = no wave running.
-  const wave = useRef({ origin: 0, t: -1 });
+  // GEOMETRY from the exact contact point — per-fragment, not per-letter.
+  // t < 0 = no wave running.
+  const wave = useRef({ t: -1 });
   const wasInside = useRef(false);
+  // Shared shader uniforms injected into every letter material: the wave is
+  // evaluated per fragment in logo-local space, so the front crosses each
+  // bevel and side wall continuously and edges catch more energy (rim term).
+  const waveUniforms = useMemo(
+    () => ({
+      uWaveOrigin: { value: new THREE.Vector2(0, 0) },
+      uWaveFront: { value: -10 },
+      uWaveAmp: { value: 0 },
+    }),
+    [],
+  );
+  const injectWave = useMemo(
+    () => (material: THREE.MeshPhysicalMaterial) => {
+      material.onBeforeCompile = (shader) => {
+        shader.uniforms.uWaveOrigin = waveUniforms.uWaveOrigin;
+        shader.uniforms.uWaveFront = waveUniforms.uWaveFront;
+        shader.uniforms.uWaveAmp = waveUniforms.uWaveAmp;
+        shader.vertexShader = shader.vertexShader
+          .replace(
+            "#include <common>",
+            "#include <common>\nvarying vec3 vLogoPos;",
+          )
+          .replace(
+            "#include <begin_vertex>",
+            "#include <begin_vertex>\nvLogoPos = position;",
+          );
+        shader.fragmentShader = shader.fragmentShader
+          .replace(
+            "#include <common>",
+            `#include <common>
+             varying vec3 vLogoPos;
+             uniform vec2 uWaveOrigin;
+             uniform float uWaveFront;
+             uniform float uWaveAmp;`,
+          )
+          .replace(
+            "#include <emissivemap_fragment>",
+            `#include <emissivemap_fragment>
+             {
+               float dW = distance(vLogoPos.xy, uWaveOrigin);
+               float act = exp(-pow(dW - uWaveFront, 2.0) / 0.16) * uWaveAmp;
+               // The energy respects the relief: grazing faces (bevels,
+               // side walls) catch more than flat fronts.
+               float rimW = 1.0 - abs(normalize(normal).z);
+               totalEmissiveRadiance +=
+                 vec3(0.0, 0.83, 0.83) * act * (0.3 + 1.1 * rimW);
+             }`,
+          );
+      };
+    },
+    [waveUniforms],
+  );
 
   const letterGeos = useMemo(
     () =>
@@ -78,17 +131,6 @@ export default function Emblem() {
     geo.translate(0, 0, -CYAN_EXTRUDE.depth! / 2);
     return geo;
   }, []);
-
-  // Per-letter horizontal centers (logo-local == world, group sits at x=0):
-  // the wave travels letter by letter from the contact point.
-  const letterCenters = useMemo(
-    () =>
-      letterGeos.map((g) => {
-        g.computeBoundingBox();
-        return (g.boundingBox!.min.x + g.boundingBox!.max.x) / 2;
-      }),
-    [letterGeos],
-  );
 
   const haloGeo = useMemo(() => {
     const geo = new THREE.ExtrudeGeometry(shapesFromD(HALO_D), CYAN_EXTRUDE);
@@ -145,9 +187,12 @@ export default function Emblem() {
     d.x += d.vx * dt;
     d.y += d.vy * dt;
 
-    // --- Colour wave (owner request): contact with the logo ignites a
-    // gradual cyan activation that PROPAGATES through the letters from the
-    // touch point — the fluid's energy waking the material, not a glow.
+    // --- Colour wave (owner request): the fluid's energy WAKES THE
+    // MATERIAL. Contact with the logo sets a wave origin at the exact
+    // touch point in logo-local space; a gaussian front then travels
+    // outward through the actual geometry (evaluated per fragment in the
+    // injected shader — bevels and side walls catch more via the rim
+    // term), and dies off slowly back to the original material.
     const cam = camera as THREE.PerspectiveCamera;
     const vDist = cam.position.z;
     const vHalfH = vDist * Math.tan((cam.fov * Math.PI) / 360);
@@ -157,33 +202,26 @@ export default function Emblem() {
     const inside =
       Math.abs(wx) < 3.7 && wy > CENTER_Y - 0.9 && wy < CENTER_Y + 1.0;
     // Trigger on ENTERING the logo (mouse crossing in, or a touch landing
-    // on it). Re-triggerable once the previous wave has travelled a beat —
-    // consecutive taps each launch their own wave.
+    // on it). Consecutive taps each launch their own wave.
     if (inter > 0.5 && inside && !wasInside.current &&
-        (wave.current.t < 0 || wave.current.t > 1.0)) {
-      wave.current.origin = Math.max(-3.5, Math.min(3.5, wx));
+        (wave.current.t < 0 || wave.current.t > 0.9)) {
+      waveUniforms.uWaveOrigin.value.set(
+        Math.max(-3.6, Math.min(3.6, wx - group.current.position.x)),
+        wy - group.current.position.y,
+      );
       wave.current.t = 0;
     }
     wasInside.current = inside;
 
     if (wave.current.t >= 0) {
       wave.current.t += dt;
-      const front = wave.current.t * 4.2; // units/s across the wordmark
-      const dieOff = Math.max(0, 1 - wave.current.t / 2.4);
-      LETTERS.forEach((_, i) => {
-        const m = letterMats.current[i];
-        if (!m) return;
-        const dxL = Math.abs(letterCenters[i] - wave.current.origin);
-        const act =
-          Math.exp(-((dxL - front) * (dxL - front)) / 0.5) * dieOff;
-        m.emissiveIntensity = act * 0.55;
-      });
-      if (wave.current.t > 2.4) {
+      const front = wave.current.t * 3.2; // units/s across the geometry
+      const dieOff = Math.max(0, 1 - wave.current.t / 2.6);
+      waveUniforms.uWaveFront.value = front;
+      waveUniforms.uWaveAmp.value = dieOff * dieOff * inter;
+      if (wave.current.t > 2.6) {
         wave.current.t = -1;
-        LETTERS.forEach((_, i) => {
-          const m = letterMats.current[i];
-          if (m) m.emissiveIntensity = 0;
-        });
+        waveUniforms.uWaveAmp.value = 0;
       }
     }
 
@@ -204,13 +242,14 @@ export default function Emblem() {
           <meshPhysicalMaterial
             ref={(m) => {
               letterMats.current[i] = m;
+              if (m) injectWave(m);
             }}
             // Industrial ceramic (Apple / Nothing): pure dielectric white,
             // matte front, thin sharp lacquer so the beveled EDGES catch
             // light and the grazing side walls read a touch more reflective.
+            // The energy wave lives in an injected shader chunk; at rest the
+            // material is byte-identical to the original.
             color="#ffffff"
-            emissive="#00d4d4"
-            emissiveIntensity={0}
             metalness={0}
             roughness={0.5}
             clearcoat={0.6}
