@@ -110,18 +110,22 @@ export default function Emblem() {
                  // front that expands outward across the surface as the
                  // bead ages, then everything fades back to the original.
                  float age = 1.0 - a;
-                 float front = age * 3.4;
-                 float ring = exp(-pow(d - front, 2.0) / 0.2) * 0.8;
-                 float core = exp(-d * d / 0.4) * 0.9;
+                 // FAST front: the impact point itself sits under the
+                 // opaque ink mass, so the wave must ESCAPE it quickly —
+                 // it crosses the whole wordmark in about a second and is
+                 // read on the letters around and beyond the fluid.
+                 float front = age * 7.0;
+                 float ring = exp(-pow(d - front, 2.0) / 0.4) * 1.15;
+                 float core = exp(-d * d / 0.4) * 0.7;
                  act += (core + ring) * a;
                }
-               act = min(act, 1.35);
+               act = min(act, 1.6);
                // The relief still matters (bevels and side walls catch a
                // touch more), but flat faces carry the change too — the
                // reaction must read on the letter FRONTS, not only edges.
                float rimW = 1.0 - abs(normalize(normal).z);
                totalEmissiveRadiance +=
-                 vec3(0.0, 0.85, 0.85) * act * (0.55 + 0.75 * rimW);
+                 vec3(0.0, 0.85, 0.85) * act * (0.6 + 0.7 * rimW);
              }`,
           );
       };
@@ -216,9 +220,9 @@ export default function Emblem() {
 
     const amps = waveUniforms.uTrailAmp.value;
     const pts = waveUniforms.uTrail.value;
-    // Pulse timing: bright for a few tenths at impact, then the front
-    // travels and everything returns to the original over ~1.4s.
-    const decay = dt / 1.4;
+    // Pulse timing: each contact launches a wave that lives ~1.1s — the
+    // front crosses the wordmark and everything returns to the original.
+    const decay = dt / 1.1;
     for (let i = 0; i < amps.length; i++) {
       amps[i] = Math.max(0, amps[i] - decay);
     }

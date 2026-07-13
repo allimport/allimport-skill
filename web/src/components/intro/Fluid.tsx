@@ -41,7 +41,10 @@ const PRESSURE_ITERS = 20;
 // long scribble is a living ribbon under the hand, never an accumulating
 // coat of paint — stop moving and it is gone in about a second.
 const VEL_DISS = 3.2;
-const DYE_DISS = 0.85;
+const DYE_DISS = 0.5;
+// Constant fade (units/s) on top of the proportional one: the spread-out
+// haze dies almost instantly, the dense core lives ~1.8s.
+const DYE_ERODE = 0.22;
 const CURL_STRENGTH = 5;
 const SPLAT_RADIUS = 0.0035; // fat rounded mass, like the reference
 // Splat velocity = gesture SPEED (uv/s) × this gain — frame-rate
@@ -65,9 +68,18 @@ const advectFrag = /* glsl */ `
   uniform vec2 uTexel;
   uniform float uDt;
   uniform float uDissipation;
+  uniform float uErode;
   void main() {
     vec2 coord = vUv - uDt * texture2D(uVelocity, vUv).xy * uTexel;
-    gl_FragColor = texture2D(uSource, coord) / (1.0 + uDissipation * uDt);
+    vec4 r = texture2D(uSource, coord) / (1.0 + uDissipation * uDt);
+    // Constant erosion (dye only; 0 for velocity): each semi-Lagrangian
+    // resample smears the field by up to a texel, and at 60fps that is
+    // 60 smears a second — proportional decay alone lets the thinned
+    // halo hang as fog. Subtracting a constant eats the faint spread
+    // almost immediately while barely denting the dense core, so the
+    // ink keeps a LIQUID body with a hard physical limit, never a mist.
+    r = sign(r) * max(abs(r) - uErode * uDt, 0.0);
+    gl_FragColor = r;
   }
 `;
 
@@ -265,6 +277,7 @@ export default function Fluid({ manualRender = false }: { manualRender?: boolean
         uTexel: { value: simTexel },
         uDt: { value: 0 },
         uDissipation: { value: 1 },
+        uErode: { value: 0 },
       }),
       splat: mk(splatFrag, {
         uTarget: { value: null },
@@ -431,12 +444,14 @@ export default function Fluid({ manualRender = false }: { manualRender?: boolean
     mats.advect.uniforms.uSource.value = targets.vel[sim.vi].texture;
     mats.advect.uniforms.uDt.value = dt;
     mats.advect.uniforms.uDissipation.value = VEL_DISS;
+    mats.advect.uniforms.uErode.value = 0;
     run(mats.advect, targets.vel[1 - sim.vi]);
     sim.vi = 1 - sim.vi;
 
     mats.advect.uniforms.uVelocity.value = targets.vel[sim.vi].texture;
     mats.advect.uniforms.uSource.value = targets.dye[sim.di].texture;
     mats.advect.uniforms.uDissipation.value = DYE_DISS;
+    mats.advect.uniforms.uErode.value = DYE_ERODE;
     run(mats.advect, targets.dye[1 - sim.di]);
     sim.di = 1 - sim.di;
 
