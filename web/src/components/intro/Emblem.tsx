@@ -105,17 +105,23 @@ export default function Emblem() {
                  float a = uTrailAmp[i];
                  if (a <= 0.0) continue;
                  float d = distance(vLogoPos.xy, uTrail[i]);
-                 // gaussian patch around each contact bead; LINEAR in the
-                 // bead amplitude so the wake returns slowly and stays
-                 // legible after the fluid has moved off the letter.
-                 act += exp(-d * d / 0.55) * a;
+                 // Each contact bead is a pulse of energy INSIDE the
+                 // material: a bright core at the impact point plus a
+                 // front that expands outward across the surface as the
+                 // bead ages, then everything fades back to the original.
+                 float age = 1.0 - a;
+                 float front = age * 3.4;
+                 float ring = exp(-pow(d - front, 2.0) / 0.2) * 0.8;
+                 float core = exp(-d * d / 0.4) * 0.9;
+                 act += (core + ring) * a;
                }
-               act = min(act, 1.2);
-               // The energy respects the relief: grazing faces (bevels,
-               // side walls) catch more than flat fronts.
+               act = min(act, 1.35);
+               // The relief still matters (bevels and side walls catch a
+               // touch more), but flat faces carry the change too — the
+               // reaction must read on the letter FRONTS, not only edges.
                float rimW = 1.0 - abs(normalize(normal).z);
                totalEmissiveRadiance +=
-                 vec3(0.0, 0.83, 0.83) * act * (0.3 + 1.1 * rimW);
+                 vec3(0.0, 0.85, 0.85) * act * (0.55 + 0.75 * rimW);
              }`,
           );
       };
@@ -210,8 +216,9 @@ export default function Emblem() {
 
     const amps = waveUniforms.uTrailAmp.value;
     const pts = waveUniforms.uTrail.value;
-    // Slow return to the original material: a bead stays lit ~2.9s.
-    const decay = dt / 2.9;
+    // Pulse timing: bright for a few tenths at impact, then the front
+    // travels and everything returns to the original over ~1.4s.
+    const decay = dt / 1.4;
     for (let i = 0; i < amps.length; i++) {
       amps[i] = Math.max(0, amps[i] - decay);
     }

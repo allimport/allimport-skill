@@ -35,10 +35,13 @@ const dyeRes = () =>
   typeof window !== "undefined" && window.innerWidth > 900 ? 1024 : 512;
 const PRESSURE_ITERS = 20;
 // Dissipation RATES (per second, frame-rate independent): the reference
-// fluid is viscous — motion calms quickly after the gesture, the ink
-// itself lingers for seconds and thins slowly.
+// fluid is viscous — motion calms quickly after the gesture, and the ink
+// carries only a SHORT history: what you drew in the last moment. Old ink
+// dissolves continuously (injection and fade stay in equilibrium), so a
+// long scribble is a living ribbon under the hand, never an accumulating
+// coat of paint — stop moving and it is gone in about a second.
 const VEL_DISS = 3.2;
-const DYE_DISS = 0.3;
+const DYE_DISS = 0.85;
 const CURL_STRENGTH = 5;
 const SPLAT_RADIUS = 0.0035; // fat rounded mass, like the reference
 // Splat velocity = gesture SPEED (uv/s) × this gain — frame-rate
