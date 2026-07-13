@@ -58,28 +58,27 @@ export default function Emblem() {
   const boltLight = useRef<THREE.PointLight>(null!);
   const letterMats = useRef<(THREE.MeshPhysicalMaterial | null)[]>([]);
   const drift = useRef({ x: 0, y: 0, vx: 0, vy: 0 });
-  // Colour wave: touching the logo makes cyan energy propagate through the
-  // GEOMETRY from the exact contact point — per-fragment, not per-letter.
-  // t < 0 = no wave running.
-  const wave = useRef({ t: -1 });
-  const wasInside = useRef(false);
-  // Shared shader uniforms injected into every letter material: the wave is
-  // evaluated per fragment in logo-local space, so the front crosses each
-  // bevel and side wall continuously and edges catch more energy (rim term).
+  // Colour trail: the fluid's contact point WAKES THE MATERIAL where it
+  // touches and the glow FOLLOWS the cursor across the geometry, leaving a
+  // trail that fades from tail to head — never a uniform flash, never a
+  // wave from one fixed point. TRAIL_N recent contact beads, each with its
+  // own decaying amplitude, evaluated per fragment in logo-local space so
+  // the energy crosses every bevel and side wall (rim term catches edges).
+  const trailState = useRef({ head: 0, lx: 1e9, ly: 1e9 });
   const waveUniforms = useMemo(
     () => ({
-      uWaveOrigin: { value: new THREE.Vector2(0, 0) },
-      uWaveFront: { value: -10 },
-      uWaveAmp: { value: 0 },
+      uTrail: {
+        value: Array.from({ length: 10 }, () => new THREE.Vector2(0, 0)),
+      },
+      uTrailAmp: { value: new Float32Array(10) },
     }),
     [],
   );
   const injectWave = useMemo(
     () => (material: THREE.MeshPhysicalMaterial) => {
       material.onBeforeCompile = (shader) => {
-        shader.uniforms.uWaveOrigin = waveUniforms.uWaveOrigin;
-        shader.uniforms.uWaveFront = waveUniforms.uWaveFront;
-        shader.uniforms.uWaveAmp = waveUniforms.uWaveAmp;
+        shader.uniforms.uTrail = waveUniforms.uTrail;
+        shader.uniforms.uTrailAmp = waveUniforms.uTrailAmp;
         shader.vertexShader = shader.vertexShader
           .replace(
             "#include <common>",
@@ -94,16 +93,24 @@ export default function Emblem() {
             "#include <common>",
             `#include <common>
              varying vec3 vLogoPos;
-             uniform vec2 uWaveOrigin;
-             uniform float uWaveFront;
-             uniform float uWaveAmp;`,
+             uniform vec2 uTrail[10];
+             uniform float uTrailAmp[10];`,
           )
           .replace(
             "#include <emissivemap_fragment>",
             `#include <emissivemap_fragment>
              {
-               float dW = distance(vLogoPos.xy, uWaveOrigin);
-               float act = exp(-pow(dW - uWaveFront, 2.0) / 0.16) * uWaveAmp;
+               float act = 0.0;
+               for (int i = 0; i < 10; i++) {
+                 float a = uTrailAmp[i];
+                 if (a <= 0.0) continue;
+                 float d = distance(vLogoPos.xy, uTrail[i]);
+                 // gaussian patch around each contact bead; LINEAR in the
+                 // bead amplitude so the wake returns slowly and stays
+                 // legible after the fluid has moved off the letter.
+                 act += exp(-d * d / 0.55) * a;
+               }
+               act = min(act, 1.2);
                // The energy respects the relief: grazing faces (bevels,
                // side walls) catch more than flat fronts.
                float rimW = 1.0 - abs(normalize(normal).z);
@@ -187,12 +194,11 @@ export default function Emblem() {
     d.x += d.vx * dt;
     d.y += d.vy * dt;
 
-    // --- Colour wave (owner request): the fluid's energy WAKES THE
-    // MATERIAL. Contact with the logo sets a wave origin at the exact
-    // touch point in logo-local space; a gaussian front then travels
-    // outward through the actual geometry (evaluated per fragment in the
-    // injected shader — bevels and side walls catch more via the rim
-    // term), and dies off slowly back to the original material.
+    // --- Colour trail (owner request): the fluid's energy WAKES THE
+    // MATERIAL where it touches, and the glow FOLLOWS the cursor across
+    // the geometry, laying a trail of contact beads that each fade slowly
+    // back to the original material (evaluated per fragment in the injected
+    // shader — bevels and side walls catch more via the rim term).
     const cam = camera as THREE.PerspectiveCamera;
     const vDist = cam.position.z;
     const vHalfH = vDist * Math.tan((cam.fov * Math.PI) / 360);
@@ -201,28 +207,30 @@ export default function Emblem() {
     const wy = pointer.y * vHalfH;
     const inside =
       Math.abs(wx) < 3.7 && wy > CENTER_Y - 0.9 && wy < CENTER_Y + 1.0;
-    // Trigger on ENTERING the logo (mouse crossing in, or a touch landing
-    // on it). Consecutive taps each launch their own wave.
-    if (inter > 0.5 && inside && !wasInside.current &&
-        (wave.current.t < 0 || wave.current.t > 0.9)) {
-      waveUniforms.uWaveOrigin.value.set(
-        Math.max(-3.6, Math.min(3.6, wx - group.current.position.x)),
-        wy - group.current.position.y,
-      );
-      wave.current.t = 0;
-    }
-    wasInside.current = inside;
 
-    if (wave.current.t >= 0) {
-      wave.current.t += dt;
-      const front = wave.current.t * 3.2; // units/s across the geometry
-      const dieOff = Math.max(0, 1 - wave.current.t / 2.6);
-      waveUniforms.uWaveFront.value = front;
-      waveUniforms.uWaveAmp.value = dieOff * dieOff * inter;
-      if (wave.current.t > 2.6) {
-        wave.current.t = -1;
-        waveUniforms.uWaveAmp.value = 0;
+    const amps = waveUniforms.uTrailAmp.value;
+    const pts = waveUniforms.uTrail.value;
+    // Slow return to the original material: a bead stays lit ~2.9s.
+    const decay = dt / 2.9;
+    for (let i = 0; i < amps.length; i++) {
+      amps[i] = Math.max(0, amps[i] - decay);
+    }
+    if (inter > 0.5 && inside) {
+      const st = trailState.current;
+      // logo-local contact point (letters live in group-local space)
+      const clx = Math.max(-3.6, Math.min(3.6, wx - group.current.position.x));
+      const cly = wy - group.current.position.y;
+      const moved = Math.hypot(clx - st.lx, cly - st.ly);
+      // Freeze the current head as a fading trail bead and open a new one
+      // once the cursor has travelled far enough; otherwise keep the head
+      // glued to the cursor so the contact point tracks continuously.
+      if (moved > 0.4 || st.lx > 1e8) {
+        st.head = (st.head + 1) % amps.length;
+        st.lx = clx;
+        st.ly = cly;
       }
+      pts[st.head].set(clx, cly);
+      amps[st.head] = 1.0;
     }
 
     group.current.position.x = d.x;
