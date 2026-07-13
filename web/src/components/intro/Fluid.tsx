@@ -28,7 +28,11 @@ import { useIntroClock } from "./Scene";
  */
 
 const SIM_RES = 128;
-const DYE_RES = 512;
+/** Ink texture size: on large screens the dissolving outline of a 512px
+ *  dye grid reads faintly stepped, so desktop gets 1024 (the sim grid
+ *  stays at 128 — only the ink itself sharpens). */
+const dyeRes = () =>
+  typeof window !== "undefined" && window.innerWidth > 900 ? 1024 : 512;
 const PRESSURE_ITERS = 20;
 // Dissipation RATES (per second, frame-rate independent): the reference
 // fluid is viscous — motion calms quickly after the gesture, the ink
@@ -249,7 +253,7 @@ export default function Fluid({ manualRender = false }: { manualRender?: boolean
       });
 
     const simTexel = new THREE.Vector2(1 / SIM_RES, 1 / SIM_RES);
-    const dyeTexel = new THREE.Vector2(1 / DYE_RES, 1 / DYE_RES);
+    const DYE = dyeRes();
 
     const mats = {
       advect: mk(advectFrag, {
@@ -304,8 +308,8 @@ export default function Fluid({ manualRender = false }: { manualRender?: boolean
         makeTarget(SIM_RES, SIM_RES, THREE.RGBAFormat),
       ],
       dye: [
-        makeTarget(DYE_RES, DYE_RES, THREE.RGBAFormat),
-        makeTarget(DYE_RES, DYE_RES, THREE.RGBAFormat),
+        makeTarget(DYE, DYE, THREE.RGBAFormat),
+        makeTarget(DYE, DYE, THREE.RGBAFormat),
       ],
       p: [
         makeTarget(SIM_RES, SIM_RES, THREE.RGBAFormat),
@@ -316,7 +320,7 @@ export default function Fluid({ manualRender = false }: { manualRender?: boolean
     };
 
     return {
-      scene, cam, mesh, mats, targets, dyeTexel,
+      scene, cam, mesh, mats, targets,
       dispScene, dispQuad, dispMat,
       vi: 0, di: 0, pi: 0,
     };
