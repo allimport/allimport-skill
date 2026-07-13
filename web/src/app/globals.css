@@ -24,6 +24,9 @@
 html {
   background: var(--bg);
   scroll-behavior: smooth;
+  /* Drawing the hero fluid with a finger must never trigger the browser's
+     horizontal back/forward swipe navigation. */
+  overscroll-behavior-x: none;
 }
 @media (prefers-reduced-motion: reduce) {
   html {
