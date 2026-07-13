@@ -102,7 +102,7 @@ export default function Scene({
         <DepthField />
         <Particles mobile={mobile} />
         <Atmosphere />
-        <Fluid />
+        <Fluid manualRender={reducedMotion} />
         <Emblem />
         <CameraRig />
         {!reducedMotion && <Effects mobile={mobile} />}

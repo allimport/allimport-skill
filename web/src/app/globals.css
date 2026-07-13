@@ -56,7 +56,21 @@ body {
   position: relative;
   z-index: 5;
   background: var(--bg);
-  box-shadow: 0 -80px 120px 40px var(--bg);
+}
+/* Soft handoff above the stage — as a gradient gated by scroll progress:
+   the old always-on box-shadow bled 240px up into the hero and silently
+   tinted anything bright there (the white fluid ink read as a grey ramp).
+   Same look while scrolling, zero footprint at rest. */
+.content::before {
+  content: "";
+  position: absolute;
+  top: -200px;
+  left: 0;
+  right: 0;
+  height: 200px;
+  background: linear-gradient(to top, var(--bg), transparent);
+  opacity: clamp(0, calc(var(--sp, 0) * 3), 1);
+  pointer-events: none;
 }
 
 .sections-root {

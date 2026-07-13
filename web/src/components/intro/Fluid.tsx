@@ -36,7 +36,7 @@ const PRESSURE_ITERS = 20;
 const VEL_DISS = 3.2;
 const DYE_DISS = 0.3;
 const CURL_STRENGTH = 5;
-const SPLAT_RADIUS = 0.0016; // finer stroke than the reference
+const SPLAT_RADIUS = 0.0035; // fat rounded mass, like the reference
 // Splat velocity = gesture SPEED (uv/s) × this gain — frame-rate
 // independent (equals the classic force 5200 per-frame delta at 60 fps).
 const SPLAT_FORCE = 86;
@@ -173,34 +173,23 @@ const gradientFrag = /* glsl */ `
   }
 `;
 
-/** Display: white viscous ink with subtle volume from the dye gradient. */
-const displayVert = /* glsl */ `
-  varying vec2 vUv;
-  void main() {
-    vUv = uv;
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-  }
-`;
+/** Display: rendered as its own fullscreen pass AFTER the composer —
+ *  outside bloom (no halo) and outside tone mapping (exact paint-white).
+ *  The reference ink is a FLAT solid silhouette with a sharp, rounded
+ *  outline; everything liquid about it lives in that outline. */
 const displayFrag = /* glsl */ `
+  precision highp float;
   varying vec2 vUv;
   uniform sampler2D uDye;
-  uniform vec2 uTexel;
   uniform float uReveal;
   void main() {
     float d = texture2D(uDye, vUv).r;
-    if (d < 0.22) discard;
-    // Dense liquid body with a SHARP paint edge (the reference ink is a
-    // near-opaque blob with rounded, surface-tension outlines — the tight
-    // threshold on the smooth dye field is what makes it tear into
-    // rounded globules instead of fading like smoke).
-    float body = smoothstep(0.26, 0.38, d);
-    // Volume: shade by the dye gradient — lit upper-left like the scene key.
-    float dx = texture2D(uDye, vUv + vec2(uTexel.x, 0.0)).r
-             - texture2D(uDye, vUv - vec2(uTexel.x, 0.0)).r;
-    float dy = texture2D(uDye, vUv + vec2(0.0, uTexel.y)).r
-             - texture2D(uDye, vUv - vec2(0.0, uTexel.y)).r;
-    float shade = clamp(0.86 - dx * 1.4 + dy * 1.9, 0.55, 1.15);
-    vec3 col = vec3(0.93, 0.96, 1.0) * shade;
+    if (d < 0.4) discard;
+    // Near-binary edge cut deep into the diffusion halo: the mass stays
+    // fully opaque and dissolves by RETRACTING its outline, never by
+    // trailing off into a grey haze. Tears become rounded globules.
+    float body = smoothstep(0.435, 0.465, d);
+    vec3 col = vec3(0.965, 0.975, 1.0);
     float a = body * uReveal;
     gl_FragColor = vec4(col * a, a);
   }
@@ -218,11 +207,9 @@ function makeTarget(w: number, h: number, fmt: THREE.AnyPixelFormat) {
   });
 }
 
-export default function Fluid() {
+export default function Fluid({ manualRender = false }: { manualRender?: boolean }) {
   const clock = useIntroClock();
   const { gl, pointer, size } = useThree();
-  const displayMat = useRef<THREE.ShaderMaterial>(null!);
-  const mesh = useRef<THREE.Mesh>(null!);
   const prev = useRef({ x: -10, y: -10, has: false });
 
   // --- Sim resources (created once; disposed on unmount) ---
@@ -233,6 +220,24 @@ export default function Fluid() {
     const mesh = new THREE.Mesh(quadGeo);
     mesh.frustumCulled = false;
     scene.add(mesh);
+
+    // Display overlay: its own fullscreen scene, drawn straight to the
+    // canvas after the main render / composer.
+    const dispMat = new THREE.ShaderMaterial({
+      vertexShader: baseVert,
+      fragmentShader: displayFrag,
+      uniforms: {
+        uDye: { value: null as THREE.Texture | null },
+        uReveal: { value: 0 },
+      },
+      transparent: true,
+      depthTest: false,
+      depthWrite: false,
+    });
+    const dispScene = new THREE.Scene();
+    const dispQuad = new THREE.Mesh(quadGeo, dispMat);
+    dispQuad.frustumCulled = false;
+    dispScene.add(dispQuad);
 
     const mk = (frag: string, uniforms: Record<string, THREE.IUniform>) =>
       new THREE.ShaderMaterial({
@@ -310,11 +315,15 @@ export default function Fluid() {
       curl: makeTarget(SIM_RES, SIM_RES, THREE.RGBAFormat),
     };
 
-    return { scene, cam, mesh, mats, targets, dyeTexel, vi: 0, di: 0, pi: 0 };
+    return {
+      scene, cam, mesh, mats, targets, dyeTexel,
+      dispScene, dispQuad, dispMat,
+      vi: 0, di: 0, pi: 0,
+    };
   }, []);
 
   useEffect(() => {
-    const { targets, mats, mesh } = sim;
+    const { targets, mats, mesh, dispMat } = sim;
     return () => {
       targets.vel.forEach((t) => t.dispose());
       targets.dye.forEach((t) => t.dispose());
@@ -322,20 +331,12 @@ export default function Fluid() {
       targets.div.dispose();
       targets.curl.dispose();
       Object.values(mats).forEach((m) => m.dispose());
+      dispMat.dispose();
       mesh.geometry.dispose();
     };
   }, [sim]);
 
-  const displayUniforms = useMemo(
-    () => ({
-      uDye: { value: null as THREE.Texture | null },
-      uTexel: { value: new THREE.Vector2(1 / DYE_RES, 1 / DYE_RES) },
-      uReveal: { value: 0 },
-    }),
-    [],
-  );
-
-  useFrame(({ camera }, rawDt) => {
+  useFrame((_, rawDt) => {
     const t = clock.t;
     const inter = seg(t, BEATS.settle);
     const reveal = seg(t, BEATS.boltOn);
@@ -347,11 +348,6 @@ export default function Fluid() {
       gl.setRenderTarget(to);
       gl.render(scene, cam);
     };
-
-    const velR = targets.vel[sim.vi];
-    const velW = targets.vel[1 - sim.vi];
-    const dyeR = targets.dye[sim.di];
-    const dyeW = targets.dye[1 - sim.di];
 
     // --- Splat pointer motion: force into velocity, white into dye ---
     const px = pointer.x * 0.5 + 0.5;
@@ -385,7 +381,7 @@ export default function Fluid() {
           // dye splat (thin white, capped so the core cannot oversaturate
           // and outlive the intended slow fade)
           mats.splat.uniforms.uTarget.value = targets.dye[sim.di].texture;
-          mats.splat.uniforms.uColor.value.set(0.8, 0.8, 0.8);
+          mats.splat.uniforms.uColor.value.set(1.1, 1.1, 1.1);
           mats.splat.uniforms.uRadius.value = SPLAT_RADIUS;
           mats.splat.uniforms.uClampMax.value = 1.1;
           run(mats.splat, targets.dye[1 - sim.di]);
@@ -439,31 +435,25 @@ export default function Fluid() {
 
     gl.setRenderTarget(null);
 
-    // --- Display --- (write through the material: R3F clones the uniforms
-    // object passed as a JSX prop, so the original is not live)
-    const du = displayMat.current?.uniforms;
-    if (du) {
-      du.uDye.value = targets.dye[sim.di].texture;
-      du.uReveal.value = reveal;
-    }
-
-    const pc = camera as THREE.PerspectiveCamera;
-    const dist = pc.position.z - mesh.current.position.z;
-    const h = 2 * dist * Math.tan((pc.fov * Math.PI) / 360);
-    mesh.current.scale.set(h * (size.width / size.height), h, 1);
+    sim.dispMat.uniforms.uDye.value = targets.dye[sim.di].texture;
+    sim.dispMat.uniforms.uReveal.value = reveal;
   }, -1);
 
-  return (
-    <mesh ref={mesh} position={[0, 0, 0.9]}>
-      <planeGeometry args={[1, 1]} />
-      <shaderMaterial
-        ref={displayMat}
-        vertexShader={displayVert}
-        fragmentShader={displayFrag}
-        uniforms={displayUniforms}
-        transparent
-        depthWrite={false}
-      />
-    </mesh>
-  );
+  // Overlay pass: draw the ink straight to the canvas AFTER the main
+  // render / EffectComposer, so bloom never wraps it in a halo and tone
+  // mapping never greys the paint. Registering any positive-priority
+  // subscriber disables R3F's automatic render, so when the composer is
+  // not mounted (reduced motion) this pass renders the scene itself.
+  useFrame((state) => {
+    if (manualRender) {
+      state.gl.setRenderTarget(null);
+      state.gl.render(state.scene, state.camera);
+    }
+    const prevAutoClear = state.gl.autoClear;
+    state.gl.autoClear = false;
+    state.gl.render(sim.dispScene, sim.cam);
+    state.gl.autoClear = prevAutoClear;
+  }, 10);
+
+  return null;
 }
