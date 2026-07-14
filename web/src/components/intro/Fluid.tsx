@@ -41,16 +41,21 @@ const PRESSURE_ITERS = 20;
 // long scribble is a living ribbon under the hand, never an accumulating
 // coat of paint — stop moving and it is gone in about a second.
 const VEL_DISS = 3.2;
-const DYE_DISS = 0.5;
-// Constant fade (units/s) on top of the proportional one: the spread-out
-// haze dies almost instantly, the dense core lives ~1.8s.
-const DYE_ERODE = 0.22;
+// Dye fade is almost ALL erosion (constant subtraction), barely any
+// proportional dimming: the ink holds its opaque value along the whole
+// trail — so the stroke reads as a solid liquid RIBBON, not just the
+// freshest splat — then drops off a cliff and is gone in ~1.2s. A high
+// proportional term instead dims the trail exponentially, dropping it
+// under the display threshold a few pixels behind the cursor and
+// collapsing the ribbon into a dot.
+const DYE_DISS = 0.06;
+const DYE_ERODE = 0.45;
 const CURL_STRENGTH = 5;
 const SPLAT_RADIUS = 0.0035; // fat rounded mass, like the reference
 // Splat velocity = gesture SPEED (uv/s) × this gain — frame-rate
 // independent (equals the classic force 5200 per-frame delta at 60 fps).
-const SPLAT_FORCE = 86;
-const SPLAT_MAX_V = 200;
+const SPLAT_FORCE = 42;
+const SPLAT_MAX_V = 70;
 
 const baseVert = /* glsl */ `
   varying vec2 vUv;
@@ -199,33 +204,6 @@ const gradientFrag = /* glsl */ `
   }
 `;
 
-/** Containment envelope: the dye is multiplied by this every frame, so
- *  the ink can only exist inside the union of a few recent cursor beads.
- *  This is what makes the fluid LOCAL to the cursor with a hard radius,
- *  bounded coverage, and a guaranteed sub-second vanish once the hand
- *  stops — independent of resolution or frame rate, unlike relying on
- *  dissipation alone (which the velocity field can always outrun). */
-const containFrag = /* glsl */ `
-  precision highp float;
-  varying vec2 vUv;
-  uniform sampler2D uDye;
-  uniform vec2 uBeads[6];
-  uniform float uBeadAmp[6];
-  uniform float uRadius;
-  uniform float uAspect;
-  void main() {
-    float env = 0.0;
-    for (int i = 0; i < 6; i++) {
-      float a = uBeadAmp[i];
-      if (a <= 0.0) continue;
-      vec2 d = vUv - uBeads[i];
-      d.x *= uAspect;
-      env = max(env, exp(-dot(d, d) / (uRadius * uRadius)) * a);
-    }
-    gl_FragColor = texture2D(uDye, vUv) * smoothstep(0.04, 0.4, env);
-  }
-`;
-
 /** Logo tint feedback field, in dye-uv (== screen-uv) space. Where the
  *  solid ink body covers a pixel the value ramps up fast (~300ms) and
  *  releases slowly (~700ms) once the ink leaves — the "liquid stains the
@@ -294,15 +272,6 @@ export default function Fluid({ manualRender = false }: { manualRender?: boolean
   const clock = useIntroClock();
   const { gl, pointer, size } = useThree();
   const prev = useRef({ x: -10, y: -10, has: false });
-  // Cursor bead ring for the containment envelope (uv positions, wall-clock
-  // aged). The dye is confined to the union of these beads.
-  const beads = useRef({
-    pos: Array.from({ length: 6 }, () => new THREE.Vector2(-10, -10)),
-    amp: new Float32Array(6),
-    head: 0,
-    lx: -10,
-    ly: -10,
-  });
 
   // --- Sim resources (created once; disposed on unmount) ---
   const sim = useMemo(() => {
@@ -395,15 +364,6 @@ export default function Fluid({ manualRender = false }: { manualRender?: boolean
         uPressure: { value: null },
         uVelocity: { value: null },
         uTexel: { value: simTexel },
-      }),
-      contain: mk(containFrag, {
-        uDye: { value: null },
-        uBeads: {
-          value: Array.from({ length: 6 }, () => new THREE.Vector2()),
-        },
-        uBeadAmp: { value: new Float32Array(6) },
-        uRadius: { value: 0.045 },
-        uAspect: { value: 1 },
       }),
       tint: mk(tintFrag, {
         uDye: { value: null },
@@ -514,28 +474,6 @@ export default function Fluid({ manualRender = false }: { manualRender?: boolean
     prev.current.y = py;
     prev.current.has = true;
 
-    // --- Cursor beads for the containment envelope: age on the wall
-    // clock (~0.6s life → sub-second vanish), and keep a bead glued to
-    // the cursor while it draws so the ink is always confined to a small
-    // disc around the hand and can never spread across the hero. ---
-    const bd = beads.current;
-    // Short bead life caps BOTH the spatial trail (fast motion cannot
-    // spread many beads across the hero) and the vanish time.
-    const bDecay = fadeDt / 0.32;
-    for (let i = 0; i < bd.amp.length; i++) {
-      bd.amp[i] = Math.max(0, bd.amp[i] - bDecay);
-    }
-    if (inter > 0) {
-      const moved = Math.hypot(px - bd.lx, py - bd.ly);
-      if (moved > 0.03 || bd.lx < -1) {
-        bd.head = (bd.head + 1) % bd.amp.length;
-        bd.lx = px;
-        bd.ly = py;
-      }
-      bd.pos[bd.head].set(px, py);
-      bd.amp[bd.head] = 1.0;
-    }
-
     // --- Vorticity confinement (the viscous curls of the reference) ---
     mats.curl.uniforms.uVelocity.value = targets.vel[sim.vi].texture;
     run(mats.curl, targets.curl);
@@ -574,21 +512,16 @@ export default function Fluid({ manualRender = false }: { manualRender?: boolean
 
     mats.advect.uniforms.uVelocity.value = targets.vel[sim.vi].texture;
     mats.advect.uniforms.uSource.value = targets.dye[sim.di].texture;
+    // Dye is a passive scalar: semi-Lagrangian advection is
+    // unconditionally stable, so it displaces on the REAL clock (fadeDt),
+    // not the CFL clamp used for the velocity feedback loop. Otherwise,
+    // below 30fps the dye would fade at real time but only advect at the
+    // clamped rate — dying before it can stretch, collapsing the ribbon
+    // into a dot exactly on slower devices.
+    mats.advect.uniforms.uDt.value = fadeDt;
     mats.advect.uniforms.uDissipation.value = DYE_DISS;
     mats.advect.uniforms.uErode.value = DYE_ERODE;
     run(mats.advect, targets.dye[1 - sim.di]);
-    sim.di = 1 - sim.di;
-
-    // --- Containment: multiply the dye by the cursor-bead envelope, so
-    // the ink is physically confined to a small disc around the hand and
-    // cannot spread across the hero regardless of resolution or fps. ---
-    mats.contain.uniforms.uDye.value = targets.dye[sim.di].texture;
-    for (let i = 0; i < 6; i++) {
-      mats.contain.uniforms.uBeads.value[i].copy(bd.pos[i]);
-      mats.contain.uniforms.uBeadAmp.value[i] = bd.amp[i];
-    }
-    mats.contain.uniforms.uAspect.value = size.width / size.height;
-    run(mats.contain, targets.dye[1 - sim.di]);
     sim.di = 1 - sim.di;
 
     // --- Logo tint feedback: where the solid ink covers a pixel the tint
