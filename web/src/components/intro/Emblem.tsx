@@ -6,6 +6,7 @@ import * as THREE from "three";
 import { SVGLoader } from "three/addons/loaders/SVGLoader.js";
 import { BEATS, seg, pulse, easeOutCubic, easeInOutCubic } from "./timeline";
 import { useIntroClock } from "./Scene";
+import { fluidContact } from "./Fluid";
 import { LETTERS, BOLT_D, HALO_D, O_CENTER } from "./logo-full-paths";
 
 /**
@@ -51,7 +52,7 @@ const CYAN_EXTRUDE: THREE.ExtrudeGeometryOptions = {
 
 export default function Emblem() {
   const clock = useIntroClock();
-  const { pointer, camera, size } = useThree();
+  const { pointer } = useThree();
   const group = useRef<THREE.Group>(null!);
   const boltMat = useRef<THREE.MeshStandardMaterial>(null!);
   const haloMat = useRef<THREE.MeshStandardMaterial>(null!);
@@ -64,7 +65,7 @@ export default function Emblem() {
   // wave from one fixed point. TRAIL_N recent contact beads, each with its
   // own decaying amplitude, evaluated per fragment in logo-local space so
   // the energy crosses every bevel and side wall (rim term catches edges).
-  const trailState = useRef({ head: 0, lx: 1e9, ly: 1e9 });
+  const trailState = useRef({ head: 0, lx: 1e9, ly: 1e9, stamp: 0 });
   const waveUniforms = useMemo(
     () => ({
       uTrail: {
@@ -115,7 +116,7 @@ export default function Emblem() {
                  // it crosses the whole wordmark in about a second and is
                  // read on the letters around and beyond the fluid.
                  float front = age * 7.0;
-                 float ring = exp(-pow(d - front, 2.0) / 0.4) * 1.15;
+                 float ring = exp(-pow(d - front, 2.0) / 0.4) * 1.35;
                  float core = exp(-d * d / 0.4) * 0.7;
                  act += (core + ring) * a;
                }
@@ -204,44 +205,45 @@ export default function Emblem() {
     d.x += d.vx * dt;
     d.y += d.vy * dt;
 
-    // --- Colour trail (owner request): the fluid's energy WAKES THE
-    // MATERIAL where it touches, and the glow FOLLOWS the cursor across
-    // the geometry, laying a trail of contact beads that each fade slowly
-    // back to the original material (evaluated per fragment in the injected
-    // shader — bevels and side walls catch more via the rim term).
-    const cam = camera as THREE.PerspectiveCamera;
-    const vDist = cam.position.z;
-    const vHalfH = vDist * Math.tan((cam.fov * Math.PI) / 360);
-    const vHalfW = vHalfH * (size.width / size.height);
-    const wx = pointer.x * vHalfW;
-    const wy = pointer.y * vHalfH;
-    const inside =
-      Math.abs(wx) < 3.7 && wy > CENTER_Y - 0.9 && wy < CENTER_Y + 1.0;
-
+    // --- Colour wave, driven by REAL fluid contact: Fluid.tsx probes its
+    // own dye field across the logo band on the GPU and publishes the
+    // strongest inked point (fluidContact). No ink on the logo, no
+    // reaction — no cursor proxies, no timers. Each fresh contact drops
+    // a bead whose energy front travels the surface from that exact
+    // point and fades back to the original material.
     const amps = waveUniforms.uTrailAmp.value;
     const pts = waveUniforms.uTrail.value;
     // Pulse timing: each contact launches a wave that lives ~1.1s — the
     // front crosses the wordmark and everything returns to the original.
-    const decay = dt / 1.1;
+    // Real elapsed time: the wave must fade on the wall clock even when
+    // the frame rate drops below the sim clamp.
+    const decay = Math.min(rawDt, 0.25) / 1.1;
     for (let i = 0; i < amps.length; i++) {
       amps[i] = Math.max(0, amps[i] - decay);
     }
-    if (inter > 0.5 && inside) {
-      const st = trailState.current;
+    const st = trailState.current;
+    if (inter > 0.5 && fluidContact.stamp !== st.stamp) {
+      st.stamp = fluidContact.stamp;
       // logo-local contact point (letters live in group-local space)
-      const clx = Math.max(-3.6, Math.min(3.6, wx - group.current.position.x));
-      const cly = wy - group.current.position.y;
+      const clx = Math.max(
+        -3.6,
+        Math.min(3.6, fluidContact.wx - group.current.position.x),
+      );
+      const cly = fluidContact.wy - group.current.position.y;
       const moved = Math.hypot(clx - st.lx, cly - st.ly);
-      // Freeze the current head as a fading trail bead and open a new one
-      // once the cursor has travelled far enough; otherwise keep the head
-      // glued to the cursor so the contact point tracks continuously.
-      if (moved > 0.4 || st.lx > 1e8) {
+      // A launched wave TRAVELS freely — never re-anchor or re-energise
+      // it, or its front would stay pinned under the ink and never be
+      // seen. Sustained contact relaunches only once the running wave
+      // has died; a contact that jumped far is a new impact and fires
+      // its own wave immediately.
+      const headAlive = amps[st.head] > 0.15;
+      if (!headAlive || moved > 1.1 || st.lx > 1e8) {
         st.head = (st.head + 1) % amps.length;
         st.lx = clx;
         st.ly = cly;
+        pts[st.head].set(clx, cly);
+        amps[st.head] = 1.0;
       }
-      pts[st.head].set(clx, cly);
-      amps[st.head] = 1.0;
     }
 
     group.current.position.x = d.x;

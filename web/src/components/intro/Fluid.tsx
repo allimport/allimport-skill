@@ -67,18 +67,25 @@ const advectFrag = /* glsl */ `
   uniform sampler2D uSource;
   uniform vec2 uTexel;
   uniform float uDt;
+  uniform float uFadeDt;
   uniform float uDissipation;
   uniform float uErode;
   void main() {
+    // Two clocks, on purpose. uDt is CLAMPED for CFL stability of the
+    // semi-Lagrangian displacement. uFadeDt is REAL elapsed time: decay
+    // is pointwise and unconditionally stable, and if it ran on the
+    // clamped clock, any machine rendering below the clamp rate would
+    // fade slower than real time while the hand keeps injecting at real
+    // time — a structural accumulation leak, the ink slowly coating the
+    // screen exactly on the devices that can least afford it.
     vec2 coord = vUv - uDt * texture2D(uVelocity, vUv).xy * uTexel;
-    vec4 r = texture2D(uSource, coord) / (1.0 + uDissipation * uDt);
+    vec4 r = texture2D(uSource, coord) / (1.0 + uDissipation * uFadeDt);
     // Constant erosion (dye only; 0 for velocity): each semi-Lagrangian
-    // resample smears the field by up to a texel, and at 60fps that is
-    // 60 smears a second — proportional decay alone lets the thinned
-    // halo hang as fog. Subtracting a constant eats the faint spread
-    // almost immediately while barely denting the dense core, so the
-    // ink keeps a LIQUID body with a hard physical limit, never a mist.
-    r = sign(r) * max(abs(r) - uErode * uDt, 0.0);
+    // resample smears the field by up to a texel — proportional decay
+    // alone lets the thinned halo hang as fog. Subtracting a constant
+    // eats the faint spread almost immediately while barely denting the
+    // dense core: a LIQUID body with a hard physical limit, never mist.
+    r = sign(r) * max(abs(r) - uErode * uFadeDt, 0.0);
     gl_FragColor = r;
   }
 `;
@@ -192,6 +199,27 @@ const gradientFrag = /* glsl */ `
   }
 `;
 
+/** Contact probe: 24x8 byte target sampling the dye field across the
+ *  logo's screen band. Read back on the CPU, it is the REAL collision
+ *  test between the fluid and the logo — the colour wave fires from
+ *  actual ink presence, never from the cursor. */
+const probeFrag = /* glsl */ `
+  precision highp float;
+  varying vec2 vUv;
+  uniform sampler2D uDye;
+  uniform vec2 uBandMin;
+  uniform vec2 uBandMax;
+  void main() {
+    vec2 duv = mix(uBandMin, uBandMax, vUv);
+    gl_FragColor = vec4(clamp(texture2D(uDye, duv).r, 0.0, 1.0));
+  }
+`;
+
+/** Latest real fluid-on-logo contact, world coords. Written by Fluid's
+ *  probe readback, consumed by Emblem. s = dye strength 0..1; stamp
+ *  increments on every fresh detection. */
+export const fluidContact = { wx: 0, wy: 0, s: 0, stamp: 0 };
+
 /** Display: rendered as its own fullscreen pass AFTER the composer —
  *  outside bloom (no halo) and outside tone mapping (exact paint-white).
  *  The reference ink is a FLAT solid silhouette with a sharp, rounded
@@ -258,6 +286,18 @@ export default function Fluid({ manualRender = false }: { manualRender?: boolean
     dispQuad.frustumCulled = false;
     dispScene.add(dispQuad);
 
+    // Contact probe resources (tiny, byte-readable)
+    const PROBE_W = 24;
+    const PROBE_H = 8;
+    const probeTarget = new THREE.WebGLRenderTarget(PROBE_W, PROBE_H, {
+      type: THREE.UnsignedByteType,
+      format: THREE.RGBAFormat,
+      minFilter: THREE.NearestFilter,
+      magFilter: THREE.NearestFilter,
+      depthBuffer: false,
+    });
+    const probeBuf = new Uint8Array(PROBE_W * PROBE_H * 4);
+
     const mk = (frag: string, uniforms: Record<string, THREE.IUniform>) =>
       new THREE.ShaderMaterial({
         vertexShader: baseVert,
@@ -276,6 +316,7 @@ export default function Fluid({ manualRender = false }: { manualRender?: boolean
         uSource: { value: null },
         uTexel: { value: simTexel },
         uDt: { value: 0 },
+        uFadeDt: { value: 0 },
         uDissipation: { value: 1 },
         uErode: { value: 0 },
       }),
@@ -316,6 +357,11 @@ export default function Fluid({ manualRender = false }: { manualRender?: boolean
         uVelocity: { value: null },
         uTexel: { value: simTexel },
       }),
+      probe: mk(probeFrag, {
+        uDye: { value: null },
+        uBandMin: { value: new THREE.Vector2() },
+        uBandMax: { value: new THREE.Vector2() },
+      }),
     };
 
     const targets = {
@@ -338,12 +384,13 @@ export default function Fluid({ manualRender = false }: { manualRender?: boolean
     return {
       scene, cam, mesh, mats, targets,
       dispScene, dispQuad, dispMat,
-      vi: 0, di: 0, pi: 0,
+      probeTarget, probeBuf, PROBE_W, PROBE_H,
+      vi: 0, di: 0, pi: 0, frame: 0,
     };
   }, []);
 
   useEffect(() => {
-    const { targets, mats, mesh, dispMat } = sim;
+    const { targets, mats, mesh, dispMat, probeTarget } = sim;
     return () => {
       targets.vel.forEach((t) => t.dispose());
       targets.dye.forEach((t) => t.dispose());
@@ -352,15 +399,19 @@ export default function Fluid({ manualRender = false }: { manualRender?: boolean
       targets.curl.dispose();
       Object.values(mats).forEach((m) => m.dispose());
       dispMat.dispose();
+      probeTarget.dispose();
       mesh.geometry.dispose();
     };
   }, [sim]);
 
-  useFrame((_, rawDt) => {
+  useFrame(({ camera }, rawDt) => {
     const t = clock.t;
     const inter = seg(t, BEATS.settle);
     const reveal = seg(t, BEATS.boltOn);
     const dt = Math.min(rawDt, 1 / 30);
+    // Real elapsed time for all fading (capped only against tab-switch
+    // jumps) — decay must run on the wall clock at ANY frame rate.
+    const fadeDt = Math.min(rawDt, 0.25);
     const { scene, cam, mesh: quad, mats, targets } = sim;
 
     const run = (mat: THREE.ShaderMaterial, to: THREE.WebGLRenderTarget) => {
@@ -443,6 +494,7 @@ export default function Fluid({ manualRender = false }: { manualRender?: boolean
     mats.advect.uniforms.uVelocity.value = targets.vel[sim.vi].texture;
     mats.advect.uniforms.uSource.value = targets.vel[sim.vi].texture;
     mats.advect.uniforms.uDt.value = dt;
+    mats.advect.uniforms.uFadeDt.value = fadeDt;
     mats.advect.uniforms.uDissipation.value = VEL_DISS;
     mats.advect.uniforms.uErode.value = 0;
     run(mats.advect, targets.vel[1 - sim.vi]);
@@ -454,6 +506,43 @@ export default function Fluid({ manualRender = false }: { manualRender?: boolean
     mats.advect.uniforms.uErode.value = DYE_ERODE;
     run(mats.advect, targets.dye[1 - sim.di]);
     sim.di = 1 - sim.di;
+
+    // --- Contact probe: REAL fluid-on-logo collision test. Renders the
+    // dye field across the logo's screen band into a 24x8 byte target
+    // and reads it back (every other frame; ~768 bytes). The strongest
+    // inked texel becomes the contact point Emblem's wave fires from —
+    // no cursor proxies, no timers: no ink on the logo, no reaction.
+    sim.frame++;
+    if (sim.frame % 2 === 0 && inter > 0.5) {
+      const pc = camera as THREE.PerspectiveCamera;
+      const vHalfH = pc.position.z * Math.tan((pc.fov * Math.PI) / 360);
+      const vHalfW = vHalfH * (size.width / size.height);
+      // Logo band in world space (matches Emblem's hit band)
+      const x0 = -3.7, x1 = 3.7, y0 = 0.15 - 0.9, y1 = 0.15 + 1.0;
+      const u0 = 0.5 + x0 / (2 * vHalfW);
+      const u1 = 0.5 + x1 / (2 * vHalfW);
+      const v0 = 0.5 + y0 / (2 * vHalfH);
+      const v1 = 0.5 + y1 / (2 * vHalfH);
+      mats.probe.uniforms.uDye.value = targets.dye[sim.di].texture;
+      mats.probe.uniforms.uBandMin.value.set(u0, v0);
+      mats.probe.uniforms.uBandMax.value.set(u1, v1);
+      run(mats.probe, sim.probeTarget);
+      gl.readRenderTargetPixels(
+        sim.probeTarget, 0, 0, sim.PROBE_W, sim.PROBE_H, sim.probeBuf,
+      );
+      let best = 0, bi = -1;
+      for (let i = 0; i < sim.probeBuf.length; i += 4) {
+        if (sim.probeBuf[i] > best) { best = sim.probeBuf[i]; bi = i >> 2; }
+      }
+      if (best > 115) { // dye ≥ ~0.45: the visible liquid body, not haze
+        const cx = (bi % sim.PROBE_W + 0.5) / sim.PROBE_W;
+        const cy = (Math.floor(bi / sim.PROBE_W) + 0.5) / sim.PROBE_H;
+        fluidContact.wx = x0 + cx * (x1 - x0);
+        fluidContact.wy = y0 + cy * (y1 - y0);
+        fluidContact.s = best / 255;
+        fluidContact.stamp++;
+      }
+    }
 
     gl.setRenderTarget(null);
 
