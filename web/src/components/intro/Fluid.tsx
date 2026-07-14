@@ -209,13 +209,13 @@ const containFrag = /* glsl */ `
   precision highp float;
   varying vec2 vUv;
   uniform sampler2D uDye;
-  uniform vec2 uBeads[12];
-  uniform float uBeadAmp[12];
+  uniform vec2 uBeads[6];
+  uniform float uBeadAmp[6];
   uniform float uRadius;
   uniform float uAspect;
   void main() {
     float env = 0.0;
-    for (int i = 0; i < 12; i++) {
+    for (int i = 0; i < 6; i++) {
       float a = uBeadAmp[i];
       if (a <= 0.0) continue;
       vec2 d = vUv - uBeads[i];
@@ -297,8 +297,8 @@ export default function Fluid({ manualRender = false }: { manualRender?: boolean
   // Cursor bead ring for the containment envelope (uv positions, wall-clock
   // aged). The dye is confined to the union of these beads.
   const beads = useRef({
-    pos: Array.from({ length: 12 }, () => new THREE.Vector2(-10, -10)),
-    amp: new Float32Array(12),
+    pos: Array.from({ length: 6 }, () => new THREE.Vector2(-10, -10)),
+    amp: new Float32Array(6),
     head: 0,
     lx: -10,
     ly: -10,
@@ -399,10 +399,10 @@ export default function Fluid({ manualRender = false }: { manualRender?: boolean
       contain: mk(containFrag, {
         uDye: { value: null },
         uBeads: {
-          value: Array.from({ length: 12 }, () => new THREE.Vector2()),
+          value: Array.from({ length: 6 }, () => new THREE.Vector2()),
         },
-        uBeadAmp: { value: new Float32Array(12) },
-        uRadius: { value: 0.05 },
+        uBeadAmp: { value: new Float32Array(6) },
+        uRadius: { value: 0.045 },
         uAspect: { value: 1 },
       }),
       tint: mk(tintFrag, {
@@ -519,7 +519,9 @@ export default function Fluid({ manualRender = false }: { manualRender?: boolean
     // the cursor while it draws so the ink is always confined to a small
     // disc around the hand and can never spread across the hero. ---
     const bd = beads.current;
-    const bDecay = fadeDt / 0.6;
+    // Short bead life caps BOTH the spatial trail (fast motion cannot
+    // spread many beads across the hero) and the vanish time.
+    const bDecay = fadeDt / 0.32;
     for (let i = 0; i < bd.amp.length; i++) {
       bd.amp[i] = Math.max(0, bd.amp[i] - bDecay);
     }
@@ -581,7 +583,7 @@ export default function Fluid({ manualRender = false }: { manualRender?: boolean
     // the ink is physically confined to a small disc around the hand and
     // cannot spread across the hero regardless of resolution or fps. ---
     mats.contain.uniforms.uDye.value = targets.dye[sim.di].texture;
-    for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < 6; i++) {
       mats.contain.uniforms.uBeads.value[i].copy(bd.pos[i]);
       mats.contain.uniforms.uBeadAmp.value[i] = bd.amp[i];
     }
