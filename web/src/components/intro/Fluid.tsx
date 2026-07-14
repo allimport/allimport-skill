@@ -199,26 +199,62 @@ const gradientFrag = /* glsl */ `
   }
 `;
 
-/** Contact probe: 24x8 byte target sampling the dye field across the
- *  logo's screen band. Read back on the CPU, it is the REAL collision
- *  test between the fluid and the logo — the colour wave fires from
- *  actual ink presence, never from the cursor. */
-const probeFrag = /* glsl */ `
+/** Containment envelope: the dye is multiplied by this every frame, so
+ *  the ink can only exist inside the union of a few recent cursor beads.
+ *  This is what makes the fluid LOCAL to the cursor with a hard radius,
+ *  bounded coverage, and a guaranteed sub-second vanish once the hand
+ *  stops — independent of resolution or frame rate, unlike relying on
+ *  dissipation alone (which the velocity field can always outrun). */
+const containFrag = /* glsl */ `
   precision highp float;
   varying vec2 vUv;
   uniform sampler2D uDye;
-  uniform vec2 uBandMin;
-  uniform vec2 uBandMax;
+  uniform vec2 uBeads[12];
+  uniform float uBeadAmp[12];
+  uniform float uRadius;
+  uniform float uAspect;
   void main() {
-    vec2 duv = mix(uBandMin, uBandMax, vUv);
-    gl_FragColor = vec4(clamp(texture2D(uDye, duv).r, 0.0, 1.0));
+    float env = 0.0;
+    for (int i = 0; i < 12; i++) {
+      float a = uBeadAmp[i];
+      if (a <= 0.0) continue;
+      vec2 d = vUv - uBeads[i];
+      d.x *= uAspect;
+      env = max(env, exp(-dot(d, d) / (uRadius * uRadius)) * a);
+    }
+    gl_FragColor = texture2D(uDye, vUv) * smoothstep(0.04, 0.4, env);
   }
 `;
 
-/** Latest real fluid-on-logo contact, world coords. Written by Fluid's
- *  probe readback, consumed by Emblem. s = dye strength 0..1; stamp
- *  increments on every fresh detection. */
-export const fluidContact = { wx: 0, wy: 0, s: 0, stamp: 0 };
+/** Logo tint feedback field, in dye-uv (== screen-uv) space. Where the
+ *  solid ink body covers a pixel the value ramps up fast (~300ms) and
+ *  releases slowly (~700ms) once the ink leaves — the "liquid stains the
+ *  metal" response. The letter material samples this by screen position,
+ *  so the colour follows the fluid's exact shape and is strictly local:
+ *  a corner touched tints only that corner. No wave, no travel, no timer. */
+const tintFrag = /* glsl */ `
+  precision highp float;
+  varying vec2 vUv;
+  uniform sampler2D uDye;
+  uniform sampler2D uPrev;
+  uniform float uAttack;
+  uniform float uRelease;
+  void main() {
+    // Widen past the opaque core into the ink's soft edge, so the stain
+    // reads as a cyan halo AROUND the white blob (the core itself is
+    // hidden under the opaque ink) and in the wake it leaves behind.
+    float d = clamp(texture2D(uDye, vUv).r, 0.0, 1.0);
+    float target = smoothstep(0.12, 0.45, d);
+    float prev = texture2D(uPrev, vUv).r;
+    float rate = target > prev ? uAttack : uRelease;
+    float v = prev + (target - prev) * clamp(rate, 0.0, 1.0);
+    gl_FragColor = vec4(v, 0.0, 0.0, 1.0);
+  }
+`;
+
+/** Live logo tint texture, published by Fluid, sampled by Emblem's
+ *  letter material in screen space. */
+export const logoTint: { tex: THREE.Texture | null } = { tex: null };
 
 /** Display: rendered as its own fullscreen pass AFTER the composer —
  *  outside bloom (no halo) and outside tone mapping (exact paint-white).
@@ -258,6 +294,15 @@ export default function Fluid({ manualRender = false }: { manualRender?: boolean
   const clock = useIntroClock();
   const { gl, pointer, size } = useThree();
   const prev = useRef({ x: -10, y: -10, has: false });
+  // Cursor bead ring for the containment envelope (uv positions, wall-clock
+  // aged). The dye is confined to the union of these beads.
+  const beads = useRef({
+    pos: Array.from({ length: 12 }, () => new THREE.Vector2(-10, -10)),
+    amp: new Float32Array(12),
+    head: 0,
+    lx: -10,
+    ly: -10,
+  });
 
   // --- Sim resources (created once; disposed on unmount) ---
   const sim = useMemo(() => {
@@ -286,17 +331,11 @@ export default function Fluid({ manualRender = false }: { manualRender?: boolean
     dispQuad.frustumCulled = false;
     dispScene.add(dispQuad);
 
-    // Contact probe resources (tiny, byte-readable)
-    const PROBE_W = 24;
-    const PROBE_H = 8;
-    const probeTarget = new THREE.WebGLRenderTarget(PROBE_W, PROBE_H, {
-      type: THREE.UnsignedByteType,
-      format: THREE.RGBAFormat,
-      minFilter: THREE.NearestFilter,
-      magFilter: THREE.NearestFilter,
-      depthBuffer: false,
-    });
-    const probeBuf = new Uint8Array(PROBE_W * PROBE_H * 4);
+    // Logo tint feedback field (ping-pong), dye-uv space, half float.
+    const tint = [
+      makeTarget(256, 256, THREE.RGBAFormat),
+      makeTarget(256, 256, THREE.RGBAFormat),
+    ];
 
     const mk = (frag: string, uniforms: Record<string, THREE.IUniform>) =>
       new THREE.ShaderMaterial({
@@ -357,10 +396,20 @@ export default function Fluid({ manualRender = false }: { manualRender?: boolean
         uVelocity: { value: null },
         uTexel: { value: simTexel },
       }),
-      probe: mk(probeFrag, {
+      contain: mk(containFrag, {
         uDye: { value: null },
-        uBandMin: { value: new THREE.Vector2() },
-        uBandMax: { value: new THREE.Vector2() },
+        uBeads: {
+          value: Array.from({ length: 12 }, () => new THREE.Vector2()),
+        },
+        uBeadAmp: { value: new Float32Array(12) },
+        uRadius: { value: 0.05 },
+        uAspect: { value: 1 },
+      }),
+      tint: mk(tintFrag, {
+        uDye: { value: null },
+        uPrev: { value: null },
+        uAttack: { value: 0.1 },
+        uRelease: { value: 0.04 },
       }),
     };
 
@@ -384,27 +433,28 @@ export default function Fluid({ manualRender = false }: { manualRender?: boolean
     return {
       scene, cam, mesh, mats, targets,
       dispScene, dispQuad, dispMat,
-      probeTarget, probeBuf, PROBE_W, PROBE_H,
+      tint, ti: 0,
       vi: 0, di: 0, pi: 0, frame: 0,
     };
   }, []);
 
   useEffect(() => {
-    const { targets, mats, mesh, dispMat, probeTarget } = sim;
+    const { targets, mats, mesh, dispMat, tint } = sim;
     return () => {
       targets.vel.forEach((t) => t.dispose());
       targets.dye.forEach((t) => t.dispose());
       targets.p.forEach((t) => t.dispose());
       targets.div.dispose();
       targets.curl.dispose();
+      tint.forEach((t) => t.dispose());
       Object.values(mats).forEach((m) => m.dispose());
       dispMat.dispose();
-      probeTarget.dispose();
+      logoTint.tex = null;
       mesh.geometry.dispose();
     };
   }, [sim]);
 
-  useFrame(({ camera }, rawDt) => {
+  useFrame((_, rawDt) => {
     const t = clock.t;
     const inter = seg(t, BEATS.settle);
     const reveal = seg(t, BEATS.boltOn);
@@ -464,6 +514,26 @@ export default function Fluid({ manualRender = false }: { manualRender?: boolean
     prev.current.y = py;
     prev.current.has = true;
 
+    // --- Cursor beads for the containment envelope: age on the wall
+    // clock (~0.6s life → sub-second vanish), and keep a bead glued to
+    // the cursor while it draws so the ink is always confined to a small
+    // disc around the hand and can never spread across the hero. ---
+    const bd = beads.current;
+    const bDecay = fadeDt / 0.6;
+    for (let i = 0; i < bd.amp.length; i++) {
+      bd.amp[i] = Math.max(0, bd.amp[i] - bDecay);
+    }
+    if (inter > 0) {
+      const moved = Math.hypot(px - bd.lx, py - bd.ly);
+      if (moved > 0.03 || bd.lx < -1) {
+        bd.head = (bd.head + 1) % bd.amp.length;
+        bd.lx = px;
+        bd.ly = py;
+      }
+      bd.pos[bd.head].set(px, py);
+      bd.amp[bd.head] = 1.0;
+    }
+
     // --- Vorticity confinement (the viscous curls of the reference) ---
     mats.curl.uniforms.uVelocity.value = targets.vel[sim.vi].texture;
     run(mats.curl, targets.curl);
@@ -507,42 +577,29 @@ export default function Fluid({ manualRender = false }: { manualRender?: boolean
     run(mats.advect, targets.dye[1 - sim.di]);
     sim.di = 1 - sim.di;
 
-    // --- Contact probe: REAL fluid-on-logo collision test. Renders the
-    // dye field across the logo's screen band into a 24x8 byte target
-    // and reads it back (every other frame; ~768 bytes). The strongest
-    // inked texel becomes the contact point Emblem's wave fires from —
-    // no cursor proxies, no timers: no ink on the logo, no reaction.
-    sim.frame++;
-    if (sim.frame % 2 === 0 && inter > 0.5) {
-      const pc = camera as THREE.PerspectiveCamera;
-      const vHalfH = pc.position.z * Math.tan((pc.fov * Math.PI) / 360);
-      const vHalfW = vHalfH * (size.width / size.height);
-      // Logo band in world space (matches Emblem's hit band)
-      const x0 = -3.7, x1 = 3.7, y0 = 0.15 - 0.9, y1 = 0.15 + 1.0;
-      const u0 = 0.5 + x0 / (2 * vHalfW);
-      const u1 = 0.5 + x1 / (2 * vHalfW);
-      const v0 = 0.5 + y0 / (2 * vHalfH);
-      const v1 = 0.5 + y1 / (2 * vHalfH);
-      mats.probe.uniforms.uDye.value = targets.dye[sim.di].texture;
-      mats.probe.uniforms.uBandMin.value.set(u0, v0);
-      mats.probe.uniforms.uBandMax.value.set(u1, v1);
-      run(mats.probe, sim.probeTarget);
-      gl.readRenderTargetPixels(
-        sim.probeTarget, 0, 0, sim.PROBE_W, sim.PROBE_H, sim.probeBuf,
-      );
-      let best = 0, bi = -1;
-      for (let i = 0; i < sim.probeBuf.length; i += 4) {
-        if (sim.probeBuf[i] > best) { best = sim.probeBuf[i]; bi = i >> 2; }
-      }
-      if (best > 115) { // dye ≥ ~0.45: the visible liquid body, not haze
-        const cx = (bi % sim.PROBE_W + 0.5) / sim.PROBE_W;
-        const cy = (Math.floor(bi / sim.PROBE_W) + 0.5) / sim.PROBE_H;
-        fluidContact.wx = x0 + cx * (x1 - x0);
-        fluidContact.wy = y0 + cy * (y1 - y0);
-        fluidContact.s = best / 255;
-        fluidContact.stamp++;
-      }
+    // --- Containment: multiply the dye by the cursor-bead envelope, so
+    // the ink is physically confined to a small disc around the hand and
+    // cannot spread across the hero regardless of resolution or fps. ---
+    mats.contain.uniforms.uDye.value = targets.dye[sim.di].texture;
+    for (let i = 0; i < 12; i++) {
+      mats.contain.uniforms.uBeads.value[i].copy(bd.pos[i]);
+      mats.contain.uniforms.uBeadAmp.value[i] = bd.amp[i];
     }
+    mats.contain.uniforms.uAspect.value = size.width / size.height;
+    run(mats.contain, targets.dye[1 - sim.di]);
+    sim.di = 1 - sim.di;
+
+    // --- Logo tint feedback: where the solid ink covers a pixel the tint
+    // ramps up in ~300ms and releases in ~700ms, all on the wall clock.
+    // Emblem samples this field in screen space, so the colour follows
+    // the fluid's exact shape and stays local to the contact. ---
+    mats.tint.uniforms.uDye.value = targets.dye[sim.di].texture;
+    mats.tint.uniforms.uPrev.value = sim.tint[sim.ti].texture;
+    mats.tint.uniforms.uAttack.value = Math.min(1, fadeDt / 0.3);
+    mats.tint.uniforms.uRelease.value = Math.min(1, fadeDt / 0.7);
+    run(mats.tint, sim.tint[1 - sim.ti]);
+    sim.ti = 1 - sim.ti;
+    logoTint.tex = sim.tint[sim.ti].texture;
 
     gl.setRenderTarget(null);
 

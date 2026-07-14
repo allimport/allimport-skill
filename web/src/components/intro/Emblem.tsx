@@ -6,7 +6,7 @@ import * as THREE from "three";
 import { SVGLoader } from "three/addons/loaders/SVGLoader.js";
 import { BEATS, seg, pulse, easeOutCubic, easeInOutCubic } from "./timeline";
 import { useIntroClock } from "./Scene";
-import { fluidContact } from "./Fluid";
+import { logoTint } from "./Fluid";
 import { LETTERS, BOLT_D, HALO_D, O_CENTER } from "./logo-full-paths";
 
 /**
@@ -59,68 +59,52 @@ export default function Emblem() {
   const boltLight = useRef<THREE.PointLight>(null!);
   const letterMats = useRef<(THREE.MeshPhysicalMaterial | null)[]>([]);
   const drift = useRef({ x: 0, y: 0, vx: 0, vy: 0 });
-  // Colour trail: the fluid's contact point WAKES THE MATERIAL where it
-  // touches and the glow FOLLOWS the cursor across the geometry, leaving a
-  // trail that fades from tail to head — never a uniform flash, never a
-  // wave from one fixed point. TRAIL_N recent contact beads, each with its
-  // own decaying amplitude, evaluated per fragment in logo-local space so
-  // the energy crosses every bevel and side wall (rim term catches edges).
-  const trailState = useRef({ head: 0, lx: 1e9, ly: 1e9, stamp: 0 });
+  // Colour tint driven by the REAL fluid shape: Fluid publishes a screen-
+  // space tint field (fast attack ~300ms, slow release ~700ms) that is 1
+  // exactly where the white ink covers a pixel. Each letter fragment
+  // samples it at its own screen position, so the cyan follows the
+  // fluid's outline and stays strictly local — a corner touched tints
+  // only that corner. No wave, no travel, no timer, no light: the
+  // material's own emissive is stained where the liquid is.
   const waveUniforms = useMemo(
     () => ({
-      uTrail: {
-        value: Array.from({ length: 10 }, () => new THREE.Vector2(0, 0)),
-      },
-      uTrailAmp: { value: new Float32Array(10) },
+      uTint: { value: null as THREE.Texture | null },
     }),
     [],
   );
   const injectWave = useMemo(
     () => (material: THREE.MeshPhysicalMaterial) => {
       material.onBeforeCompile = (shader) => {
-        shader.uniforms.uTrail = waveUniforms.uTrail;
-        shader.uniforms.uTrailAmp = waveUniforms.uTrailAmp;
+        shader.uniforms.uTint = waveUniforms.uTint;
+        // Screen uv from CLIP space (resolution-independent): the letters
+        // rasterize into the EffectComposer's internal buffer, so
+        // gl_FragCoord over the canvas size would be misaligned. NDC does
+        // not care what size the target is.
         shader.vertexShader = shader.vertexShader
           .replace(
             "#include <common>",
-            "#include <common>\nvarying vec3 vLogoPos;",
+            "#include <common>\nvarying vec4 vClip;",
           )
           .replace(
-            "#include <begin_vertex>",
-            "#include <begin_vertex>\nvLogoPos = position;",
+            "#include <project_vertex>",
+            "#include <project_vertex>\nvClip = gl_Position;",
           );
         shader.fragmentShader = shader.fragmentShader
           .replace(
             "#include <common>",
             `#include <common>
-             varying vec3 vLogoPos;
-             uniform vec2 uTrail[10];
-             uniform float uTrailAmp[10];`,
+             uniform sampler2D uTint;
+             varying vec4 vClip;`,
           )
           .replace(
             "#include <emissivemap_fragment>",
             `#include <emissivemap_fragment>
              {
-               float act = 0.0;
-               for (int i = 0; i < 10; i++) {
-                 float a = uTrailAmp[i];
-                 if (a <= 0.0) continue;
-                 float d = distance(vLogoPos.xy, uTrail[i]);
-                 // Each contact bead is a pulse of energy INSIDE the
-                 // material: a bright core at the impact point plus a
-                 // front that expands outward across the surface as the
-                 // bead ages, then everything fades back to the original.
-                 float age = 1.0 - a;
-                 // FAST front: the impact point itself sits under the
-                 // opaque ink mass, so the wave must ESCAPE it quickly —
-                 // it crosses the whole wordmark in about a second and is
-                 // read on the letters around and beyond the fluid.
-                 float front = age * 7.0;
-                 float ring = exp(-pow(d - front, 2.0) / 0.4) * 1.35;
-                 float core = exp(-d * d / 0.4) * 0.7;
-                 act += (core + ring) * a;
-               }
-               act = min(act, 1.6);
+               vec2 suv = vClip.xy / vClip.w * 0.5 + 0.5;
+               float tint = 0.0;
+               if (suv.x > 0.0 && suv.x < 1.0 && suv.y > 0.0 && suv.y < 1.0)
+                 tint = texture2D(uTint, suv).r;
+               float act = tint * 3.4;
                // The relief still matters (bevels and side walls catch a
                // touch more), but flat faces carry the change too — the
                // reaction must read on the letter FRONTS, not only edges.
@@ -205,46 +189,11 @@ export default function Emblem() {
     d.x += d.vx * dt;
     d.y += d.vy * dt;
 
-    // --- Colour wave, driven by REAL fluid contact: Fluid.tsx probes its
-    // own dye field across the logo band on the GPU and publishes the
-    // strongest inked point (fluidContact). No ink on the logo, no
-    // reaction — no cursor proxies, no timers. Each fresh contact drops
-    // a bead whose energy front travels the surface from that exact
-    // point and fades back to the original material.
-    const amps = waveUniforms.uTrailAmp.value;
-    const pts = waveUniforms.uTrail.value;
-    // Pulse timing: each contact launches a wave that lives ~1.1s — the
-    // front crosses the wordmark and everything returns to the original.
-    // Real elapsed time: the wave must fade on the wall clock even when
-    // the frame rate drops below the sim clamp.
-    const decay = Math.min(rawDt, 0.25) / 1.1;
-    for (let i = 0; i < amps.length; i++) {
-      amps[i] = Math.max(0, amps[i] - decay);
-    }
-    const st = trailState.current;
-    if (inter > 0.5 && fluidContact.stamp !== st.stamp) {
-      st.stamp = fluidContact.stamp;
-      // logo-local contact point (letters live in group-local space)
-      const clx = Math.max(
-        -3.6,
-        Math.min(3.6, fluidContact.wx - group.current.position.x),
-      );
-      const cly = fluidContact.wy - group.current.position.y;
-      const moved = Math.hypot(clx - st.lx, cly - st.ly);
-      // A launched wave TRAVELS freely — never re-anchor or re-energise
-      // it, or its front would stay pinned under the ink and never be
-      // seen. Sustained contact relaunches only once the running wave
-      // has died; a contact that jumped far is a new impact and fires
-      // its own wave immediately.
-      const headAlive = amps[st.head] > 0.15;
-      if (!headAlive || moved > 1.1 || st.lx > 1e8) {
-        st.head = (st.head + 1) % amps.length;
-        st.lx = clx;
-        st.ly = cly;
-        pts[st.head].set(clx, cly);
-        amps[st.head] = 1.0;
-      }
-    }
+    // --- Colour tint: feed the live screen-space tint field and the
+    // drawing-buffer resolution to the letter material. The stain is
+    // computed entirely in the shader from the real fluid shape — nothing
+    // to drive here but the two uniforms.
+    waveUniforms.uTint.value = logoTint.tex;
 
     group.current.position.x = d.x;
     group.current.position.y = baseY + d.y;
