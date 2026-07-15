@@ -11,15 +11,19 @@ import { fluidDye } from "./Fluid";
  * The effect is a COMPOSITION, not a material/lighting change: the logo is
  * rendered to its own target (RT_LOGO, RGB = colour, A = mask) via a
  * dedicated layer, and this fullscreen pass recolours ONLY the logo pixels
- * where a source (a test circle, or the fluid dye) covers them. It draws
- * over the canvas AFTER the composer, so the recolour never enters the
- * lighting, the bloom or the material, and the background — where the mask
- * is 0 — is mathematically untouched.
+ * the fluid dye covers. It draws over the canvas AFTER the composer, so the
+ * recolour never enters the lighting, the bloom or the material, and the
+ * background — where the mask is 0 — is mathematically untouched.
  *
- * ETAPA 3: proof of architecture. The recolour is a flat TEST RED (no
- * cyan, no smoothing, no effects) driven by `uMode`:
- *   0 = fixed circle (does the composite touch only the logo?)
- *   1 = mask * dye  (does the fluid drive it, background intact?)
+ * Definitive mechanism (etapa 4):
+ *
+ *   colorFinal = mix(logoColor, cyanBase, mask * dye)
+ *
+ * implemented as a single NormalBlend draw of `vec4(cyan, mask*dye)` over
+ * the canvas — the destination pixel IS logoColor (the composer already
+ * drew it), so blending reproduces that mix exactly. Chosen precisely so
+ * that where `mask*dye == 0` the pass draws NOTHING: the composer's exact
+ * white is preserved byte-for-byte, no glow/bloom/emissive/pulse.
  */
 
 /** Objects on this layer are the ones the mask render captures. The logo
@@ -39,29 +43,20 @@ const compositeFrag = /* glsl */ `
   precision highp float;
   varying vec2 vUv;
   uniform sampler2D uMask;   // RT_LOGO: alpha = logo mask
-  uniform sampler2D uDye;    // RT_DYE
-  uniform float uMode;       // 0 = circle, 1 = dye
-  uniform vec2 uCircle;      // circle centre, screen uv
-  uniform float uCircleR;    // circle radius, uv
-  uniform float uAspect;
-  uniform vec3 uColor;       // flat test colour (red for etapa 3)
+  uniform sampler2D uDye;    // RT_DYE: red channel = ink density
+  uniform vec3 uCyan;        // All Import identity cyan, flat
   void main() {
-    float mask = texture2D(uMask, vUv).a;
-    float src;
-    if (uMode < 0.5) {
-      vec2 d = vUv - uCircle;
-      d.x *= uAspect;
-      src = length(d) < uCircleR ? 1.0 : 0.0;   // hard, no smoothing
-    } else {
-      src = texture2D(uDye, vUv).r > 0.35 ? 1.0 : 0.0; // hard threshold
-    }
-    float m = mask * src;
-    gl_FragColor = vec4(uColor, m);            // normal blend over canvas
+    float mask = texture2D(uMask, vUv).a;   // 1 on the logo, 0 elsewhere
+    float dye  = texture2D(uDye,  vUv).r;   // ink density under this pixel
+    float m = mask * dye;                   // only logo pixels the ink covers
+    // NormalBlend over canvas == mix(logoColor, cyan, m). No threshold,
+    // no smoothstep, no glow: m==0 -> nothing drawn -> exact white kept.
+    gl_FragColor = vec4(uCyan, m);
   }
 `;
 
 export default function CompositePass() {
-  const { gl, scene, camera, size } = useThree();
+  const { gl, scene, camera } = useThree();
 
   const rtLogo = useMemo(
     () =>
@@ -82,11 +77,8 @@ export default function CompositePass() {
       uniforms: {
         uMask: { value: null as THREE.Texture | null },
         uDye: { value: null as THREE.Texture | null },
-        uMode: { value: 1 },
-        uCircle: { value: new THREE.Vector2(0.5, 0.5) },
-        uCircleR: { value: 0.12 },
-        uAspect: { value: 1 },
-        uColor: { value: new THREE.Color(1, 0, 0) }, // ETAPA 3 test red
+        // All Import identity cyan (--cyan: #00d4d4). Flat, no gradient.
+        uCyan: { value: new THREE.Color(0x00d4d4) },
       },
       transparent: true,
       depthTest: false,
@@ -118,7 +110,6 @@ export default function CompositePass() {
 
     // --- 1) Render ONLY the logo layer to RT_LOGO (A = mask) ---
     const prevLayerMask = camera.layers.mask;
-    const prevTarget = gl.getRenderTarget();
     const prevClearAlpha = gl.getClearAlpha();
     const prevClearColor = new THREE.Color();
     gl.getClearColor(prevClearColor);
@@ -141,7 +132,6 @@ export default function CompositePass() {
     // --- 2) Composite over the canvas (after the composer, under the ink) ---
     comp.mat.uniforms.uMask.value = rtLogo.texture;
     comp.mat.uniforms.uDye.value = fluidDye.tex;
-    comp.mat.uniforms.uAspect.value = size.width / size.height;
 
     gl.setRenderTarget(null);
     const prevAutoClear = gl.autoClear;

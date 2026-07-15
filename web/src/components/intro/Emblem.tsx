@@ -6,7 +6,6 @@ import * as THREE from "three";
 import { SVGLoader } from "three/addons/loaders/SVGLoader.js";
 import { BEATS, seg, pulse, easeOutCubic, easeInOutCubic } from "./timeline";
 import { useIntroClock } from "./Scene";
-import { fluidDye } from "./Fluid";
 import { LOGO_LAYER } from "./CompositePass";
 import { LETTERS, BOLT_D, HALO_D, O_CENTER } from "./logo-full-paths";
 
@@ -60,60 +59,9 @@ export default function Emblem() {
   const boltLight = useRef<THREE.PointLight>(null!);
   const letterMats = useRef<(THREE.MeshPhysicalMaterial | null)[]>([]);
   const drift = useRef({ x: 0, y: 0, vx: 0, vy: 0 });
-  // Colour mask driven by the fluid's own DYE field (the same white ink
-  // density the display uses — no second texture, no feedback field). The
-  // letter fragment samples the dye at its own screen position and MIXES
-  // its base colour toward cyan by that mask: pure material colour, not
-  // emissive/light/bloom. Where the ink is present the letter is cyan;
-  // where the ink has eroded away the mask is 0 and the letter returns to
-  // white on its own — strictly local, smooth, no timer, no flicker.
-  const waveUniforms = useMemo(
-    () => ({
-      uDye: { value: null as THREE.Texture | null },
-    }),
-    [],
-  );
-  const injectWave = useMemo(
-    () => (material: THREE.MeshPhysicalMaterial) => {
-      material.onBeforeCompile = (shader) => {
-        shader.uniforms.uDye = waveUniforms.uDye;
-        // Screen uv from CLIP space (resolution-independent): the letters
-        // rasterize into the EffectComposer's internal buffer, so
-        // gl_FragCoord over the canvas size would be misaligned. NDC does
-        // not care what size the target is.
-        shader.vertexShader = shader.vertexShader
-          .replace(
-            "#include <common>",
-            "#include <common>\nvarying vec4 vClip;",
-          )
-          .replace(
-            "#include <project_vertex>",
-            "#include <project_vertex>\nvClip = gl_Position;",
-          );
-        shader.fragmentShader = shader.fragmentShader
-          .replace(
-            "#include <common>",
-            `#include <common>
-             uniform sampler2D uDye;
-             varying vec4 vClip;`,
-          )
-          .replace(
-            "#include <color_fragment>",
-            `#include <color_fragment>
-             {
-               vec2 suv = vClip.xy / vClip.w * 0.5 + 0.5;
-               float m = 0.0;
-               if (suv.x > 0.0 && suv.x < 1.0 && suv.y > 0.0 && suv.y < 1.0)
-                 // low threshold so the mask reads on the ink's soft edge
-                 // and its fading wake, not only under the opaque core.
-                 m = smoothstep(0.06, 0.3, texture2D(uDye, suv).r);
-               diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.0, 0.80, 0.86), m);
-             }`,
-          );
-      };
-    },
-    [waveUniforms],
-  );
+  // The letters are pure PBR. The logo colour reaction to the fluid lives
+  // ENTIRELY in CompositePass (screen space); the material knows nothing of
+  // the fluid, the dye, the mask or the cursor — it only renders the logo.
 
   const letterGeos = useMemo(
     () =>
@@ -186,11 +134,6 @@ export default function Emblem() {
     d.x += d.vx * dt;
     d.y += d.vy * dt;
 
-    // --- Colour mask: feed the live dye field to the letter material. The
-    // mix toward cyan happens entirely in the shader from the real fluid
-    // density — nothing to drive here but the one texture.
-    waveUniforms.uDye.value = fluidDye.tex;
-
     group.current.position.x = d.x;
     group.current.position.y = baseY + d.y;
     // Minimal momentum lean: driven by VELOCITY, not position — the logo
@@ -216,13 +159,11 @@ export default function Emblem() {
           <meshPhysicalMaterial
             ref={(m) => {
               letterMats.current[i] = m;
-              if (m) injectWave(m);
             }}
             // Industrial ceramic (Apple / Nothing): pure dielectric white,
             // matte front, thin sharp lacquer so the beveled EDGES catch
             // light and the grazing side walls read a touch more reflective.
-            // The energy wave lives in an injected shader chunk; at rest the
-            // material is byte-identical to the original.
+            // 100% PBR — no fluid, no dye, no screen-space lookup.
             color="#ffffff"
             metalness={0}
             roughness={0.5}
