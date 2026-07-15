@@ -119,9 +119,9 @@ export default function Scene({
         <DepthField />
         <Particles mobile={mobile} />
         <Atmosphere />
-        <Fluid manualRender={reducedMotion} />
+        <Fluid />
         <Emblem />
-        <CompositePass />
+        <CompositePass manualRender={reducedMotion} />
         <CameraRig />
         {!reducedMotion && <Effects mobile={mobile} />}
       </ClockContext.Provider>

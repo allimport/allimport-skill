@@ -6,24 +6,23 @@ import * as THREE from "three";
 import { fluidDye } from "./Fluid";
 
 /**
- * Screen-space composite for the logo colour reaction.
+ * The SINGLE final composite. One pass, one shader — the only thing that
+ * draws the logo colour reaction AND the fluid ink to the screen. There is
+ * no separate fluid overlay any more:
  *
- * The effect is a COMPOSITION, not a material/lighting change: the logo is
- * rendered to its own target (RT_LOGO, RGB = colour, A = mask) via a
- * dedicated layer, and this fullscreen pass recolours ONLY the logo pixels
- * the fluid dye covers. It draws over the canvas AFTER the composer, so the
- * recolour never enters the lighting, the bloom or the material, and the
- * background — where the mask is 0 — is mathematically untouched.
+ *   scene (background + logo PBR, via the composer)   → canvas
+ *   → CompositePass: recolour (mask × dye → cyan), then white ink → canvas
  *
- * Definitive mechanism (etapa 4):
+ * The logo is rendered to its own target (RT_LOGO, RGB = colour, A = mask)
+ * on a dedicated layer, so this pass can recolour ONLY the logo pixels the
+ * dye covers, and lay the white ink over everything, in this exact order:
  *
- *   colorFinal = mix(logoColor, cyanBase, mask * dye)
+ *   final = mix( mix(logoColor, cyan, mask*dye), inkWhite, inkA )
  *
- * implemented as a single NormalBlend draw of `vec4(cyan, mask*dye)` over
- * the canvas — the destination pixel IS logoColor (the composer already
- * drew it), so blending reproduces that mix exactly. Chosen precisely so
- * that where `mask*dye == 0` the pass draws NOTHING: the composer's exact
- * white is preserved byte-for-byte, no glow/bloom/emissive/pulse.
+ * It draws AFTER the composer, so nothing here enters lighting, bloom or
+ * the material, and the background (mask = 0, dye = 0) is untouched. The
+ * whole thing is one premultiplied-over draw; the ink term reproduces the
+ * old display pass's blend verbatim so the look does not change.
  */
 
 /** Objects on this layer are the ones the mask render captures. The logo
@@ -45,17 +44,38 @@ const compositeFrag = /* glsl */ `
   uniform sampler2D uMask;   // RT_LOGO: alpha = logo mask
   uniform sampler2D uDye;    // RT_DYE: red channel = ink density
   uniform vec3 uCyan;        // All Import identity cyan, flat
+  uniform vec3 uInk;         // paint white of the ink, flat
+  uniform float uReveal;     // bolt-activation ramp, gates the ink
   void main() {
     float mask = texture2D(uMask, vUv).a;   // 1 on the logo, 0 elsewhere
     float dye  = texture2D(uDye,  vUv).r;   // ink density under this pixel
-    float m = mask * dye;                   // only logo pixels the ink covers
-    // NormalBlend over canvas == mix(logoColor, cyan, m). No threshold,
-    // no smoothstep, no glow: m==0 -> nothing drawn -> exact white kept.
-    gl_FragColor = vec4(uCyan, m);
+
+    // (1) recolour: logo pixels the ink covers mix toward cyan. md is the
+    // mix weight (canvas is 8-bit, so md is effectively clamped anyway).
+    float md = clamp(mask * dye, 0.0, 1.0);
+
+    // (2) white ink on top: near-binary body cut into the diffusion halo,
+    // identical to the old display pass — the mass stays opaque and
+    // dissolves by RETRACTING its outline, never trailing into grey haze.
+    float body = smoothstep(0.435, 0.465, dye);
+    float a = body * uReveal;               // ink alpha
+
+    // One premultiplied-over draw of, in this order,
+    //   logo -> mix(logoColor, cyan, md) -> over white ink(alpha a)
+    // where logoColor is the destination the composer already drew. The
+    // old ink pass output vec4(col*a, a) under NormalBlend, contributing
+    // col*a^2; kept verbatim (uInk * a*a) so the ink is pixel-identical.
+    vec3 premult = uCyan * md * (1.0 - a) + uInk * (a * a);
+    float outA   = 1.0 - (1.0 - md) * (1.0 - a);
+    gl_FragColor = vec4(premult, outA);
   }
 `;
 
-export default function CompositePass() {
+export default function CompositePass({
+  manualRender = false,
+}: {
+  manualRender?: boolean;
+}) {
   const { gl, scene, camera } = useThree();
 
   const rtLogo = useMemo(
@@ -79,11 +99,20 @@ export default function CompositePass() {
         uDye: { value: null as THREE.Texture | null },
         // All Import identity cyan (--cyan: #00d4d4). Flat, no gradient.
         uCyan: { value: new THREE.Color(0x00d4d4) },
+        // Ink paint-white (matches the old display pass exactly).
+        uInk: { value: new THREE.Color(0.965, 0.975, 1.0) },
+        uReveal: { value: 0 },
       },
       transparent: true,
       depthTest: false,
       depthWrite: false,
-      blending: THREE.NormalBlending,
+      // gl_FragColor is PREMULTIPLIED: src * 1 + dst * (1 - srcAlpha).
+      blending: THREE.CustomBlending,
+      blendEquation: THREE.AddEquation,
+      blendSrc: THREE.OneFactor,
+      blendDst: THREE.OneMinusSrcAlphaFactor,
+      blendSrcAlpha: THREE.OneFactor,
+      blendDstAlpha: THREE.OneMinusSrcAlphaFactor,
     });
     const scn = new THREE.Scene();
     const cam = new THREE.Camera();
@@ -108,6 +137,14 @@ export default function CompositePass() {
     const h = ctx.drawingBufferHeight;
     if (rtLogo.width !== w || rtLogo.height !== h) rtLogo.setSize(w, h);
 
+    // --- 0) Reduced motion: no composer is mounted, and this positive-
+    // priority subscriber disabled R3F's auto-render, so draw the scene to
+    // the canvas here (full layers) BEFORE the composite goes over it. ---
+    if (manualRender) {
+      gl.setRenderTarget(null);
+      gl.render(scene, camera);
+    }
+
     // --- 1) Render ONLY the logo layer to RT_LOGO (A = mask) ---
     const prevLayerMask = camera.layers.mask;
     const prevClearAlpha = gl.getClearAlpha();
@@ -129,9 +166,10 @@ export default function CompositePass() {
     gl.setClearColor(prevClearColor, prevClearAlpha);
     camera.layers.mask = prevLayerMask;
 
-    // --- 2) Composite over the canvas (after the composer, under the ink) ---
+    // --- 2) The single composite over the canvas: recolour + white ink ---
     comp.mat.uniforms.uMask.value = rtLogo.texture;
     comp.mat.uniforms.uDye.value = fluidDye.tex;
+    comp.mat.uniforms.uReveal.value = fluidDye.reveal;
 
     gl.setRenderTarget(null);
     const prevAutoClear = gl.autoClear;

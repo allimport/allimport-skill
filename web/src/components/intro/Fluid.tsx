@@ -17,11 +17,10 @@ import { useIntroClock } from "./Scene";
  * tears into droplets, merges back, curls on itself, and dissipates
  * slowly. Nothing is faked: no metaballs, no blur, no particles.
  *
- * The dye is displayed on a view-filling quad in FRONT of the logo, so
- * the ink can be drawn anywhere in the hero and passes over the letters.
- * Outside the stroke the dye is zero and the quad is invisible — no
- * rectangle, no limit, and it can never wash the whole screen (dye only
- * exists where the hand put it).
+ * The dye field is PUBLISHED (fluidDye) and drawn to the screen by the
+ * single final composite (CompositePass), never here — this component owns
+ * only the simulation. Outside the stroke the dye is zero, so the ink can
+ * never wash the whole screen (dye only exists where the hand put it).
  *
  * Sim runs at 128px (velocity) / 512px (dye) in half-float ping-pong
  * targets: ~60 fps on integrated GPUs.
@@ -207,38 +206,16 @@ const gradientFrag = /* glsl */ `
   }
 `;
 
-/** Logo tint feedback field, in dye-uv (== screen-uv) space. Where the
- *  solid ink body covers a pixel the value ramps up fast (~300ms) and
- *  releases slowly (~700ms) once the ink leaves — the "liquid stains the
- *  metal" response. The letter material samples this by screen position,
- *  so the colour follows the fluid's exact shape and is strictly local:
- *  a corner touched tints only that corner. No wave, no travel, no timer. */
-/** Live dye texture, published by Fluid, sampled DIRECTLY by Emblem's
- *  letter material as the cyan colour mask (no second texture, no
- *  feedback field — the same white-ink density the display uses). */
-export const fluidDye: { tex: THREE.Texture | null } = { tex: null };
-
-/** Display: rendered as its own fullscreen pass AFTER the composer —
- *  outside bloom (no halo) and outside tone mapping (exact paint-white).
- *  The reference ink is a FLAT solid silhouette with a sharp, rounded
- *  outline; everything liquid about it lives in that outline. */
-const displayFrag = /* glsl */ `
-  precision highp float;
-  varying vec2 vUv;
-  uniform sampler2D uDye;
-  uniform float uReveal;
-  void main() {
-    float d = texture2D(uDye, vUv).r;
-    if (d < 0.4) discard;
-    // Near-binary edge cut deep into the diffusion halo: the mass stays
-    // fully opaque and dissolves by RETRACTING its outline, never by
-    // trailing off into a grey haze. Tears become rounded globules.
-    float body = smoothstep(0.435, 0.465, d);
-    vec3 col = vec3(0.965, 0.975, 1.0);
-    float a = body * uReveal;
-    gl_FragColor = vec4(col * a, a);
-  }
-`;
+/** Live sim outputs published by the solver and consumed by the SINGLE
+ *  final composite (CompositePass) — Fluid itself no longer draws anything
+ *  to the screen. `tex` is the raw dye field (red = ink density); `reveal`
+ *  is the bolt-activation ramp that gates the white ink. The solver stays
+ *  fully intact (advection, vorticity, pressure, dye); only its old
+ *  on-screen display pass is gone. */
+export const fluidDye: { tex: THREE.Texture | null; reveal: number } = {
+  tex: null,
+  reveal: 0,
+};
 
 function makeTarget(w: number, h: number, fmt: THREE.AnyPixelFormat) {
   return new THREE.WebGLRenderTarget(w, h, {
@@ -252,7 +229,7 @@ function makeTarget(w: number, h: number, fmt: THREE.AnyPixelFormat) {
   });
 }
 
-export default function Fluid({ manualRender = false }: { manualRender?: boolean }) {
+export default function Fluid() {
   const clock = useIntroClock();
   const { gl, pointer, size } = useThree();
   const prev = useRef({ x: -10, y: -10, has: false });
@@ -265,24 +242,6 @@ export default function Fluid({ manualRender = false }: { manualRender?: boolean
     const mesh = new THREE.Mesh(quadGeo);
     mesh.frustumCulled = false;
     scene.add(mesh);
-
-    // Display overlay: its own fullscreen scene, drawn straight to the
-    // canvas after the main render / composer.
-    const dispMat = new THREE.ShaderMaterial({
-      vertexShader: baseVert,
-      fragmentShader: displayFrag,
-      uniforms: {
-        uDye: { value: null as THREE.Texture | null },
-        uReveal: { value: 0 },
-      },
-      transparent: true,
-      depthTest: false,
-      depthWrite: false,
-    });
-    const dispScene = new THREE.Scene();
-    const dispQuad = new THREE.Mesh(quadGeo, dispMat);
-    dispQuad.frustumCulled = false;
-    dispScene.add(dispQuad);
 
     const mk = (frag: string, uniforms: Record<string, THREE.IUniform>) =>
       new THREE.ShaderMaterial({
@@ -364,13 +323,12 @@ export default function Fluid({ manualRender = false }: { manualRender?: boolean
 
     return {
       scene, cam, mesh, mats, targets,
-      dispScene, dispQuad, dispMat,
       vi: 0, di: 0, pi: 0, frame: 0,
     };
   }, []);
 
   useEffect(() => {
-    const { targets, mats, mesh, dispMat } = sim;
+    const { targets, mats, mesh } = sim;
     return () => {
       targets.vel.forEach((t) => t.dispose());
       targets.dye.forEach((t) => t.dispose());
@@ -378,7 +336,6 @@ export default function Fluid({ manualRender = false }: { manualRender?: boolean
       targets.div.dispose();
       targets.curl.dispose();
       Object.values(mats).forEach((m) => m.dispose());
-      dispMat.dispose();
       fluidDye.tex = null;
       mesh.geometry.dispose();
     };
@@ -499,28 +456,12 @@ export default function Fluid({ manualRender = false }: { manualRender?: boolean
     // texture, no feedback pass: the mask IS the fluid density, so it
     // returns to white on its own as the ink erodes away.
     fluidDye.tex = targets.dye[sim.di].texture;
+    // Publish the activation ramp so the single final composite can gate
+    // the white ink exactly as the old display pass did.
+    fluidDye.reveal = reveal;
 
     gl.setRenderTarget(null);
-
-    sim.dispMat.uniforms.uDye.value = targets.dye[sim.di].texture;
-    sim.dispMat.uniforms.uReveal.value = reveal;
   }, -1);
-
-  // Overlay pass: draw the ink straight to the canvas AFTER the main
-  // render / EffectComposer, so bloom never wraps it in a halo and tone
-  // mapping never greys the paint. Registering any positive-priority
-  // subscriber disables R3F's automatic render, so when the composer is
-  // not mounted (reduced motion) this pass renders the scene itself.
-  useFrame((state) => {
-    if (manualRender) {
-      state.gl.setRenderTarget(null);
-      state.gl.render(state.scene, state.camera);
-    }
-    const prevAutoClear = state.gl.autoClear;
-    state.gl.autoClear = false;
-    state.gl.render(sim.dispScene, sim.cam);
-    state.gl.autoClear = prevAutoClear;
-  }, 10);
 
   return null;
 }
