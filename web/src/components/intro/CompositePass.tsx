@@ -11,18 +11,18 @@ import { fluidDye } from "./Fluid";
  * no separate fluid overlay any more:
  *
  *   scene (background + logo PBR, via the composer)   → canvas
- *   → CompositePass: recolour (mask × dye → cyan), then white ink → canvas
+ *   → CompositePass: white ink + cyan logo halo → canvas
  *
- * The logo is rendered to its own target (RT_LOGO, RGB = colour, A = mask)
- * on a dedicated layer, so this pass can recolour ONLY the logo pixels the
- * dye covers, and lay the white ink over everything, in this exact order:
- *
- *   final = mix( mix(logoColor, cyan, mask*dye), inkWhite, inkA )
- *
- * It draws AFTER the composer, so nothing here enters lighting, bloom or
- * the material, and the background (mask = 0, dye = 0) is untouched. The
- * whole thing is one premultiplied-over draw; the ink term reproduces the
- * old display pass's blend verbatim so the look does not change.
+ * Art direction (etapa 6): the ink reads as WHITE with a cyan halo that
+ * runs ONLY along the letters. From the dye density we cut two bands:
+ *   - core: the dense centre → near-opaque WHITE (everywhere the ink is).
+ *   - rim : the ink's edge   → CYAN, but masked to the logo, so the cyan
+ *           traces the letters and nothing bleeds onto the background.
+ *   - outside both → fully transparent.
+ * The logo is rendered to its own target (RT_LOGO, A = mask) on a dedicated
+ * layer so the cyan can be contained inside the letters. It draws AFTER the
+ * composer, so nothing here enters lighting, bloom or the material, and the
+ * background (dye = 0) is untouched. One premultiplied-over draw.
  */
 
 /** Objects on this layer are the ones the mask render captures. The logo
@@ -46,27 +46,45 @@ const compositeFrag = /* glsl */ `
   uniform vec3 uCyan;        // All Import identity cyan, flat
   uniform vec3 uInk;         // paint white of the ink, flat
   uniform float uReveal;     // bolt-activation ramp, gates the ink
+
+  // Viscous-ribbon profile — NOT a long gradient. The dye field is cut with
+  // NEAR-STEP edges whose transition half-width is the dye's own screen-space
+  // derivative (fwidth), i.e. a constant ~1px antialias no matter how fast
+  // the density falls off. So the ink reads as a solid liquid body with a
+  // crisp, well-defined outline, never smoke. Three hard zones:
+  //   dye <  EDGE          -> transparent
+  //   EDGE <= dye < CORE   -> thin CYAN rim (hugs the outline)
+  //   dye >= CORE          -> compact, near-opaque WHITE core
+  // The rim's dye span (CORE-EDGE) is deliberately small so the cyan band is
+  // thin; on a steep ink edge that maps to just a couple of pixels.
+  const float EDGE = 0.30;   // outer outline; below it, nothing is drawn
+  const float CORE = 0.33;   // core boundary (rim thickness = CORE - EDGE)
+  const float CORE_OPACITY = 0.96; // white core: almost fully opaque
+
   void main() {
     float mask = texture2D(uMask, vUv).a;   // 1 on the logo, 0 elsewhere
     float dye  = texture2D(uDye,  vUv).r;   // ink density under this pixel
 
-    // (1) recolour: logo pixels the ink covers mix toward cyan. md is the
-    // mix weight (canvas is 8-bit, so md is effectively clamped anyway).
-    float md = clamp(mask * dye, 0.0, 1.0);
+    // Constant ~1px antialias from the density's screen gradient. Floor it
+    // so a flat (plateau) region can't collapse the edge to a hard alias.
+    float aa = max(fwidth(dye), 0.0016);
 
-    // (2) white ink on top: near-binary body cut into the diffusion halo,
-    // identical to the old display pass — the mass stays opaque and
-    // dissolves by RETRACTING its outline, never trailing into grey haze.
-    float body = smoothstep(0.435, 0.465, dye);
-    float a = body * uReveal;               // ink alpha
+    // Near-step cuts (transition = 2*aa ~= 1px), not a wide smoothstep:
+    float body = smoothstep(EDGE - aa, EDGE + aa, dye); // full ink outline
+    float core = smoothstep(CORE - aa, CORE + aa, dye); // dense white centre
+    float rim  = clamp(body - core, 0.0, 1.0);          // thin outline ring
 
-    // One premultiplied-over draw of, in this order,
-    //   logo -> mix(logoColor, cyan, md) -> over white ink(alpha a)
-    // where logoColor is the destination the composer already drew. The
-    // old ink pass output vec4(col*a, a) under NormalBlend, contributing
-    // col*a^2; kept verbatim (uInk * a*a) so the ink is pixel-identical.
-    vec3 premult = uCyan * md * (1.0 - a) + uInk * (a * a);
-    float outA   = 1.0 - (1.0 - md) * (1.0 - a);
+    // Compact near-opaque white core (on or off the logo); exterior (dye <
+    // EDGE) stays fully transparent.
+    float iw = core * CORE_OPACITY * uReveal;
+    // Thin cyan edge, CONTAINED in the logo so it traces the letters only.
+    float cw = rim * mask * uReveal;
+
+    // One premultiplied-over draw: background -> cyan rim -> white core.
+    //   final = mix( mix(D, cyan, cw), white, iw )
+    //   premult = (1-iw)*cw*cyan + iw*white ;  outA = 1-(1-iw)(1-cw)
+    vec3 premult = uCyan * (cw * (1.0 - iw)) + uInk * iw;
+    float outA   = 1.0 - (1.0 - iw) * (1.0 - cw);
     gl_FragColor = vec4(premult, outA);
   }
 `;
@@ -166,7 +184,7 @@ export default function CompositePass({
     gl.setClearColor(prevClearColor, prevClearAlpha);
     camera.layers.mask = prevLayerMask;
 
-    // --- 2) The single composite over the canvas: recolour + white ink ---
+    // --- 2) The single composite over the canvas: white ink + cyan halo ---
     comp.mat.uniforms.uMask.value = rtLogo.texture;
     comp.mat.uniforms.uDye.value = fluidDye.tex;
     comp.mat.uniforms.uReveal.value = fluidDye.reveal;
