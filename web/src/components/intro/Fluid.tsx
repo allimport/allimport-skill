@@ -52,7 +52,7 @@ const DYE_DISS = 0.06;
 // Tuned so peak ink expansion holds around 3.5% of the hero (measured):
 // higher erodes the trail faster (less expansion), lower lets it live
 // longer (more). Ink is bounded by this wall-clock lifetime, fps-invariant.
-const DYE_ERODE = 0.55;
+const DYE_ERODE = 0.465;
 const CURL_STRENGTH = 5;
 const SPLAT_RADIUS = 0.0035; // fat rounded mass, like the reference
 // Splat velocity = gesture SPEED (uv/s) × this gain — frame-rate
