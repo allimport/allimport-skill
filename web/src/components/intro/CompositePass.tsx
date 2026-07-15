@@ -53,9 +53,9 @@ const compositeFrag = /* glsl */ `
   // Thresholds on the dye density (peaks ~0.44 at this scale). T_CYAN is the
   // hard rule that recolours the letter; CORE is where the off-logo white
   // ink body reads. Near-step (2*aa ~1px) edges via fwidth keep them crisp.
-  const float T_CYAN = 0.28;   // mask*dye above this -> letter turns cyan
+  const float T_CYAN = 0.15;   // mask*dye above this -> letter turns cyan
   const float CORE   = 0.33;   // white ink body threshold (off-logo effect)
-  const float CYAN_OPACITY = 0.95; // full, evident recolour (a little bevel left)
+  const float CYAN_OPACITY = 1.0;  // full flip white -> cyan, unmistakable
   const float CORE_OPACITY = 0.96; // white ink: almost fully opaque
 
   void main() {
