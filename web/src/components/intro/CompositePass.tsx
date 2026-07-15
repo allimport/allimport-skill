@@ -32,6 +32,7 @@ export default function CompositePass() {
         minFilter: THREE.LinearFilter,
         magFilter: THREE.LinearFilter,
         depthBuffer: true,
+        samples: 4, // MSAA → clean antialiased mask edges (WebGL2)
       }),
     [],
   );
@@ -51,12 +52,21 @@ export default function CompositePass() {
     const prevClearColor = new THREE.Color();
     gl.getClearColor(prevClearColor);
 
+    // Null the scene background/fog for this pass, or three fills the
+    // target opaque with the void colour and the mask becomes 100%.
+    const prevBg = scene.background;
+    const prevFog = scene.fog;
+    scene.background = null;
+    scene.fog = null;
+
     camera.layers.set(LOGO_LAYER);
     gl.setRenderTarget(rtLogo);
     gl.setClearColor(0x000000, 0);
     gl.clear(true, true, false);
     gl.render(scene, camera);
 
+    scene.background = prevBg;
+    scene.fog = prevFog;
     gl.setRenderTarget(prevTarget);
     gl.setClearColor(prevClearColor, prevClearAlpha);
     camera.layers.mask = prevMask;

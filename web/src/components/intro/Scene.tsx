@@ -9,7 +9,7 @@ import Fluid from "./Fluid";
 import DepthField from "./DepthField";
 import CameraRig from "./CameraRig";
 import Effects from "./Effects";
-import CompositePass from "./CompositePass";
+import CompositePass, { LOGO_LAYER } from "./CompositePass";
 import TouchDrive from "./TouchDrive";
 import { BEATS, INTRO_DURATION, seg } from "./timeline";
 
@@ -95,10 +95,26 @@ export default function Scene({
         />
 
         {/* Minimal ambient bed: the black metal must live off speculars
-            and, after activation, the bolt's own light. */}
-        <ambientLight intensity={0.25} />
-        <directionalLight position={[3, 5, 8]} intensity={1.5} color="#ffffff" />
-        <directionalLight position={[-6, -2, 4]} intensity={0.22} color="#00d4d4" />
+            and, after activation, the bolt's own light. The scene lights
+            also opt into LOGO_LAYER (2) so the composite's mask render of
+            the logo is lit the same as the main view — main render (layer
+            0) is unchanged since these lights keep layer 0. */}
+        <ambientLight
+          intensity={0.25}
+          ref={(l) => l && l.layers.enable(LOGO_LAYER)}
+        />
+        <directionalLight
+          position={[3, 5, 8]}
+          intensity={1.5}
+          color="#ffffff"
+          ref={(l) => l && l.layers.enable(LOGO_LAYER)}
+        />
+        <directionalLight
+          position={[-6, -2, 4]}
+          intensity={0.22}
+          color="#00d4d4"
+          ref={(l) => l && l.layers.enable(LOGO_LAYER)}
+        />
 
         <DepthField />
         <Particles mobile={mobile} />
