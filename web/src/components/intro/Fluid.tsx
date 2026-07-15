@@ -52,7 +52,7 @@ const DYE_DISS = 0.06;
 // Tuned so peak ink expansion holds around 3.5% of the hero (measured):
 // higher erodes the trail faster (less expansion), lower lets it live
 // longer (more). Ink is bounded by this wall-clock lifetime, fps-invariant.
-const DYE_ERODE = 0.465;
+const DYE_ERODE = 0.6;
 const CURL_STRENGTH = 5;
 const SPLAT_RADIUS = 0.0035; // fat rounded mass, like the reference
 // Splat velocity = gesture SPEED (uv/s) × this gain — frame-rate
@@ -213,29 +213,10 @@ const gradientFrag = /* glsl */ `
  *  metal" response. The letter material samples this by screen position,
  *  so the colour follows the fluid's exact shape and is strictly local:
  *  a corner touched tints only that corner. No wave, no travel, no timer. */
-const tintFrag = /* glsl */ `
-  precision highp float;
-  varying vec2 vUv;
-  uniform sampler2D uDye;
-  uniform sampler2D uPrev;
-  uniform float uAttack;
-  uniform float uRelease;
-  void main() {
-    // Widen past the opaque core into the ink's soft edge, so the stain
-    // reads as a cyan halo AROUND the white blob (the core itself is
-    // hidden under the opaque ink) and in the wake it leaves behind.
-    float d = clamp(texture2D(uDye, vUv).r, 0.0, 1.0);
-    float target = smoothstep(0.12, 0.45, d);
-    float prev = texture2D(uPrev, vUv).r;
-    float rate = target > prev ? uAttack : uRelease;
-    float v = prev + (target - prev) * clamp(rate, 0.0, 1.0);
-    gl_FragColor = vec4(v, 0.0, 0.0, 1.0);
-  }
-`;
-
-/** Live logo tint texture, published by Fluid, sampled by Emblem's
- *  letter material in screen space. */
-export const logoTint: { tex: THREE.Texture | null } = { tex: null };
+/** Live dye texture, published by Fluid, sampled DIRECTLY by Emblem's
+ *  letter material as the cyan colour mask (no second texture, no
+ *  feedback field — the same white-ink density the display uses). */
+export const fluidDye: { tex: THREE.Texture | null } = { tex: null };
 
 /** Display: rendered as its own fullscreen pass AFTER the composer —
  *  outside bloom (no halo) and outside tone mapping (exact paint-white).
@@ -303,12 +284,6 @@ export default function Fluid({ manualRender = false }: { manualRender?: boolean
     dispQuad.frustumCulled = false;
     dispScene.add(dispQuad);
 
-    // Logo tint feedback field (ping-pong), dye-uv space, half float.
-    const tint = [
-      makeTarget(256, 256, THREE.RGBAFormat),
-      makeTarget(256, 256, THREE.RGBAFormat),
-    ];
-
     const mk = (frag: string, uniforms: Record<string, THREE.IUniform>) =>
       new THREE.ShaderMaterial({
         vertexShader: baseVert,
@@ -368,12 +343,6 @@ export default function Fluid({ manualRender = false }: { manualRender?: boolean
         uVelocity: { value: null },
         uTexel: { value: simTexel },
       }),
-      tint: mk(tintFrag, {
-        uDye: { value: null },
-        uPrev: { value: null },
-        uAttack: { value: 0.1 },
-        uRelease: { value: 0.04 },
-      }),
     };
 
     const targets = {
@@ -396,23 +365,21 @@ export default function Fluid({ manualRender = false }: { manualRender?: boolean
     return {
       scene, cam, mesh, mats, targets,
       dispScene, dispQuad, dispMat,
-      tint, ti: 0,
       vi: 0, di: 0, pi: 0, frame: 0,
     };
   }, []);
 
   useEffect(() => {
-    const { targets, mats, mesh, dispMat, tint } = sim;
+    const { targets, mats, mesh, dispMat } = sim;
     return () => {
       targets.vel.forEach((t) => t.dispose());
       targets.dye.forEach((t) => t.dispose());
       targets.p.forEach((t) => t.dispose());
       targets.div.dispose();
       targets.curl.dispose();
-      tint.forEach((t) => t.dispose());
       Object.values(mats).forEach((m) => m.dispose());
       dispMat.dispose();
-      logoTint.tex = null;
+      fluidDye.tex = null;
       mesh.geometry.dispose();
     };
   }, [sim]);
@@ -527,17 +494,11 @@ export default function Fluid({ manualRender = false }: { manualRender?: boolean
     run(mats.advect, targets.dye[1 - sim.di]);
     sim.di = 1 - sim.di;
 
-    // --- Logo tint feedback: where the solid ink covers a pixel the tint
-    // ramps up in ~300ms and releases in ~700ms, all on the wall clock.
-    // Emblem samples this field in screen space, so the colour follows
-    // the fluid's exact shape and stays local to the contact. ---
-    mats.tint.uniforms.uDye.value = targets.dye[sim.di].texture;
-    mats.tint.uniforms.uPrev.value = sim.tint[sim.ti].texture;
-    mats.tint.uniforms.uAttack.value = Math.min(1, fadeDt / 0.3);
-    mats.tint.uniforms.uRelease.value = Math.min(1, fadeDt / 0.7);
-    run(mats.tint, sim.tint[1 - sim.ti]);
-    sim.ti = 1 - sim.ti;
-    logoTint.tex = sim.tint[sim.ti].texture;
+    // Publish the dye field itself as the logo colour mask — the letter
+    // material samples it directly and mixes toward cyan. No second
+    // texture, no feedback pass: the mask IS the fluid density, so it
+    // returns to white on its own as the ink erodes away.
+    fluidDye.tex = targets.dye[sim.di].texture;
 
     gl.setRenderTarget(null);
 

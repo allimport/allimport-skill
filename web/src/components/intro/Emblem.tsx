@@ -6,7 +6,7 @@ import * as THREE from "three";
 import { SVGLoader } from "three/addons/loaders/SVGLoader.js";
 import { BEATS, seg, pulse, easeOutCubic, easeInOutCubic } from "./timeline";
 import { useIntroClock } from "./Scene";
-import { logoTint } from "./Fluid";
+import { fluidDye } from "./Fluid";
 import { LETTERS, BOLT_D, HALO_D, O_CENTER } from "./logo-full-paths";
 
 /**
@@ -59,23 +59,23 @@ export default function Emblem() {
   const boltLight = useRef<THREE.PointLight>(null!);
   const letterMats = useRef<(THREE.MeshPhysicalMaterial | null)[]>([]);
   const drift = useRef({ x: 0, y: 0, vx: 0, vy: 0 });
-  // Colour tint driven by the REAL fluid shape: Fluid publishes a screen-
-  // space tint field (fast attack ~300ms, slow release ~700ms) that is 1
-  // exactly where the white ink covers a pixel. Each letter fragment
-  // samples it at its own screen position, so the cyan follows the
-  // fluid's outline and stays strictly local — a corner touched tints
-  // only that corner. No wave, no travel, no timer, no light: the
-  // material's own emissive is stained where the liquid is.
+  // Colour mask driven by the fluid's own DYE field (the same white ink
+  // density the display uses — no second texture, no feedback field). The
+  // letter fragment samples the dye at its own screen position and MIXES
+  // its base colour toward cyan by that mask: pure material colour, not
+  // emissive/light/bloom. Where the ink is present the letter is cyan;
+  // where the ink has eroded away the mask is 0 and the letter returns to
+  // white on its own — strictly local, smooth, no timer, no flicker.
   const waveUniforms = useMemo(
     () => ({
-      uTint: { value: null as THREE.Texture | null },
+      uDye: { value: null as THREE.Texture | null },
     }),
     [],
   );
   const injectWave = useMemo(
     () => (material: THREE.MeshPhysicalMaterial) => {
       material.onBeforeCompile = (shader) => {
-        shader.uniforms.uTint = waveUniforms.uTint;
+        shader.uniforms.uDye = waveUniforms.uDye;
         // Screen uv from CLIP space (resolution-independent): the letters
         // rasterize into the EffectComposer's internal buffer, so
         // gl_FragCoord over the canvas size would be misaligned. NDC does
@@ -93,24 +93,20 @@ export default function Emblem() {
           .replace(
             "#include <common>",
             `#include <common>
-             uniform sampler2D uTint;
+             uniform sampler2D uDye;
              varying vec4 vClip;`,
           )
           .replace(
-            "#include <emissivemap_fragment>",
-            `#include <emissivemap_fragment>
+            "#include <color_fragment>",
+            `#include <color_fragment>
              {
                vec2 suv = vClip.xy / vClip.w * 0.5 + 0.5;
-               float tint = 0.0;
+               float m = 0.0;
                if (suv.x > 0.0 && suv.x < 1.0 && suv.y > 0.0 && suv.y < 1.0)
-                 tint = texture2D(uTint, suv).r;
-               float act = tint * 3.4;
-               // The relief still matters (bevels and side walls catch a
-               // touch more), but flat faces carry the change too — the
-               // reaction must read on the letter FRONTS, not only edges.
-               float rimW = 1.0 - abs(normalize(normal).z);
-               totalEmissiveRadiance +=
-                 vec3(0.0, 0.85, 0.85) * act * (0.6 + 0.7 * rimW);
+                 // low threshold so the mask reads on the ink's soft edge
+                 // and its fading wake, not only under the opaque core.
+                 m = smoothstep(0.06, 0.3, texture2D(uDye, suv).r);
+               diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.0, 0.80, 0.86), m);
              }`,
           );
       };
@@ -189,11 +185,10 @@ export default function Emblem() {
     d.x += d.vx * dt;
     d.y += d.vy * dt;
 
-    // --- Colour tint: feed the live screen-space tint field and the
-    // drawing-buffer resolution to the letter material. The stain is
-    // computed entirely in the shader from the real fluid shape — nothing
-    // to drive here but the two uniforms.
-    waveUniforms.uTint.value = logoTint.tex;
+    // --- Colour mask: feed the live dye field to the letter material. The
+    // mix toward cyan happens entirely in the shader from the real fluid
+    // density — nothing to drive here but the one texture.
+    waveUniforms.uDye.value = fluidDye.tex;
 
     group.current.position.x = d.x;
     group.current.position.y = baseY + d.y;
