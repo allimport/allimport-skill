@@ -11,18 +11,21 @@ import { fluidDye } from "./Fluid";
  * no separate fluid overlay any more:
  *
  *   scene (background + logo PBR, via the composer)   → canvas
- *   → CompositePass: white ink + cyan logo halo → canvas
+ *   → CompositePass: white ink + FULL cyan recolour of the letters → canvas
  *
- * Art direction (etapa 6): the ink reads as WHITE with a cyan halo that
- * runs ONLY along the letters. From the dye density we cut two bands:
- *   - core: the dense centre → near-opaque WHITE (everywhere the ink is).
- *   - rim : the ink's edge   → CYAN, but masked to the logo, so the cyan
- *           traces the letters and nothing bleeds onto the background.
- *   - outside both → fully transparent.
- * The logo is rendered to its own target (RT_LOGO, A = mask) on a dedicated
- * layer so the cyan can be contained inside the letters. It draws AFTER the
- * composer, so nothing here enters lighting, bloom or the material, and the
- * background (dye = 0) is untouched. One premultiplied-over draw.
+ * Colour mechanism (etapa 7): the logo really CHANGES COLOUR. Wherever the
+ * ink covers a letter past a threshold, the WHOLE letter surface there flips
+ * from white to cyan — a hard rule, not a rim/halo/gradient:
+ *
+ *   if (mask * dye > T)  letter = cyan   else  letter = original white
+ *
+ * The cyan fills the affected area and is drawn ON TOP, so on the logo it
+ * dominates: the user reads a clear white → cyan → white as the fluid passes
+ * and leaves. The white ink still exists as the liquid effect (it reads as
+ * white off the logo, where there is nothing to recolour). The logo is
+ * rendered to its own target (RT_LOGO, A = mask) so the recolour is contained
+ * in the letters. It draws AFTER the composer, so nothing here enters
+ * lighting, bloom or the material. One premultiplied-over draw.
  */
 
 /** Objects on this layer are the ones the mask render captures. The logo
@@ -47,19 +50,13 @@ const compositeFrag = /* glsl */ `
   uniform vec3 uInk;         // paint white of the ink, flat
   uniform float uReveal;     // bolt-activation ramp, gates the ink
 
-  // Viscous-ribbon profile — NOT a long gradient. The dye field is cut with
-  // NEAR-STEP edges whose transition half-width is the dye's own screen-space
-  // derivative (fwidth), i.e. a constant ~1px antialias no matter how fast
-  // the density falls off. So the ink reads as a solid liquid body with a
-  // crisp, well-defined outline, never smoke. Three hard zones:
-  //   dye <  EDGE          -> transparent
-  //   EDGE <= dye < CORE   -> thin CYAN rim (hugs the outline)
-  //   dye >= CORE          -> compact, near-opaque WHITE core
-  // The rim's dye span (CORE-EDGE) is deliberately small so the cyan band is
-  // thin; on a steep ink edge that maps to just a couple of pixels.
-  const float EDGE = 0.30;   // outer outline; below it, nothing is drawn
-  const float CORE = 0.33;   // core boundary (rim thickness = CORE - EDGE)
-  const float CORE_OPACITY = 0.96; // white core: almost fully opaque
+  // Thresholds on the dye density (peaks ~0.44 at this scale). T_CYAN is the
+  // hard rule that recolours the letter; CORE is where the off-logo white
+  // ink body reads. Near-step (2*aa ~1px) edges via fwidth keep them crisp.
+  const float T_CYAN = 0.28;   // mask*dye above this -> letter turns cyan
+  const float CORE   = 0.33;   // white ink body threshold (off-logo effect)
+  const float CYAN_OPACITY = 0.95; // full, evident recolour (a little bevel left)
+  const float CORE_OPACITY = 0.96; // white ink: almost fully opaque
 
   void main() {
     float mask = texture2D(uMask, vUv).a;   // 1 on the logo, 0 elsewhere
@@ -69,22 +66,21 @@ const compositeFrag = /* glsl */ `
     // so a flat (plateau) region can't collapse the edge to a hard alias.
     float aa = max(fwidth(dye), 0.0016);
 
-    // Near-step cuts (transition = 2*aa ~= 1px), not a wide smoothstep:
-    float body = smoothstep(EDGE - aa, EDGE + aa, dye); // full ink outline
-    float core = smoothstep(CORE - aa, CORE + aa, dye); // dense white centre
-    float rim  = clamp(body - core, 0.0, 1.0);          // thin outline ring
+    // FULL-AREA cyan recolour (not a rim): the whole letter surface under
+    // enough ink flips to cyan. Near-step == the hard rule mask*dye > T_CYAN.
+    float fill = smoothstep(T_CYAN - aa, T_CYAN + aa, dye);
+    float cw   = mask * fill * CYAN_OPACITY * uReveal;   // cyan on the letter
 
-    // Compact near-opaque white core (on or off the logo); exterior (dye <
-    // EDGE) stays fully transparent.
-    float iw = core * CORE_OPACITY * uReveal;
-    // Thin cyan edge, CONTAINED in the logo so it traces the letters only.
-    float cw = rim * mask * uReveal;
+    // White ink body (the liquid effect). Off the logo it reads as white; on
+    // the logo the cyan is drawn OVER it, so the recolour dominates there.
+    float core = smoothstep(CORE - aa, CORE + aa, dye);
+    float iw   = core * CORE_OPACITY * uReveal;
 
-    // One premultiplied-over draw: background -> cyan rim -> white core.
-    //   final = mix( mix(D, cyan, cw), white, iw )
-    //   premult = (1-iw)*cw*cyan + iw*white ;  outA = 1-(1-iw)(1-cw)
-    vec3 premult = uCyan * (cw * (1.0 - iw)) + uInk * iw;
-    float outA   = 1.0 - (1.0 - iw) * (1.0 - cw);
+    // Premultiplied over, in order: background -> white ink -> cyan letter.
+    //   F = mix( mix(D, white, iw), cyan, cw )
+    //   premult = cyan*cw + white*iw*(1-cw) ;  outA = 1-(1-cw)(1-iw)
+    vec3 premult = uCyan * cw + uInk * (iw * (1.0 - cw));
+    float outA   = 1.0 - (1.0 - cw) * (1.0 - iw);
     gl_FragColor = vec4(premult, outA);
   }
 `;
