@@ -7,6 +7,7 @@ import { SVGLoader } from "three/addons/loaders/SVGLoader.js";
 import { BEATS, seg, pulse, easeOutCubic, easeInOutCubic } from "./timeline";
 import { useIntroClock } from "./Scene";
 import { fluidDye } from "./Fluid";
+import { LOGO_LAYER } from "./CompositePass";
 import { LETTERS, BOLT_D, HALO_D, O_CENTER } from "./logo-full-paths";
 
 /**
@@ -203,7 +204,15 @@ export default function Emblem() {
       {/* Letters: brand white. The bolt's point light tints the letters
           near the o with celeste — a real light gradient across the logo. */}
       {LETTERS.map((l, i) => (
-        <mesh key={l.name} geometry={letterGeos[i]}>
+        <mesh
+          key={l.name}
+          geometry={letterGeos[i]}
+          ref={(m) => {
+            // Also on LOGO_LAYER so the composite's mask camera can render
+            // the letters alone (still on layer 0 → main render unchanged).
+            if (m) m.layers.enable(LOGO_LAYER);
+          }}
+        >
           <meshPhysicalMaterial
             ref={(m) => {
               letterMats.current[i] = m;

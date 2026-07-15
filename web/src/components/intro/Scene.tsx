@@ -9,6 +9,7 @@ import Fluid from "./Fluid";
 import DepthField from "./DepthField";
 import CameraRig from "./CameraRig";
 import Effects from "./Effects";
+import CompositePass from "./CompositePass";
 import TouchDrive from "./TouchDrive";
 import { BEATS, INTRO_DURATION, seg } from "./timeline";
 
@@ -104,6 +105,7 @@ export default function Scene({
         <Atmosphere />
         <Fluid manualRender={reducedMotion} />
         <Emblem />
+        <CompositePass />
         <CameraRig />
         {!reducedMotion && <Effects mobile={mobile} />}
       </ClockContext.Provider>
