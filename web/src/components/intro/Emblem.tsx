@@ -63,6 +63,28 @@ export default function Emblem() {
   // ENTIRELY in CompositePass (screen space); the material knows nothing of
   // the fluid, the dye, the mask or the cursor — it only renders the logo.
 
+  // Bolt = EDGE ONLY. The cyan emission is gated by a Fresnel term so only
+  // the silhouette of the bolt glows celeste; the interior stays dark. A
+  // celeste-outlined bolt, not a solid glowing mass.
+  const injectBoltRim = useMemo(
+    () => (mat: THREE.MeshStandardMaterial) => {
+      if (mat.userData.rim) return;
+      mat.userData.rim = true;
+      mat.onBeforeCompile = (shader) => {
+        shader.fragmentShader = shader.fragmentShader.replace(
+          "#include <emissivemap_fragment>",
+          `#include <emissivemap_fragment>
+           {
+             float fr = 1.0 - abs(dot(normalize(normal), normalize(vViewPosition)));
+             totalEmissiveRadiance *= pow(clamp(fr, 0.0, 1.0), 2.2);
+           }`,
+        );
+      };
+      mat.needsUpdate = true;
+    },
+    [],
+  );
+
   const letterGeos = useMemo(
     () =>
       LETTERS.map((l) => {
@@ -189,10 +211,13 @@ export default function Emblem() {
         />
       </mesh>
 
-      {/* Bolt — dark until it becomes the scene's light source */}
+      {/* Bolt — edge-only celeste (Fresnel rim); dark interior */}
       <mesh geometry={boltGeo} position={[0, 0, -0.26]}>
         <meshStandardMaterial
-          ref={boltMat}
+          ref={(m) => {
+            boltMat.current = m!;
+            if (m) injectBoltRim(m);
+          }}
           color="#062a2a"
           emissive="#00d4d4"
           emissiveIntensity={0}

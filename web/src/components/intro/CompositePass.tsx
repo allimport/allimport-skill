@@ -26,6 +26,9 @@ import { fluidDye } from "./Fluid";
  * rendered to its own target (RT_LOGO, A = mask) so the recolour is contained
  * in the letters. It draws AFTER the composer, so nothing here enters
  * lighting, bloom or the material. One premultiplied-over draw.
+ *
+ * The ink edges are SOFT / diffuse (wide density ramps), so the liquid reads
+ * with a feathered, blurry contour like the reference — not a hard outline.
  */
 
 /** Objects on this layer are the ones the mask render captures. The logo
@@ -50,30 +53,28 @@ const compositeFrag = /* glsl */ `
   uniform vec3 uInk;         // paint white of the ink, flat
   uniform float uReveal;     // bolt-activation ramp, gates the ink
 
-  // Thresholds on the dye density (peaks ~0.44 at this scale). T_CYAN is the
-  // hard rule that recolours the letter; CORE is where the off-logo white
-  // ink body reads. Near-step (2*aa ~1px) edges via fwidth keep them crisp.
-  const float T_CYAN = 0.15;   // mask*dye above this -> letter turns cyan
-  const float CORE   = 0.33;   // white ink body threshold (off-logo effect)
+  // Dye density thresholds (peaks ~0.44 at this scale). The edges are now
+  // SOFT / diffuse on purpose — wide smoothstep ramps, not a crisp near-step
+  // — so the liquid reads with a feathered, blurry contour like the
+  // reference, not a hard outline. T_CYAN still flips the letter to cyan.
+  const float CYAN_LO = 0.10;  // cyan starts ramping in (soft)
+  const float CYAN_HI = 0.30;  // fully cyan above this
+  const float INK_LO  = 0.14;  // white ink body: wide, feathered edge...
+  const float INK_HI  = 0.44;  // ...fully dense only at the dye peak
   const float CYAN_OPACITY = 1.0;  // full flip white -> cyan, unmistakable
-  const float CORE_OPACITY = 0.96; // white ink: almost fully opaque
+  const float CORE_OPACITY = 0.94; // white ink: near-opaque core, soft rim
 
   void main() {
     float mask = texture2D(uMask, vUv).a;   // 1 on the logo, 0 elsewhere
     float dye  = texture2D(uDye,  vUv).r;   // ink density under this pixel
 
-    // Constant ~1px antialias from the density's screen gradient. Floor it
-    // so a flat (plateau) region can't collapse the edge to a hard alias.
-    float aa = max(fwidth(dye), 0.0016);
-
-    // FULL-AREA cyan recolour (not a rim): the whole letter surface under
-    // enough ink flips to cyan. Near-step == the hard rule mask*dye > T_CYAN.
-    float fill = smoothstep(T_CYAN - aa, T_CYAN + aa, dye);
+    // FULL-AREA cyan recolour with a SOFT edge (diffuse, not a rim).
+    float fill = smoothstep(CYAN_LO, CYAN_HI, dye);
     float cw   = mask * fill * CYAN_OPACITY * uReveal;   // cyan on the letter
 
-    // White ink body (the liquid effect). Off the logo it reads as white; on
-    // the logo the cyan is drawn OVER it, so the recolour dominates there.
-    float core = smoothstep(CORE - aa, CORE + aa, dye);
+    // White ink body (the liquid). Wide ramp => diffuse, blurry contour.
+    // Off the logo it reads as white; on the logo the cyan draws OVER it.
+    float core = smoothstep(INK_LO, INK_HI, dye);
     float iw   = core * CORE_OPACITY * uReveal;
 
     // Premultiplied over, in order: background -> white ink -> cyan letter.
