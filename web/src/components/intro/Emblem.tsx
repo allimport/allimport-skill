@@ -6,6 +6,7 @@ import * as THREE from "three";
 import { SVGLoader } from "three/addons/loaders/SVGLoader.js";
 import { BEATS, seg, pulse, easeOutCubic, easeInOutCubic } from "./timeline";
 import { useIntroClock } from "./Scene";
+import { fluidDye } from "./Fluid";
 import { LOGO_LAYER, BOLT_LAYER } from "./CompositePass";
 import { LETTERS, BOLT_D, HALO_D, O_CENTER } from "./logo-full-paths";
 
@@ -59,9 +60,66 @@ export default function Emblem() {
   const boltLight = useRef<THREE.PointLight>(null!);
   const letterMats = useRef<(THREE.MeshPhysicalMaterial | null)[]>([]);
   const drift = useRef({ x: 0, y: 0, vx: 0, vy: 0 });
-  // The letters are pure PBR. The logo colour reaction to the fluid lives
-  // ENTIRELY in CompositePass (screen space); the material knows nothing of
-  // the fluid, the dye, the mask or the cursor — it only renders the logo.
+  // ENERGY STATE CHANGE (material, BRDF-correct). The fluid does not paint
+  // the logo: it charges the metal. We modify ONLY the albedo (diffuseColor),
+  // BEFORE lighting, through an energy GRADIENT MAP — white → cold white →
+  // pale cyan → identity cyan → intense cyan — indexed by the fluid dye at
+  // this pixel and weighted by fresnel so the charge climbs the relief.
+  // metalness / roughness / normal / clearcoat / F0 are untouched, so the
+  // BRDF keeps its WHITE speculars, fresnel and clearcoat over the new
+  // albedo — the tell of energized metal, not paint. dye→0 returns to white.
+  const energyUniforms = useMemo(
+    () => ({ uDye: { value: null as THREE.Texture | null } }),
+    [],
+  );
+  const injectEnergy = useMemo(
+    () => (material: THREE.MeshPhysicalMaterial) => {
+      if (material.userData.energy) return;
+      material.userData.energy = true;
+      material.onBeforeCompile = (shader) => {
+        shader.uniforms.uDye = energyUniforms.uDye;
+        shader.vertexShader = shader.vertexShader
+          .replace("#include <common>", "#include <common>\nvarying vec4 vEClip;")
+          .replace(
+            "#include <project_vertex>",
+            "#include <project_vertex>\nvEClip = gl_Position;",
+          );
+        shader.fragmentShader = shader.fragmentShader
+          .replace(
+            "#include <common>",
+            `#include <common>
+             uniform sampler2D uDye;
+             varying vec4 vEClip;
+             // Energy gradient map (a colour CURVE, not a white→cyan lerp).
+             // Value stays high so the metal never darkens into a coat.
+             vec3 energyRamp(float e) {
+               vec3 c = vec3(1.0);                               // metal white
+               c = mix(c, vec3(0.92, 0.99, 1.00), smoothstep(0.00, 0.25, e)); // cold white
+               c = mix(c, vec3(0.62, 0.94, 0.97), smoothstep(0.25, 0.50, e)); // pale cyan
+               c = mix(c, vec3(0.00, 0.83, 0.83), smoothstep(0.50, 0.78, e)); // identity #00d4d4
+               c = mix(c, vec3(0.00, 0.93, 1.00), smoothstep(0.78, 1.00, e)); // intense cyan
+               return c;
+             }`,
+          )
+          .replace(
+            "#include <normal_fragment_begin>",
+            `#include <normal_fragment_begin>
+             {
+               vec2 suv = vEClip.xy / vEClip.w * 0.5 + 0.5;
+               float dyeE = 0.0;
+               if (suv.x > 0.0 && suv.x < 1.0 && suv.y > 0.0 && suv.y < 1.0)
+                 dyeE = texture2D(uDye, suv).r;
+               // Charge climbs the relief: a touch more where the light grazes.
+               float fres = 1.0 - abs(dot(normalize(normal), normalize(vViewPosition)));
+               float e = clamp(dyeE / 0.24 * (0.7 + 0.3 * fres), 0.0, 1.0);
+               // Only the ALBEDO changes; the BRDF runs untouched on top.
+               diffuseColor.rgb = energyRamp(e);
+             }`,
+          );
+      };
+    },
+    [energyUniforms],
+  );
 
   const letterGeos = useMemo(
     () =>
@@ -88,6 +146,9 @@ export default function Emblem() {
   useFrame((_, rawDt) => {
     const t = clock.t;
     const dt = Math.min(rawDt, 1 / 30);
+
+    // Feed the live dye field to the letters' energy gradient map.
+    energyUniforms.uDye.value = fluidDye.tex;
 
     // --- Emerge: the logo surfaces from the void. Slight per-letter phase
     // keeps it organic without reading as a letter-by-letter effect.
@@ -159,11 +220,12 @@ export default function Emblem() {
           <meshPhysicalMaterial
             ref={(m) => {
               letterMats.current[i] = m;
+              if (m) injectEnergy(m);
             }}
-            // Industrial ceramic (Apple / Nothing): pure dielectric white,
-            // matte front, thin sharp lacquer so the beveled EDGES catch
-            // light and the grazing side walls read a touch more reflective.
-            // 100% PBR — no fluid, no dye, no screen-space lookup.
+            // Industrial ceramic (Apple / Nothing): pure dielectric white.
+            // The energy gradient map recolours ONLY the albedo (injected
+            // chunk); metalness/roughness/clearcoat/F0 stay as-is, so the
+            // BRDF is byte-identical to this material at rest (dye = 0).
             color="#ffffff"
             metalness={0}
             roughness={0.5}

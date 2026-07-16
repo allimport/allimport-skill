@@ -59,40 +59,19 @@ const compositeFrag = /* glsl */ `
   uniform float uReveal;     // bolt-activation ramp, gates the ink
   uniform vec2 uTexel;       // 1 / drawingBuffer, for the bolt outline
 
-  // Dye density thresholds (peaks ~0.44 at this scale). The edges are now
-  // SOFT / diffuse on purpose — wide smoothstep ramps, not a crisp near-step
-  // — so the liquid reads with a feathered, blurry contour like the
-  // reference, not a hard outline. T_CYAN still flips the letter to cyan.
-  const float CYAN_LO = 0.10;  // cyan starts ramping in (soft)
-  const float CYAN_HI = 0.30;  // fully cyan above this
+  // Dye density thresholds (peaks ~0.44 at this scale), soft/diffuse ramps.
+  // NOTE: the logo colour reaction no longer lives here — the metal energizes
+  // in its OWN material (BRDF-correct, albedo gradient map). This pass is now
+  // only the LIQUID (white ink) + its shadow + the bolt outline. RT_LOGO /
+  // uMask stay wired as infra but are currently unused by this shader.
   const float INK_LO  = 0.14;  // white ink body: wide, feathered edge...
   const float INK_HI  = 0.44;  // ...fully dense only at the dye peak
-  const float CYAN_OPACITY = 1.0;  // full flip white -> cyan, unmistakable
-  const float CORE_OPACITY = 0.94; // white ink: near-opaque core, soft rim
+  const float CORE_OPACITY = 0.45; // liquid sheen, TRANSLUCENT so the energized metal shows through
 
   void main() {
-    vec4 logo  = texture2D(uMask, vUv);     // RT_LOGO: rgb = shaded PBR, a = mask
-    float mask = logo.a;                     // 1 on the logo, 0 elsewhere
     float dye  = texture2D(uDye,  vUv).r;   // ink density under this pixel
 
-    // ENERGY, not paint. The cyan is a bright tint that CARRIES the PBR
-    // shading (overbright at the speculars = electric), and its coverage is
-    // GATED by the material's own relief: strong on lit bevels/speculars and
-    // plane changes, near-zero in the dark/flat areas — so the shadows stay
-    // shadows and the metal is never fully painted. Reads as a current
-    // running along the piece, not a coat of cyan.
-    vec3 cyanTint = uCyan * (0.5 + 1.15 * logo.rgb);
-    float lum    = max(max(logo.r, logo.g), logo.b);
-    float lit    = smoothstep(0.40, 0.82, lum);           // lit bevels/speculars
-    float plane  = smoothstep(0.02, 0.07, fwidth(lum));   // plane changes / relief
-    float energy = clamp(lit + plane * 0.7, 0.0, 1.0);
-
-    // Recolour coverage, GATED by energy (dark areas keep the white metal).
-    float fill = smoothstep(CYAN_LO, CYAN_HI, dye);
-    float cw   = mask * fill * CYAN_OPACITY * uReveal * energy;
-
     // White ink body (the liquid). Wide ramp => diffuse, blurry contour.
-    // Off the logo it reads as white; on the logo the cyan draws OVER it.
     float core = smoothstep(INK_LO, INK_HI, dye);
     float iw   = core * CORE_OPACITY * uReveal;
 
@@ -101,11 +80,9 @@ const compositeFrag = /* glsl */ `
     float shadow = smoothstep(0.05, 0.15, dye) * (1.0 - smoothstep(0.15, 0.32, dye));
     float aS = shadow * 0.5 * uReveal;
 
-    // Premultiplied over, in order: background -> shadow -> white ink -> cyan.
-    //   premult = cyan*cw + white*iw*(1-cw) (shadow is black, adds no colour)
-    //   outA    = 1 - (1-cw)(1-iw)(1-aS)
-    vec3 premult = cyanTint * cw + uInk * (iw * (1.0 - cw));
-    float outA   = 1.0 - (1.0 - cw) * (1.0 - iw) * (1.0 - aS);
+    // Premultiplied over, in order: background -> shadow -> white ink.
+    vec3 premult = uInk * iw;
+    float outA   = 1.0 - (1.0 - iw) * (1.0 - aS);
 
     // BOLT OUTLINE: where the fluid crosses the bolt, trace its silhouette
     // in celeste ON TOP of the ink, so the bolt reads as a contour instead
