@@ -77,11 +77,16 @@ const compositeFrag = /* glsl */ `
     float core = smoothstep(INK_LO, INK_HI, dye);
     float iw   = core * CORE_OPACITY * uReveal;
 
-    // Premultiplied over, in order: background -> white ink -> cyan letter.
-    //   F = mix( mix(D, white, iw), cyan, cw )
-    //   premult = cyan*cw + white*iw*(1-cw) ;  outA = 1-(1-cw)(1-iw)
+    // Soft dark shadow hugging the OUTSIDE of the liquid — a diffuse
+    // border/shadow that grounds the ink on the surface (not a hard line).
+    float shadow = smoothstep(0.05, 0.15, dye) * (1.0 - smoothstep(0.15, 0.32, dye));
+    float aS = shadow * 0.5 * uReveal;
+
+    // Premultiplied over, in order: background -> shadow -> white ink -> cyan.
+    //   premult = cyan*cw + white*iw*(1-cw) (shadow is black, adds no colour)
+    //   outA    = 1 - (1-cw)(1-iw)(1-aS)
     vec3 premult = uCyan * cw + uInk * (iw * (1.0 - cw));
-    float outA   = 1.0 - (1.0 - cw) * (1.0 - iw);
+    float outA   = 1.0 - (1.0 - cw) * (1.0 - iw) * (1.0 - aS);
     gl_FragColor = vec4(premult, outA);
   }
 `;
