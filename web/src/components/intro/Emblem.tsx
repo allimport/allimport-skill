@@ -6,7 +6,7 @@ import * as THREE from "three";
 import { SVGLoader } from "three/addons/loaders/SVGLoader.js";
 import { BEATS, seg, pulse, easeOutCubic, easeInOutCubic } from "./timeline";
 import { useIntroClock } from "./Scene";
-import { LOGO_LAYER } from "./CompositePass";
+import { LOGO_LAYER, BOLT_LAYER } from "./CompositePass";
 import { LETTERS, BOLT_D, HALO_D, O_CENTER } from "./logo-full-paths";
 
 /**
@@ -62,28 +62,6 @@ export default function Emblem() {
   // The letters are pure PBR. The logo colour reaction to the fluid lives
   // ENTIRELY in CompositePass (screen space); the material knows nothing of
   // the fluid, the dye, the mask or the cursor — it only renders the logo.
-
-  // Bolt = EDGE ONLY. The cyan emission is gated by a Fresnel term so only
-  // the silhouette of the bolt glows celeste; the interior stays dark. A
-  // celeste-outlined bolt, not a solid glowing mass.
-  const injectBoltRim = useMemo(
-    () => (mat: THREE.MeshStandardMaterial) => {
-      if (mat.userData.rim) return;
-      mat.userData.rim = true;
-      mat.onBeforeCompile = (shader) => {
-        shader.fragmentShader = shader.fragmentShader.replace(
-          "#include <emissivemap_fragment>",
-          `#include <emissivemap_fragment>
-           {
-             float fr = 1.0 - abs(dot(normalize(normal), normalize(vViewPosition)));
-             totalEmissiveRadiance *= pow(clamp(fr, 0.0, 1.0), 2.2);
-           }`,
-        );
-      };
-      mat.needsUpdate = true;
-    },
-    [],
-  );
 
   const letterGeos = useMemo(
     () =>
@@ -211,13 +189,18 @@ export default function Emblem() {
         />
       </mesh>
 
-      {/* Bolt — edge-only celeste (Fresnel rim); dark interior */}
-      <mesh geometry={boltGeo} position={[0, 0, -0.26]}>
+      {/* Bolt — dark until it becomes the scene's light source. Also on
+          BOLT_LAYER so the composite can trace its outline in celeste where
+          the fluid crosses it. */}
+      <mesh
+        geometry={boltGeo}
+        position={[0, 0, -0.26]}
+        ref={(m) => {
+          if (m) m.layers.enable(BOLT_LAYER);
+        }}
+      >
         <meshStandardMaterial
-          ref={(m) => {
-            boltMat.current = m!;
-            if (m) injectBoltRim(m);
-          }}
+          ref={boltMat}
           color="#062a2a"
           emissive="#00d4d4"
           emissiveIntensity={0}

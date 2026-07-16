@@ -36,6 +36,10 @@ import { fluidDye } from "./Fluid";
  *  unaffected. */
 export const LOGO_LAYER = 2;
 
+/** The bolt renders to its own mask on this layer, so the composite can
+ *  trace its silhouette in celeste where the fluid crosses it. */
+export const BOLT_LAYER = 3;
+
 const quadVert = /* glsl */ `
   varying vec2 vUv;
   void main() {
@@ -48,10 +52,12 @@ const compositeFrag = /* glsl */ `
   precision highp float;
   varying vec2 vUv;
   uniform sampler2D uMask;   // RT_LOGO: alpha = logo mask
+  uniform sampler2D uBolt;   // RT_BOLT: alpha = bolt mask
   uniform sampler2D uDye;    // RT_DYE: red channel = ink density
   uniform vec3 uCyan;        // All Import identity cyan, flat
   uniform vec3 uInk;         // paint white of the ink, flat
   uniform float uReveal;     // bolt-activation ramp, gates the ink
+  uniform vec2 uTexel;       // 1 / drawingBuffer, for the bolt outline
 
   // Dye density thresholds (peaks ~0.44 at this scale). The edges are now
   // SOFT / diffuse on purpose — wide smoothstep ramps, not a crisp near-step
@@ -87,6 +93,26 @@ const compositeFrag = /* glsl */ `
     //   outA    = 1 - (1-cw)(1-iw)(1-aS)
     vec3 premult = uCyan * cw + uInk * (iw * (1.0 - cw));
     float outA   = 1.0 - (1.0 - cw) * (1.0 - iw) * (1.0 - aS);
+
+    // BOLT OUTLINE: where the fluid crosses the bolt, trace its silhouette
+    // in celeste ON TOP of the ink, so the bolt reads as a contour instead
+    // of vanishing under the white liquid. dilate(mask) - mask = edge ring.
+    float b0 = texture2D(uBolt, vUv).a;
+    float t = 1.6;
+    float bd = texture2D(uBolt, vUv + vec2(uTexel.x, 0.0) * t).a;
+    bd = max(bd, texture2D(uBolt, vUv - vec2(uTexel.x, 0.0) * t).a);
+    bd = max(bd, texture2D(uBolt, vUv + vec2(0.0, uTexel.y) * t).a);
+    bd = max(bd, texture2D(uBolt, vUv - vec2(0.0, uTexel.y) * t).a);
+    bd = max(bd, texture2D(uBolt, vUv + uTexel * t).a);
+    bd = max(bd, texture2D(uBolt, vUv - uTexel * t).a);
+    bd = max(bd, texture2D(uBolt, vUv + vec2(uTexel.x, -uTexel.y) * t).a);
+    bd = max(bd, texture2D(uBolt, vUv + vec2(-uTexel.x, uTexel.y) * t).a);
+    float outline = clamp(bd - b0, 0.0, 1.0);          // ring at the silhouette
+    float dyeP    = smoothstep(0.08, 0.20, dye);        // only where fluid is
+    float bw      = outline * dyeP * uReveal;
+    premult = uCyan * bw + premult * (1.0 - bw);
+    outA    = 1.0 - (1.0 - bw) * (1.0 - outA);
+
     gl_FragColor = vec4(premult, outA);
   }
 `;
@@ -109,6 +135,18 @@ export default function CompositePass({
     [],
   );
 
+  // Bolt silhouette mask, for the celeste outline under the fluid.
+  const rtBolt = useMemo(
+    () =>
+      new THREE.WebGLRenderTarget(2, 2, {
+        minFilter: THREE.LinearFilter,
+        magFilter: THREE.LinearFilter,
+        depthBuffer: true,
+        samples: 4,
+      }),
+    [],
+  );
+
   // Fullscreen composite quad, its own scene + ortho-less camera.
   const comp = useMemo(() => {
     const mat = new THREE.ShaderMaterial({
@@ -116,12 +154,14 @@ export default function CompositePass({
       fragmentShader: compositeFrag,
       uniforms: {
         uMask: { value: null as THREE.Texture | null },
+        uBolt: { value: null as THREE.Texture | null },
         uDye: { value: null as THREE.Texture | null },
         // All Import identity cyan (--cyan: #00d4d4). Flat, no gradient.
         uCyan: { value: new THREE.Color(0x00d4d4) },
         // Ink paint-white (matches the old display pass exactly).
         uInk: { value: new THREE.Color(0.965, 0.975, 1.0) },
         uReveal: { value: 0 },
+        uTexel: { value: new THREE.Vector2(1 / 2, 1 / 2) },
       },
       transparent: true,
       depthTest: false,
@@ -145,10 +185,11 @@ export default function CompositePass({
   useEffect(
     () => () => {
       rtLogo.dispose();
+      rtBolt.dispose();
       comp.mat.dispose();
       (comp.scn.children[0] as THREE.Mesh).geometry.dispose();
     },
-    [rtLogo, comp],
+    [rtLogo, rtBolt, comp],
   );
 
   useFrame(() => {
@@ -156,6 +197,7 @@ export default function CompositePass({
     const w = ctx.drawingBufferWidth;
     const h = ctx.drawingBufferHeight;
     if (rtLogo.width !== w || rtLogo.height !== h) rtLogo.setSize(w, h);
+    if (rtBolt.width !== w || rtBolt.height !== h) rtBolt.setSize(w, h);
 
     // --- 0) Reduced motion: no composer is mounted, and this positive-
     // priority subscriber disabled R3F's auto-render, so draw the scene to
@@ -181,6 +223,13 @@ export default function CompositePass({
     gl.clear(true, true, false);
     gl.render(scene, camera);
 
+    // --- 1b) Render ONLY the bolt layer to RT_BOLT (A = bolt mask) ---
+    camera.layers.set(BOLT_LAYER);
+    gl.setRenderTarget(rtBolt);
+    gl.setClearColor(0x000000, 0);
+    gl.clear(true, true, false);
+    gl.render(scene, camera);
+
     scene.background = prevBg;
     scene.fog = prevFog;
     gl.setClearColor(prevClearColor, prevClearAlpha);
@@ -188,8 +237,10 @@ export default function CompositePass({
 
     // --- 2) The single composite over the canvas: white ink + cyan halo ---
     comp.mat.uniforms.uMask.value = rtLogo.texture;
+    comp.mat.uniforms.uBolt.value = rtBolt.texture;
     comp.mat.uniforms.uDye.value = fluidDye.tex;
     comp.mat.uniforms.uReveal.value = fluidDye.reveal;
+    (comp.mat.uniforms.uTexel.value as THREE.Vector2).set(1 / w, 1 / h);
 
     gl.setRenderTarget(null);
     const prevAutoClear = gl.autoClear;
