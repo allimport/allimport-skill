@@ -71,8 +71,15 @@ const compositeFrag = /* glsl */ `
   const float CORE_OPACITY = 0.94; // white ink: near-opaque core, soft rim
 
   void main() {
-    float mask = texture2D(uMask, vUv).a;   // 1 on the logo, 0 elsewhere
+    vec4 logo  = texture2D(uMask, vUv);     // RT_LOGO: rgb = shaded PBR, a = mask
+    float mask = logo.a;                     // 1 on the logo, 0 elsewhere
     float dye  = texture2D(uDye,  vUv).r;   // ink density under this pixel
+
+    // The cyan is a TINT of the material, not flat paint: multiply the
+    // identity cyan by the logo's own PBR shading (RT_LOGO.rgb = bevels,
+    // speculars, shadows, volume). White metal painted cyan — the pigment
+    // changes, all the lighting information is preserved.
+    vec3 cyanTint = uCyan * logo.rgb;
 
     // FULL-AREA cyan recolour with a SOFT edge (diffuse, not a rim).
     float fill = smoothstep(CYAN_LO, CYAN_HI, dye);
@@ -91,7 +98,7 @@ const compositeFrag = /* glsl */ `
     // Premultiplied over, in order: background -> shadow -> white ink -> cyan.
     //   premult = cyan*cw + white*iw*(1-cw) (shadow is black, adds no colour)
     //   outA    = 1 - (1-cw)(1-iw)(1-aS)
-    vec3 premult = uCyan * cw + uInk * (iw * (1.0 - cw));
+    vec3 premult = cyanTint * cw + uInk * (iw * (1.0 - cw));
     float outA   = 1.0 - (1.0 - cw) * (1.0 - iw) * (1.0 - aS);
 
     // BOLT OUTLINE: where the fluid crosses the bolt, trace its silhouette
