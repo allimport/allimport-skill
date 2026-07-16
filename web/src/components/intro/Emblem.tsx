@@ -107,10 +107,10 @@ export default function Emblem() {
     const on = seg(t, BEATS.boltOn, easeInOutCubic);
     const over = pulse(t, BEATS.boltOn[1], 0.35) * 0.5;
     boltMat.current.opacity = Math.max(emerged, on);
-    boltMat.current.emissiveIntensity = 1.0 * on + over * 0.6;
+    boltMat.current.emissiveIntensity = 2.0 * on + over * 1.1;
     haloMat.current.opacity = on;
-    haloMat.current.emissiveIntensity = 0.3 * on;
-    boltLight.current.intensity = 8 * on + 5 * over;
+    haloMat.current.emissiveIntensity = 0.42 * on;
+    boltLight.current.intensity = 11 * on + 7 * over;
 
     // --- Stabilize: mass lands once the light is on.
     const dip = pulse(t, BEATS.stabilize[0], 0.3);

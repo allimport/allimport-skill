@@ -75,15 +75,21 @@ const compositeFrag = /* glsl */ `
     float mask = logo.a;                     // 1 on the logo, 0 elsewhere
     float dye  = texture2D(uDye,  vUv).r;   // ink density under this pixel
 
-    // The cyan is a TINT of the material, not flat paint: multiply the
-    // identity cyan by the logo's own PBR shading (RT_LOGO.rgb = bevels,
-    // speculars, shadows, volume). White metal painted cyan — the pigment
-    // changes, all the lighting information is preserved.
-    vec3 cyanTint = uCyan * logo.rgb;
+    // ENERGY, not paint. The cyan is a bright tint that CARRIES the PBR
+    // shading (overbright at the speculars = electric), and its coverage is
+    // GATED by the material's own relief: strong on lit bevels/speculars and
+    // plane changes, near-zero in the dark/flat areas — so the shadows stay
+    // shadows and the metal is never fully painted. Reads as a current
+    // running along the piece, not a coat of cyan.
+    vec3 cyanTint = uCyan * (0.5 + 1.15 * logo.rgb);
+    float lum    = max(max(logo.r, logo.g), logo.b);
+    float lit    = smoothstep(0.40, 0.82, lum);           // lit bevels/speculars
+    float plane  = smoothstep(0.02, 0.07, fwidth(lum));   // plane changes / relief
+    float energy = clamp(lit + plane * 0.7, 0.0, 1.0);
 
-    // FULL-AREA cyan recolour with a SOFT edge (diffuse, not a rim).
+    // Recolour coverage, GATED by energy (dark areas keep the white metal).
     float fill = smoothstep(CYAN_LO, CYAN_HI, dye);
-    float cw   = mask * fill * CYAN_OPACITY * uReveal;   // cyan on the letter
+    float cw   = mask * fill * CYAN_OPACITY * uReveal * energy;
 
     // White ink body (the liquid). Wide ramp => diffuse, blurry contour.
     // Off the logo it reads as white; on the logo the cyan draws OVER it.
