@@ -80,9 +80,18 @@ const compositeFrag = /* glsl */ `
     float shadow = smoothstep(0.05, 0.15, dye) * (1.0 - smoothstep(0.15, 0.32, dye));
     float aS = shadow * 0.5 * uReveal;
 
-    // Premultiplied over, in order: background -> shadow -> white ink.
-    vec3 premult = uInk * iw;
-    float outA   = 1.0 - (1.0 - iw) * (1.0 - aS);
+    // --- B) MENISCUS: the surface-tension lip. A thin band INSIDE the
+    // liquid edge (from the dye gradient) where the raised, curved surface
+    // is a touch DENSER and catches a cool reflection. Not a stroke/outline
+    // — it lives within the liquid and is born/dies with it. ---
+    float men = clamp(smoothstep(0.18, 0.26, dye) - smoothstep(0.30, 0.42, dye),
+                      0.0, 1.0) * uReveal;
+    vec3  inkCol = uInk + vec3(0.03, 0.08, 0.13) * men;  // faint cool lip highlight
+    float iwL    = clamp(iw + 0.18 * men, 0.0, 1.0);     // lip slightly denser
+
+    // Premultiplied over, in order: background -> shadow -> white ink (+lip).
+    vec3 premult = inkCol * iwL;
+    float outA   = 1.0 - (1.0 - iwL) * (1.0 - aS);
 
     // BOLT OUTLINE: where the fluid crosses the bolt, trace its silhouette
     // in celeste ON TOP of the ink, so the bolt reads as a contour instead
