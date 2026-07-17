@@ -109,9 +109,12 @@ export default function Emblem() {
                float dyeE = 0.0;
                if (suv.x > 0.0 && suv.x < 1.0 && suv.y > 0.0 && suv.y < 1.0)
                  dyeE = texture2D(uDye, suv).r;
-               // Charge climbs the relief: a touch more where the light grazes.
-               float fres = 1.0 - abs(dot(normalize(normal), normalize(vViewPosition)));
-               float e = clamp(dyeE / 0.24 * (0.7 + 0.3 * fres), 0.0, 1.0);
+               // Energy is a CONSEQUENCE under the liquid, not paint. Gate hard
+               // on the dye so it exists ONLY where the fluid actually sits —
+               // no periphery ring, born and dies with the liquid — and cap it
+               // low so the cyan stays subtle. No fresnel => no rim on the
+               // letter silhouette.
+               float e = smoothstep(0.20, 0.42, dyeE) * 0.6;
                // Only the ALBEDO changes; the BRDF runs untouched on top.
                diffuseColor.rgb = energyRamp(e);
              }`,
