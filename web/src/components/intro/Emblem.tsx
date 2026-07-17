@@ -6,6 +6,7 @@ import * as THREE from "three";
 import { SVGLoader } from "three/addons/loaders/SVGLoader.js";
 import { BEATS, seg, pulse, easeOutCubic, easeInOutCubic } from "./timeline";
 import { useIntroClock } from "./Scene";
+import { fluidDye } from "./Fluid";
 import { LOGO_LAYER } from "./CompositePass";
 import { LETTERS, BOLT_D, HALO_D, O_CENTER } from "./logo-full-paths";
 
@@ -59,9 +60,66 @@ export default function Emblem() {
   const boltLight = useRef<THREE.PointLight>(null!);
   const letterMats = useRef<(THREE.MeshPhysicalMaterial | null)[]>([]);
   const drift = useRef({ x: 0, y: 0, vx: 0, vy: 0 });
-  // The letters are pure PBR. The logo colour reaction to the fluid lives
-  // ENTIRELY in CompositePass (screen space); the material knows nothing of
-  // the fluid, the dye, the mask or the cursor — it only renders the logo.
+
+  // MATERIAL STATE CHANGE (brdf-material-state skill). The fluid does not
+  // paint the logo: it charges the metal. We modify ONLY the albedo
+  // (diffuseColor), BEFORE lighting, through a value-preserving colour
+  // gradient map — white -> cold white -> identity cyan (#00d4d4) — gated
+  // hard by the fluid dye (no fresnel, so no ring/sticker outline). Every
+  // other material input (metalness/roughness/normal/clearcoat/F0) is
+  // untouched, so the BRDF keeps its WHITE speculars/fresnel/clearcoat over
+  // the new albedo — energized metal, not paint. dye=0 => exact white.
+  const energyUniforms = useMemo(
+    () => ({ uDye: { value: null as THREE.Texture | null } }),
+    [],
+  );
+  const injectEnergy = useMemo(
+    () => (material: THREE.MeshPhysicalMaterial) => {
+      if (material.userData.energy) return;
+      material.userData.energy = true;
+      material.onBeforeCompile = (shader) => {
+        shader.uniforms.uDye = energyUniforms.uDye;
+        shader.vertexShader = shader.vertexShader
+          .replace("#include <common>", "#include <common>\nvarying vec4 vEClip;")
+          .replace(
+            "#include <project_vertex>",
+            "#include <project_vertex>\nvEClip = gl_Position;",
+          );
+        shader.fragmentShader = shader.fragmentShader
+          .replace(
+            "#include <common>",
+            `#include <common>
+             uniform sampler2D uDye;
+             varying vec4 vEClip;
+             // Energy gradient map: a colour CURVE (not a base->target lerp).
+             // Ends at the exact identity cyan; value stays high so the metal
+             // gains pigment instead of being coated.
+             vec3 stateRamp(float e) {
+               vec3 c = vec3(1.0);                                    // metal white
+               c = mix(c, vec3(0.92, 0.99, 1.00), smoothstep(0.00, 0.30, e)); // cold white
+               c = mix(c, vec3(0.55, 0.90, 0.93), smoothstep(0.30, 0.62, e)); // pale cyan
+               c = mix(c, vec3(0.00, 0.831, 0.831), smoothstep(0.62, 1.00, e)); // #00d4d4
+               return c;
+             }`,
+          )
+          .replace(
+            "#include <normal_fragment_begin>",
+            `#include <normal_fragment_begin>
+             {
+               vec2 suv = vEClip.xy / vEClip.w * 0.5 + 0.5;
+               float dyeE = 0.0;
+               if (suv.x > 0.0 && suv.x < 1.0 && suv.y > 0.0 && suv.y < 1.0)
+                 dyeE = texture2D(uDye, suv).r;
+               // Hard-ish gate: the charge exists ONLY where the fluid sits,
+               // born and dies with it — no halo/ring. No fresnel weighting.
+               float e = smoothstep(0.20, 0.42, dyeE);
+               diffuseColor.rgb = stateRamp(e);   // ALBEDO only; BRDF untouched
+             }`,
+          );
+      };
+    },
+    [energyUniforms],
+  );
 
   const letterGeos = useMemo(
     () =>
@@ -89,6 +147,9 @@ export default function Emblem() {
     const t = clock.t;
     const dt = Math.min(rawDt, 1 / 30);
 
+    // Feed the live dye to the letters' albedo state ramp.
+    energyUniforms.uDye.value = fluidDye.tex;
+
     // --- Emerge: the logo surfaces from the void. Slight per-letter phase
     // keeps it organic without reading as a letter-by-letter effect.
     LETTERS.forEach((_, i) => {
@@ -107,10 +168,13 @@ export default function Emblem() {
     const on = seg(t, BEATS.boltOn, easeInOutCubic);
     const over = pulse(t, BEATS.boltOn[1], 0.35) * 0.5;
     boltMat.current.opacity = Math.max(emerged, on);
+    // Bolt brightness UNCHANGED (still the protagonist). Only its SPILL is
+    // contained: the backlight and halo washed cyan onto the O's metal, so
+    // pull them down — the bolt's own emissive glow stays the same.
     boltMat.current.emissiveIntensity = 1.0 * on + over * 0.6;
     haloMat.current.opacity = on;
-    haloMat.current.emissiveIntensity = 0.3 * on;
-    boltLight.current.intensity = 8 * on + 5 * over;
+    haloMat.current.emissiveIntensity = 0.16 * on;
+    boltLight.current.intensity = 4.5 * on + 3 * over;
 
     // --- Stabilize: mass lands once the light is on.
     const dip = pulse(t, BEATS.stabilize[0], 0.3);
@@ -159,11 +223,12 @@ export default function Emblem() {
           <meshPhysicalMaterial
             ref={(m) => {
               letterMats.current[i] = m;
+              if (m) injectEnergy(m);
             }}
-            // Industrial ceramic (Apple / Nothing): pure dielectric white,
-            // matte front, thin sharp lacquer so the beveled EDGES catch
-            // light and the grazing side walls read a touch more reflective.
-            // 100% PBR — no fluid, no dye, no screen-space lookup.
+            // Industrial ceramic (Apple / Nothing): pure dielectric white.
+            // The energy state ramp recolours ONLY the albedo (injected
+            // chunk); metalness/roughness/clearcoat/F0 stay as-is, so the
+            // BRDF is byte-identical to this material at rest (dye = 0).
             color="#ffffff"
             metalness={0}
             roughness={0.5}
@@ -211,7 +276,7 @@ export default function Emblem() {
         position={[O_CENTER[0], O_CENTER[1] + 0.4, -1.6]}
         color="#33e4e4"
         intensity={0}
-        distance={11}
+        distance={7.5}
         decay={1.8}
       />
     </group>

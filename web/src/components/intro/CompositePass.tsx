@@ -6,26 +6,24 @@ import * as THREE from "three";
 import { fluidDye } from "./Fluid";
 
 /**
- * The SINGLE final composite. One pass, one shader — the only thing that
- * draws the logo colour reaction AND the fluid ink to the screen. There is
- * no separate fluid overlay any more:
+ * The final composite pass. It draws ONLY the liquid (white ink). The logo
+ * colour STATE change does NOT live here — the metal energizes in its own
+ * material (BRDF-safe albedo, see the brdf-material-state skill), so the 3D
+ * shading is preserved. This pass reads that already-energized metal from
+ * RT_LOGO and lets it show THROUGH the liquid:
  *
- *   scene (background + logo PBR, via the composer)   → canvas
- *   → CompositePass: white ink + FULL cyan recolour of the letters → canvas
+ *   scene (background + energized logo PBR, via the composer)   → canvas
+ *   → CompositePass: white liquid, with the charged metal transmitting
+ *     through it by the liquid's own thickness profile                → canvas
  *
- * Colour mechanism (etapa 7): the logo really CHANGES COLOUR. Wherever the
- * ink covers a letter past a threshold, the WHOLE letter surface there flips
- * from white to cyan — a hard rule, not a rim/halo/gradient:
- *
- *   if (mask * dye > T)  letter = cyan   else  letter = original white
- *
- * The cyan fills the affected area and is drawn ON TOP, so on the logo it
- * dominates: the user reads a clear white → cyan → white as the fluid passes
- * and leaves. The white ink still exists as the liquid effect (it reads as
- * white off the logo, where there is nothing to recolour). The logo is
- * rendered to its own target (RT_LOGO, A = mask) so the recolour is contained
- * in the letters. It draws AFTER the composer, so nothing here enters
- * lighting, bloom or the material. One premultiplied-over draw.
+ * Liquid model: the body is a DOME (spherical cap). Its thickness `t` comes
+ * from the drop geometry, not the raw dye. Opacity follows `t` (transparent
+ * rim → solid thick core), and the charged metal transmits through by (1 - t)
+ * — an artistic, physically-INSPIRED read, not a literal Beer-Lambert
+ * absorption. So: transparent exterior → transition → cyan felt from inside →
+ * solid white core. RT_LOGO (A = mask, RGB = energized metal) is the only
+ * thing sampled from the logo. One premultiplied-over draw, after the composer,
+ * so nothing here touches lighting, bloom or the material.
  */
 
 /** Objects on this layer are the ones the mask render captures. The logo
@@ -50,37 +48,43 @@ const compositeFrag = /* glsl */ `
   uniform vec3 uInk;         // paint white of the ink, flat
   uniform float uReveal;     // bolt-activation ramp, gates the ink
 
-  // Thresholds on the dye density (peaks ~0.44 at this scale). T_CYAN is the
-  // hard rule that recolours the letter; CORE is where the off-logo white
-  // ink body reads. Near-step (2*aa ~1px) edges via fwidth keep them crisp.
-  const float T_CYAN = 0.15;   // mask*dye above this -> letter turns cyan
-  const float CORE   = 0.33;   // white ink body threshold (off-logo effect)
-  const float CYAN_OPACITY = 1.0;  // full flip white -> cyan, unmistakable
-  const float CORE_OPACITY = 0.96; // white ink: almost fully opaque
+  // The liquid FOOTPRINT in dye space: where the body starts (thin outer
+  // edge) and where it reaches its peak thickness. These place the drop; they
+  // are not a curve fit. This pass is ONLY the liquid — the logo colour STATE
+  // lives in the material (BRDF-safe albedo). uMask = RT_LOGO (energized metal).
+  const float L_EDGE = 0.16;   // outer edge of the liquid body (thickness 0)
+  const float L_PEAK = 0.44;   // where the body reaches full thickness
+  const float MAX_OPACITY = 0.96; // solidity of the thick core
 
   void main() {
-    float mask = texture2D(uMask, vUv).a;   // 1 on the logo, 0 elsewhere
     float dye  = texture2D(uDye,  vUv).r;   // ink density under this pixel
+    vec4  logo = texture2D(uMask, vUv);     // RT_LOGO: rgb = charged metal, a = mask
 
-    // Constant ~1px antialias from the density's screen gradient. Floor it
-    // so a flat (plateau) region can't collapse the edge to a hard alias.
-    float aa = max(fwidth(dye), 0.0016);
+    // LIQUID THICKNESS from a physical DOME profile, not the raw dye value.
+    // u = how far inside the body we are (0 at the outline, 1 at the core).
+    // A spherical-cap (drop) of insideness u has thickness sqrt(u(2-u)) — pure
+    // geometry, no tunable exponent. So the whole read falls out of the drop's
+    // own shape: thin transparent rim -> rising body -> solid thick core.
+    float u = smoothstep(L_EDGE, L_PEAK, dye);
+    float t = sqrt(u * (2.0 - u));           // dome thickness 0..1
 
-    // FULL-AREA cyan recolour (not a rim): the whole letter surface under
-    // enough ink flips to cyan. Near-step == the hard rule mask*dye > T_CYAN.
-    float fill = smoothstep(T_CYAN - aa, T_CYAN + aa, dye);
-    float cw   = mask * fill * CYAN_OPACITY * uReveal;   // cyan on the letter
+    // The white body's OPACITY follows the thickness: the rim is transparent,
+    // the core is solid white. This is the liquid's real profile (a drop), not
+    // a flat cut or a lowered opacity.
+    float iw = t * MAX_OPACITY * uReveal;
 
-    // White ink body (the liquid effect). Off the logo it reads as white; on
-    // the logo the cyan is drawn OVER it, so the recolour dominates there.
-    float core = smoothstep(CORE - aa, CORE + aa, dye);
-    float iw   = core * CORE_OPACITY * uReveal;
+    // ENERGY TRANSMISSION — an ARTISTIC, physically-inspired term, NOT a
+    // literal Beer-Lambert absorption (no exponential). It reads straight off
+    // the dome geometry: transmit = 1 - t. Thin body (t->0) lets the charged
+    // metal through; thick core (t->1) blocks it to white. Times the metal's
+    // own charge (logo.rgb), so the cyan is felt from INSIDE the body and dies
+    // where it is thick. No constant, no fitted curve. If a real optical
+    // absorption is ever needed, that is a separate stage.
+    float transmit = (1.0 - t) * logo.a;
+    vec3  inkCol   = mix(uInk, logo.rgb, transmit);
 
-    // Premultiplied over, in order: background -> white ink -> cyan letter.
-    //   F = mix( mix(D, white, iw), cyan, cw )
-    //   premult = cyan*cw + white*iw*(1-cw) ;  outA = 1-(1-cw)(1-iw)
-    vec3 premult = uCyan * cw + uInk * (iw * (1.0 - cw));
-    float outA   = 1.0 - (1.0 - cw) * (1.0 - iw);
+    vec3 premult = inkCol * iw;  // premultiplied over the canvas
+    float outA   = iw;
     gl_FragColor = vec4(premult, outA);
   }
 `;
