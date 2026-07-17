@@ -66,7 +66,7 @@ const compositeFrag = /* glsl */ `
   // uMask stay wired as infra but are currently unused by this shader.
   const float INK_LO  = 0.14;  // white ink body: wide, feathered edge...
   const float INK_HI  = 0.44;  // ...fully dense only at the dye peak
-  const float CORE_OPACITY = 0.45; // liquid sheen, TRANSLUCENT so the energized metal shows through
+  const float CORE_OPACITY = 0.94; // solid, viscous liquid body (weight + depth)
 
   void main() {
     float dye  = texture2D(uDye,  vUv).r;   // ink density under this pixel
