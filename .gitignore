@@ -3,3 +3,6 @@
 .agents/
 .claude/
 skills-lock.json
+
+# Graphify generated output (local knowledge graph)
+graphify-out/
