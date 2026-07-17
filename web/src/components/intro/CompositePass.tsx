@@ -89,9 +89,20 @@ const compositeFrag = /* glsl */ `
     vec3  inkCol = uInk + vec3(0.03, 0.08, 0.13) * men;  // faint cool lip highlight
     float iwL    = clamp(iw + 0.18 * men, 0.0, 1.0);     // lip slightly denser
 
-    // Premultiplied over, in order: background -> shadow -> white ink (+lip).
-    vec3 premult = inkCol * iwL;
-    float outA   = 1.0 - (1.0 - iwL) * (1.0 - aS);
+    // --- C) REFRACTION: the thick lip bends the metal underneath. Sample the
+    // logo (RT_LOGO, already the energized metal) displaced along the dye
+    // gradient, blend a hair of it ONLY in the lip band. Optical, not glass. ---
+    vec2 grad = vec2(
+      texture2D(uDye, vUv + vec2(uTexel.x, 0.0)).r - texture2D(uDye, vUv - vec2(uTexel.x, 0.0)).r,
+      texture2D(uDye, vUv + vec2(0.0, uTexel.y)).r - texture2D(uDye, vUv - vec2(0.0, uTexel.y)).r);
+    vec2  disp = grad * uTexel * 18.0 * men;             // a few px, only at the lip
+    vec4  refr = texture2D(uMask, vUv + disp);           // displaced metal
+    float rW   = men * refr.a * 0.16;                    // extremely subtle
+
+    // Premultiplied over: background -> refraction ghost -> shadow -> ink lip.
+    float base = (1.0 - iwL) * (1.0 - aS);
+    vec3 premult = inkCol * iwL + base * rW * refr.rgb;
+    float outA   = 1.0 - base * (1.0 - rW);
 
     // BOLT OUTLINE: where the fluid crosses the bolt, trace its silhouette
     // in celeste ON TOP of the ink, so the bolt reads as a contour instead
