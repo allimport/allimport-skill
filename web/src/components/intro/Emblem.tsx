@@ -6,7 +6,7 @@ import * as THREE from "three";
 import { SVGLoader } from "three/addons/loaders/SVGLoader.js";
 import { BEATS, seg, pulse, easeOutCubic, easeInOutCubic } from "./timeline";
 import { useIntroClock } from "./Scene";
-import { LOGO_LAYER, BOLT_LAYER } from "./CompositePass";
+import { LOGO_LAYER } from "./CompositePass";
 import { LETTERS, BOLT_D, HALO_D, O_CENTER } from "./logo-full-paths";
 
 /**
@@ -189,16 +189,8 @@ export default function Emblem() {
         />
       </mesh>
 
-      {/* Bolt — dark until it becomes the scene's light source. Also on
-          BOLT_LAYER so the composite can trace its outline in celeste where
-          the fluid crosses it. */}
-      <mesh
-        geometry={boltGeo}
-        position={[0, 0, -0.26]}
-        ref={(m) => {
-          if (m) m.layers.enable(BOLT_LAYER);
-        }}
-      >
+      {/* Bolt — dark until it becomes the scene's light source */}
+      <mesh geometry={boltGeo} position={[0, 0, -0.26]}>
         <meshStandardMaterial
           ref={boltMat}
           color="#062a2a"
