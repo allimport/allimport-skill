@@ -59,19 +59,27 @@ const compositeFrag = /* glsl */ `
   uniform float uReveal;     // bolt-activation ramp, gates the ink
   uniform vec2 uTexel;       // 1 / drawingBuffer, for the bolt outline
 
-  // Dye density thresholds (peaks ~0.44 at this scale), soft/diffuse ramps.
-  // NOTE: the logo colour reaction no longer lives here — the metal energizes
-  // in its OWN material (BRDF-correct, albedo gradient map). This pass is now
-  // only the LIQUID (white ink) + its shadow + the bolt outline. RT_LOGO /
-  // uMask stay wired as infra but are currently unused by this shader.
+  // Dye density thresholds (peaks ~0.44 at this scale). The edges are now
+  // SOFT / diffuse on purpose — wide smoothstep ramps, not a crisp near-step
+  // — so the liquid reads with a feathered, blurry contour like the
+  // reference, not a hard outline. T_CYAN still flips the letter to cyan.
+  const float CYAN_LO = 0.10;  // cyan starts ramping in (soft)
+  const float CYAN_HI = 0.30;  // fully cyan above this
   const float INK_LO  = 0.14;  // white ink body: wide, feathered edge...
   const float INK_HI  = 0.44;  // ...fully dense only at the dye peak
-  const float CORE_OPACITY = 0.94; // solid, viscous liquid body (weight + depth)
+  const float CYAN_OPACITY = 1.0;  // full flip white -> cyan, unmistakable
+  const float CORE_OPACITY = 0.94; // white ink: near-opaque core, soft rim
 
   void main() {
+    float mask = texture2D(uMask, vUv).a;   // 1 on the logo, 0 elsewhere
     float dye  = texture2D(uDye,  vUv).r;   // ink density under this pixel
 
+    // FULL-AREA cyan recolour with a SOFT edge (diffuse, not a rim).
+    float fill = smoothstep(CYAN_LO, CYAN_HI, dye);
+    float cw   = mask * fill * CYAN_OPACITY * uReveal;   // cyan on the letter
+
     // White ink body (the liquid). Wide ramp => diffuse, blurry contour.
+    // Off the logo it reads as white; on the logo the cyan draws OVER it.
     float core = smoothstep(INK_LO, INK_HI, dye);
     float iw   = core * CORE_OPACITY * uReveal;
 
@@ -80,29 +88,11 @@ const compositeFrag = /* glsl */ `
     float shadow = smoothstep(0.05, 0.15, dye) * (1.0 - smoothstep(0.15, 0.32, dye));
     float aS = shadow * 0.5 * uReveal;
 
-    // --- B) MENISCUS: the surface-tension lip. A thin band INSIDE the
-    // liquid edge (from the dye gradient) where the raised, curved surface
-    // is a touch DENSER and catches a cool reflection. Not a stroke/outline
-    // — it lives within the liquid and is born/dies with it. ---
-    float men = clamp(smoothstep(0.18, 0.26, dye) - smoothstep(0.30, 0.42, dye),
-                      0.0, 1.0) * uReveal;
-    vec3  inkCol = uInk + vec3(0.03, 0.08, 0.13) * men;  // faint cool lip highlight
-    float iwL    = clamp(iw + 0.18 * men, 0.0, 1.0);     // lip slightly denser
-
-    // --- C) REFRACTION: the thick lip bends the metal underneath. Sample the
-    // logo (RT_LOGO, already the energized metal) displaced along the dye
-    // gradient, blend a hair of it ONLY in the lip band. Optical, not glass. ---
-    vec2 grad = vec2(
-      texture2D(uDye, vUv + vec2(uTexel.x, 0.0)).r - texture2D(uDye, vUv - vec2(uTexel.x, 0.0)).r,
-      texture2D(uDye, vUv + vec2(0.0, uTexel.y)).r - texture2D(uDye, vUv - vec2(0.0, uTexel.y)).r);
-    vec2  disp = grad * uTexel * 18.0 * men;             // a few px, only at the lip
-    vec4  refr = texture2D(uMask, vUv + disp);           // displaced metal
-    float rW   = men * refr.a * 0.16;                    // extremely subtle
-
-    // Premultiplied over: background -> refraction ghost -> shadow -> ink lip.
-    float base = (1.0 - iwL) * (1.0 - aS);
-    vec3 premult = inkCol * iwL + base * rW * refr.rgb;
-    float outA   = 1.0 - base * (1.0 - rW);
+    // Premultiplied over, in order: background -> shadow -> white ink -> cyan.
+    //   premult = cyan*cw + white*iw*(1-cw) (shadow is black, adds no colour)
+    //   outA    = 1 - (1-cw)(1-iw)(1-aS)
+    vec3 premult = uCyan * cw + uInk * (iw * (1.0 - cw));
+    float outA   = 1.0 - (1.0 - cw) * (1.0 - iw) * (1.0 - aS);
 
     // BOLT OUTLINE: where the fluid crosses the bolt, trace its silhouette
     // in celeste ON TOP of the ink, so the bolt reads as a contour instead
