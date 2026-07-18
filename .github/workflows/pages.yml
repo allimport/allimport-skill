@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - claude/allimport-skill-setup-0m43zg
+      - claude/project-context-analysis-d5wfc4
   workflow_dispatch:
 
 # gh-pages branch deploy (not the Pages artifact API): creating the branch
