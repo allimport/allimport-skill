@@ -173,6 +173,16 @@ export default function Emblem() {
           .replace(
             "#include <emissivemap_fragment>",
             `#include <emissivemap_fragment>
+             // Fresnel RIM: grazing faces (bevel, side wall) glow brighter
+             // than the flat front. A glowing solid reads as 3D volume when
+             // its silhouette is hotter than its face — this is what makes
+             // the bolt look dimensional instead of a flat cyan sticker.
+             float boltRim = pow(
+               1.0 - clamp(abs(dot(normalize(normal), normalize(vViewPosition))), 0.0, 1.0),
+               2.0);
+             totalEmissiveRadiance += totalEmissiveRadiance * boltRim * 1.4;
+             // Under the ink: fill goes dark/flat so only the contour shell
+             // survives — the liquid reveals just the bolt's outline.
              totalEmissiveRadiance *= 1.0 - boltGate * 0.85;`,
           );
       };
@@ -356,7 +366,7 @@ export default function Emblem() {
           if (m) m.layers.enable(LOGO_LAYER);
         }}
       >
-        <meshStandardMaterial
+        <meshPhysicalMaterial
           ref={(m) => {
             if (m) {
               boltMat.current = m;
@@ -366,8 +376,13 @@ export default function Emblem() {
           color="#062a2a"
           emissive="#00d4d4"
           emissiveIntensity={0}
-          roughness={0.3}
+          // Glossy clearcoat like the letters: sharp speculars from the
+          // scene lights ride the bevel and side wall, so the piece reads
+          // as 3D volume instead of a flat glowing shape.
+          roughness={0.22}
           metalness={0}
+          clearcoat={0.8}
+          clearcoatRoughness={0.14}
           transparent
           opacity={0}
         />
