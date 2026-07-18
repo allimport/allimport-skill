@@ -80,8 +80,8 @@ export default function Scene({
       {/* Deep spatial black — darker than the brand navy, a true void */}
       {/* Deep Field: near-absolute black. Fog is the EXACT background
           color so distance fades honestly — no artificial haze tint. */}
-      <color attach="background" args={["#030407"]} />
-      <fog attach="fog" args={["#030407", 28, 65]} />
+      <color attach="background" args={["#010508"]} />
+      <fog attach="fog" args={["#010508", 28, 65]} />
 
       <ClockContext.Provider value={clock}>
         {/* Only addition over the original hero: feeds the shared pointer

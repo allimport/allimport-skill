@@ -53,13 +53,15 @@ const CYAN_EXTRUDE: THREE.ExtrudeGeometryOptions = {
 
 export default function Emblem() {
   const clock = useIntroClock();
-  const { pointer } = useThree();
+  const { pointer, camera } = useThree();
   const group = useRef<THREE.Group>(null!);
   const boltMat = useRef<THREE.MeshStandardMaterial>(null!);
   const haloMat = useRef<THREE.MeshStandardMaterial>(null!);
   const boltLight = useRef<THREE.PointLight>(null!);
   const letterMats = useRef<(THREE.MeshPhysicalMaterial | null)[]>([]);
   const drift = useRef({ x: 0, y: 0, vx: 0, vy: 0 });
+  const boltNdc = useRef(new THREE.Vector3());
+  const outline = useRef(0);
 
   // MATERIAL STATE CHANGE (brdf-material-state skill). The fluid does not
   // paint the logo: it charges the metal. We modify ONLY the albedo
@@ -167,14 +169,35 @@ export default function Emblem() {
     // with a restrained overshoot — activation, not explosion.
     const on = seg(t, BEATS.boltOn, easeInOutCubic);
     const over = pulse(t, BEATS.boltOn[1], 0.35) * 0.5;
-    boltMat.current.opacity = Math.max(emerged, on);
-    // Bolt brightness UNCHANGED (still the protagonist). Only its SPILL is
-    // contained: the backlight and halo washed cyan onto the O's metal, so
-    // pull them down — the bolt's own emissive glow stays the same.
-    boltMat.current.emissiveIntensity = 1.0 * on + over * 0.6;
-    haloMat.current.opacity = on;
+
+    // --- Outline state (the colour-change moment): when the cursor draws
+    // near the bolt — the same gesture that charges the letters cyan — the
+    // bolt's FILL yields and only its glowing contour remains. Screen-space
+    // proximity: project the bolt to NDC and compare against the pointer.
+    const interNow = seg(t, BEATS.settle);
+    boltNdc.current
+      .set(O_CENTER[0], O_CENTER[1], 0)
+      .applyMatrix4(group.current.matrixWorld)
+      .project(camera);
+    const pdx = pointer.x - boltNdc.current.x;
+    const pdy = pointer.y - boltNdc.current.y;
+    const pDist = Math.hypot(pdx, pdy);
+    const nearTarget =
+      interNow * Math.max(0, Math.min(1, (0.35 - pDist) / 0.2));
+    // Smooth, interruptible follow — no snap in either direction.
+    outline.current += (nearTarget - outline.current) * Math.min(1, dt * 6);
+    const oc = outline.current;
+
+    // Fill fades toward a quarter of its value; the emissive is boosted so
+    // what remains reads as a pure glowing contour (bloom does the rim).
+    boltMat.current.opacity = Math.max(emerged, on) * (1 - oc * 0.75);
+    // Bolt brightness UNCHANGED at rest (still the protagonist). Only its
+    // SPILL is contained: backlight and halo washed cyan onto the O's
+    // metal, so they stay pulled down — the bolt's own glow stays the same.
+    boltMat.current.emissiveIntensity = (1.0 + oc * 2.5) * on + over * 0.6;
+    haloMat.current.opacity = on * (1 - oc * 0.6);
     haloMat.current.emissiveIntensity = 0.16 * on;
-    boltLight.current.intensity = 4.5 * on + 3 * over;
+    boltLight.current.intensity = 4.5 * on + 3 * over + 3.0 * oc * on;
 
     // --- Stabilize: mass lands once the light is on.
     const dip = pulse(t, BEATS.stabilize[0], 0.3);

@@ -52,9 +52,9 @@ const compositeFrag = /* glsl */ `
   // edge) and where it reaches its peak thickness. These place the drop; they
   // are not a curve fit. This pass is ONLY the liquid — the logo colour STATE
   // lives in the material (BRDF-safe albedo). uMask = RT_LOGO (energized metal).
-  const float L_EDGE = 0.18;   // outer edge of the liquid body (thickness 0)
-  const float L_PEAK = 0.40;   // where the body reaches full thickness
-  const float MAX_OPACITY = 0.82; // solidity of the thick core
+  const float L_EDGE = 0.20;   // outer edge of the liquid body (thickness 0)
+  const float L_PEAK = 0.30;   // tight transition → hard liquid edges, no fog zone
+  const float MAX_OPACITY = 0.92; // solidity of the thick core
 
   void main() {
     float dye  = texture2D(uDye,  vUv).r;   // ink density under this pixel
@@ -70,8 +70,12 @@ const compositeFrag = /* glsl */ `
 
     // The white body's OPACITY follows the thickness: the rim is transparent,
     // the core is solid white. This is the liquid's real profile (a drop), not
-    // a flat cut or a lowered opacity.
-    float iw = t * MAX_OPACITY * uReveal;
+    // a flat cut or a lowered opacity. A bright specular RIM rides the outer
+    // edge of the body — the highlight a glossy liquid catches on its
+    // meniscus — so the fluid reads bright and wet, like the bolt.
+    float rim = smoothstep(L_EDGE, L_EDGE + 0.04, dye)
+              * (1.0 - smoothstep(L_EDGE + 0.04, L_PEAK, dye));
+    float iw = (t * MAX_OPACITY + rim * 0.30) * uReveal;
 
     // ENERGY TRANSMISSION — an ARTISTIC, physically-inspired term, NOT a
     // literal Beer-Lambert absorption (no exponential). It reads straight off
@@ -122,8 +126,9 @@ export default function CompositePass({
         uDye: { value: null as THREE.Texture | null },
         // All Import identity cyan (--cyan: #00d4d4). Flat, no gradient.
         uCyan: { value: new THREE.Color(0x00d4d4) },
-        // Ink paint-white (matches the old display pass exactly).
-        uInk: { value: new THREE.Color(0.965, 0.975, 1.0) },
+        // Ink bright cool white — slightly over 1 in blue so the liquid
+        // reads luminous against the void, matching the bolt's brilliance.
+        uInk: { value: new THREE.Color(1.0, 1.0, 1.04) },
         uReveal: { value: 0 },
       },
       transparent: true,
