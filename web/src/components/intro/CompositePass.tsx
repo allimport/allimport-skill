@@ -47,6 +47,22 @@ const compositeFrag = /* glsl */ `
   uniform vec3 uCyan;        // All Import identity cyan, flat
   uniform vec3 uInk;         // paint white of the ink, flat
   uniform float uReveal;     // bolt-activation ramp, gates the ink
+  uniform vec2 uDyeTexel;    // 1 / dye texture resolution
+  uniform float uTime;       // drives the liquid's living surface
+
+  // Small value-noise pair (fluid-cursor reference): animates the liquid's
+  // internal surface so the body reads alive, never a static decal.
+  float random(vec2 st) {
+    return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
+  }
+  float noise(vec2 p) {
+    vec2 i = floor(p);
+    vec2 f = fract(p);
+    vec2 u = f * f * (3.0 - 2.0 * f);
+    return mix(mix(random(i), random(i + vec2(1.0, 0.0)), u.x),
+               mix(random(i + vec2(0.0, 1.0)), random(i + vec2(1.0, 1.0)), u.x),
+               u.y);
+  }
 
   // The liquid FOOTPRINT in dye space: where the body starts (thin outer
   // edge) and where it reaches its peak thickness. These place the drop; they
@@ -77,6 +93,21 @@ const compositeFrag = /* glsl */ `
               * (1.0 - smoothstep(L_EDGE + 0.04, L_PEAK, dye));
     float iw = (t * MAX_OPACITY + rim * 0.30) * uReveal;
 
+    // SURFACE RELIEF (adapted from the fluid-cursor 3D reference, in OUR
+    // identity — no amber; body stays brand white). The real dye field is
+    // the height map: central differences give a surface normal, a fixed
+    // key light produces a WET specular highlight that travels over the
+    // moving body, and animated noise boils the surface subtly — 3D
+    // volumetric liquid, not flat paint.
+    float hL = texture2D(uDye, vUv - vec2(uDyeTexel.x, 0.0)).r;
+    float hR = texture2D(uDye, vUv + vec2(uDyeTexel.x, 0.0)).r;
+    float hB = texture2D(uDye, vUv - vec2(0.0, uDyeTexel.y)).r;
+    float hT = texture2D(uDye, vUv + vec2(0.0, uDyeTexel.y)).r;
+    float boil = noise(vUv * 26.0 + uTime * 0.45) - 0.5;
+    vec3 N = normalize(vec3(hL - hR, hB - hT, 0.55 + boil * 0.25));
+    vec3 Ld = normalize(vec3(0.35, 0.55, 0.75));
+    float spec = pow(max(dot(N, Ld), 0.0), 22.0);
+
     // ENERGY TRANSMISSION — an ARTISTIC, physically-inspired term, NOT a
     // literal Beer-Lambert absorption (no exponential). It reads straight off
     // the dome geometry: transmit = 1 - t. Thin body (t->0) lets the charged
@@ -86,6 +117,11 @@ const compositeFrag = /* glsl */ `
     // absorption is ever needed, that is a separate stage.
     float transmit = (1.0 - t) * logo.a;
     vec3  inkCol   = mix(uInk, logo.rgb, transmit);
+
+    // Wet highlight: pure white, riding the body only (scaled by the dome
+    // thickness so the rim never sparkles on its own), shimmering slowly.
+    float shimmer = 0.55 + 0.45 * noise(vUv * 14.0 - uTime * 0.3);
+    inkCol += vec3(1.0) * spec * t * shimmer;
 
     // Letters always cut through the fluid: ink is attenuated where the logo
     // mask is present so the wordmark stays legible at any fluid density.
@@ -130,6 +166,8 @@ export default function CompositePass({
         // reads luminous against the void, matching the bolt's brilliance.
         uInk: { value: new THREE.Color(1.0, 1.0, 1.04) },
         uReveal: { value: 0 },
+        uDyeTexel: { value: new THREE.Vector2(1 / 512, 1 / 512) },
+        uTime: { value: 0 },
       },
       transparent: true,
       depthTest: false,
@@ -159,7 +197,7 @@ export default function CompositePass({
     [rtLogo, comp],
   );
 
-  useFrame(() => {
+  useFrame((_, delta) => {
     const ctx = gl.getContext();
     const w = ctx.drawingBufferWidth;
     const h = ctx.drawingBufferHeight;
@@ -198,6 +236,15 @@ export default function CompositePass({
     comp.mat.uniforms.uMask.value = rtLogo.texture;
     comp.mat.uniforms.uDye.value = fluidDye.tex;
     comp.mat.uniforms.uReveal.value = fluidDye.reveal;
+    comp.mat.uniforms.uTime.value += Math.min(delta, 0.1);
+    const dyeImg = fluidDye.tex?.image as
+      | { width?: number; height?: number }
+      | undefined;
+    if (dyeImg?.width && dyeImg?.height)
+      comp.mat.uniforms.uDyeTexel.value.set(
+        1 / dyeImg.width,
+        1 / dyeImg.height,
+      );
 
     gl.setRenderTarget(null);
     const prevAutoClear = gl.autoClear;
