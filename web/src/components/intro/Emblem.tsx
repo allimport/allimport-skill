@@ -62,6 +62,7 @@ export default function Emblem() {
   const drift = useRef({ x: 0, y: 0, vx: 0, vy: 0 });
   const boltNdc = useRef(new THREE.Vector3());
   const outline = useRef(0);
+  const boltOutlineMat = useRef<THREE.MeshBasicMaterial>(null!);
 
   // MATERIAL STATE CHANGE (brdf-material-state skill). The fluid does not
   // paint the logo: it charges the metal. We modify ONLY the albedo
@@ -139,6 +140,15 @@ export default function Emblem() {
     return geo;
   }, []);
 
+  // Centroid of the bolt in geometry space — the outline shell scales
+  // around IT (not the group origin), so the rim grows evenly on all sides.
+  const boltCenter = useMemo(() => {
+    boltGeo.computeBoundingBox();
+    const c = new THREE.Vector3();
+    boltGeo.boundingBox!.getCenter(c);
+    return c;
+  }, [boltGeo]);
+
   const haloGeo = useMemo(() => {
     const geo = new THREE.ExtrudeGeometry(shapesFromD(HALO_D), CYAN_EXTRUDE);
     geo.translate(0, 0, -CYAN_EXTRUDE.depth! / 2);
@@ -183,18 +193,23 @@ export default function Emblem() {
     const pdy = pointer.y - boltNdc.current.y;
     const pDist = Math.hypot(pdx, pdy);
     const nearTarget =
-      interNow * Math.max(0, Math.min(1, (0.35 - pDist) / 0.2));
+      interNow * Math.max(0, Math.min(1, (0.4 - pDist) / 0.22));
     // Smooth, interruptible follow — no snap in either direction.
     outline.current += (nearTarget - outline.current) * Math.min(1, dt * 6);
     const oc = outline.current;
 
-    // Fill fades toward a quarter of its value; the emissive is boosted so
-    // what remains reads as a pure glowing contour (bloom does the rim).
-    boltMat.current.opacity = Math.max(emerged, on) * (1 - oc * 0.75);
+    // CONTOUR MODE: the fill truly goes out (opacity AND emissive together
+    // — opacity alone would be cancelled by any emissive boost, since
+    // opacity multiplies the whole fragment). The near-invisible fill still
+    // WRITES DEPTH, which clips the interior of the inverted-hull shell
+    // behind it — so what survives of the shell is exactly the rim: a pure
+    // glowing contour of the bolt.
+    boltMat.current.opacity = Math.max(emerged, on) * (1 - oc * 0.92);
     // Bolt brightness UNCHANGED at rest (still the protagonist). Only its
     // SPILL is contained: backlight and halo washed cyan onto the O's
     // metal, so they stay pulled down — the bolt's own glow stays the same.
-    boltMat.current.emissiveIntensity = (1.0 + oc * 2.5) * on + over * 0.6;
+    boltMat.current.emissiveIntensity = (1.0 - oc * 0.85) * on + over * 0.6;
+    boltOutlineMat.current.opacity = oc * on;
     haloMat.current.opacity = on * (1 - oc * 0.6);
     haloMat.current.emissiveIntensity = 0.16 * on;
     boltLight.current.intensity = 4.5 * on + 3 * over + 3.0 * oc * on;
@@ -288,6 +303,32 @@ export default function Emblem() {
           metalness={0}
           transparent
           opacity={0}
+        />
+      </mesh>
+
+      {/* Bolt CONTOUR — inverted-hull shell: the same geometry scaled 6%
+          around its own centroid, back faces only, drawn after the fill.
+          The fill keeps writing depth, so the shell survives only where it
+          peeks past the silhouette: a clean glowing outline. Visible only
+          during the colour-change moment (opacity driven in useFrame). */}
+      <mesh
+        geometry={boltGeo}
+        position={[
+          boltCenter.x * -0.06,
+          boltCenter.y * -0.06,
+          -0.26 + boltCenter.z * -0.06,
+        ]}
+        scale={1.06}
+        renderOrder={10}
+      >
+        <meshBasicMaterial
+          ref={boltOutlineMat}
+          color="#00eaea"
+          side={THREE.BackSide}
+          transparent
+          opacity={0}
+          depthWrite={false}
+          toneMapped={false}
         />
       </mesh>
 
