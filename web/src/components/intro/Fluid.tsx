@@ -55,11 +55,11 @@ const DYE_ERODE = 0.5;
 // Low curl: high values shred the stroke edge into wispy spiral tendrils
 // that read as SMOKE. A liquid ribbon keeps its body coherent.
 const CURL_STRENGTH = 0.6;
-const SPLAT_RADIUS = 0.002; // thin ink stroke — Buttermax-style trail, not an inflating cloud
+const SPLAT_RADIUS = 0.0005; // thin ink stroke — deterministic render: ~35px ribbon on a 600px hero, Buttermax-like
 // Splat velocity = gesture SPEED (uv/s) × this gain — frame-rate
 // independent (equals the classic force 5200 per-frame delta at 60 fps).
-const SPLAT_FORCE = 9;
-const SPLAT_MAX_V = 16;
+const SPLAT_FORCE = 3;
+const SPLAT_MAX_V = 6;
 
 const baseVert = /* glsl */ `
   varying vec2 vUv;
