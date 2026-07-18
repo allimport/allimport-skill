@@ -168,12 +168,12 @@ export default function Emblem() {
             "#include <color_fragment>",
             `#include <color_fragment>
              float boltGate = dyeGate();
-             diffuseColor.a *= 1.0 - boltGate * 0.45;`,
+             diffuseColor.a *= 1.0 - boltGate * 0.92;`,
           )
           .replace(
             "#include <emissivemap_fragment>",
             `#include <emissivemap_fragment>
-             totalEmissiveRadiance *= 1.0 - boltGate * 0.5;`,
+             totalEmissiveRadiance *= 1.0 - boltGate * 0.85;`,
           );
       };
     },
