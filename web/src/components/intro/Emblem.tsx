@@ -344,8 +344,18 @@ export default function Emblem() {
         />
       </mesh>
 
-      {/* Bolt — dark until it becomes the scene's light source */}
-      <mesh geometry={boltGeo} position={[0, 0, -0.26]}>
+      {/* Bolt — dark until it becomes the scene's light source. Also on
+          LOGO_LAYER: being in RT_LOGO's mask means the composite ATTENUATES
+          the ink over the bolt exactly as it does over the letters — so the
+          bolt (and its dye-gated contour) always shows through the liquid
+          instead of being buried under opaque white. */}
+      <mesh
+        geometry={boltGeo}
+        position={[0, 0, -0.26]}
+        ref={(m) => {
+          if (m) m.layers.enable(LOGO_LAYER);
+        }}
+      >
         <meshStandardMaterial
           ref={(m) => {
             if (m) {
@@ -377,6 +387,9 @@ export default function Emblem() {
         ]}
         scale={1.06}
         renderOrder={10}
+        ref={(m) => {
+          if (m) m.layers.enable(LOGO_LAYER);
+        }}
       >
         <meshBasicMaterial
           ref={(m) => {
