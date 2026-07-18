@@ -52,9 +52,9 @@ const compositeFrag = /* glsl */ `
   // edge) and where it reaches its peak thickness. These place the drop; they
   // are not a curve fit. This pass is ONLY the liquid — the logo colour STATE
   // lives in the material (BRDF-safe albedo). uMask = RT_LOGO (energized metal).
-  const float L_EDGE = 0.16;   // outer edge of the liquid body (thickness 0)
-  const float L_PEAK = 0.36;   // where the body reaches full thickness
-  const float MAX_OPACITY = 0.96; // solidity of the thick core
+  const float L_EDGE = 0.18;   // outer edge of the liquid body (thickness 0)
+  const float L_PEAK = 0.40;   // where the body reaches full thickness
+  const float MAX_OPACITY = 0.82; // solidity of the thick core
 
   void main() {
     float dye  = texture2D(uDye,  vUv).r;   // ink density under this pixel
@@ -82,6 +82,11 @@ const compositeFrag = /* glsl */ `
     // absorption is ever needed, that is a separate stage.
     float transmit = (1.0 - t) * logo.a;
     vec3  inkCol   = mix(uInk, logo.rgb, transmit);
+
+    // Letters always cut through the fluid: ink is attenuated where the logo
+    // mask is present so the wordmark stays legible at any fluid density.
+    float logoMask = logo.a;
+    iw *= (1.0 - logoMask * 0.72);
 
     vec3 premult = inkCol * iw;  // premultiplied over the canvas
     float outA   = iw;
