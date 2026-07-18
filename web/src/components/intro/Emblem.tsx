@@ -43,10 +43,12 @@ const LETTER_EXTRUDE: THREE.ExtrudeGeometryOptions = {
 };
 
 const CYAN_EXTRUDE: THREE.ExtrudeGeometryOptions = {
-  depth: 0.2,
+  // Letter-like proportions so the bolt has real 3D body (deep wall +
+  // rounded bevel that catches the light), not a thin flat slab.
+  depth: 0.3,
   bevelEnabled: true,
-  bevelThickness: 0.03,
-  bevelSize: 0.03,
+  bevelThickness: 0.045,
+  bevelSize: 0.045,
   bevelSegments: 3,
   curveSegments: 24,
 };
@@ -180,7 +182,7 @@ export default function Emblem() {
              float boltRim = pow(
                1.0 - clamp(abs(dot(normalize(normal), normalize(vViewPosition))), 0.0, 1.0),
                2.0);
-             totalEmissiveRadiance += totalEmissiveRadiance * boltRim * 1.4;
+             totalEmissiveRadiance += totalEmissiveRadiance * boltRim * 0.9;
              // Under the ink: fill goes dark/flat so only the contour shell
              // survives — the liquid reveals just the bolt's outline.
              totalEmissiveRadiance *= 1.0 - boltGate * 0.85;`,
@@ -270,7 +272,10 @@ export default function Emblem() {
     // Bolt brightness UNCHANGED at rest (still the protagonist). Only its
     // SPILL is contained: backlight and halo washed cyan onto the O's
     // metal, so they stay pulled down — the bolt's own glow stays the same.
-    boltMat.current.emissiveIntensity = 1.0 * on + over * 0.6;
+    // Glow layered ON TOP of the lit 3D form: kept moderate so the light
+    // cyan metal's shading (bevel, side wall) stays readable instead of
+    // being washed flat by a blown-out emissive.
+    boltMat.current.emissiveIntensity = 0.55 * on + over * 0.45;
     boltOutlineMat.current.opacity = on;
     haloMat.current.opacity = on;
     haloMat.current.emissiveIntensity = 0.16 * on;
@@ -373,16 +378,17 @@ export default function Emblem() {
               injectBoltFade(m);
             }
           }}
-          color="#062a2a"
+          // Treated like a LETTER: a light cyan metal so the scene lights
+          // actually reveal the 3D form (near-black albedo showed no
+          // shading). The glow is layered ON TOP via emissive, not instead
+          // of the form. Same clearcoat/roughness recipe as the letters.
+          color="#8fe6e6"
           emissive="#00d4d4"
           emissiveIntensity={0}
-          // Glossy clearcoat like the letters: sharp speculars from the
-          // scene lights ride the bevel and side wall, so the piece reads
-          // as 3D volume instead of a flat glowing shape.
-          roughness={0.22}
+          roughness={0.5}
           metalness={0}
-          clearcoat={0.8}
-          clearcoatRoughness={0.14}
+          clearcoat={0.6}
+          clearcoatRoughness={0.12}
           transparent
           opacity={0}
         />
