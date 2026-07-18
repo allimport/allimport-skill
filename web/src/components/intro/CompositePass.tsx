@@ -53,7 +53,7 @@ const compositeFrag = /* glsl */ `
   // are not a curve fit. This pass is ONLY the liquid — the logo colour STATE
   // lives in the material (BRDF-safe albedo). uMask = RT_LOGO (energized metal).
   const float L_EDGE = 0.16;   // outer edge of the liquid body (thickness 0)
-  const float L_PEAK = 0.44;   // where the body reaches full thickness
+  const float L_PEAK = 0.36;   // where the body reaches full thickness
   const float MAX_OPACITY = 0.96; // solidity of the thick core
 
   void main() {
@@ -117,8 +117,8 @@ export default function CompositePass({
         uDye: { value: null as THREE.Texture | null },
         // All Import identity cyan (--cyan: #00d4d4). Flat, no gradient.
         uCyan: { value: new THREE.Color(0x00d4d4) },
-        // Ink paint-white (matches the old display pass exactly).
-        uInk: { value: new THREE.Color(0.965, 0.975, 1.0) },
+        // All Import cyan ink — cursor paints the background from dark to cyan.
+        uInk: { value: new THREE.Color(0x00d4d4) },
         uReveal: { value: 0 },
       },
       transparent: true,
