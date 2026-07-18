@@ -53,15 +53,13 @@ const CYAN_EXTRUDE: THREE.ExtrudeGeometryOptions = {
 
 export default function Emblem() {
   const clock = useIntroClock();
-  const { pointer, camera } = useThree();
+  const { pointer } = useThree();
   const group = useRef<THREE.Group>(null!);
   const boltMat = useRef<THREE.MeshStandardMaterial>(null!);
   const haloMat = useRef<THREE.MeshStandardMaterial>(null!);
   const boltLight = useRef<THREE.PointLight>(null!);
   const letterMats = useRef<(THREE.MeshPhysicalMaterial | null)[]>([]);
   const drift = useRef({ x: 0, y: 0, vx: 0, vy: 0 });
-  const boltNdc = useRef(new THREE.Vector3());
-  const outline = useRef(0);
   const boltOutlineMat = useRef<THREE.MeshBasicMaterial>(null!);
 
   // MATERIAL STATE CHANGE (brdf-material-state skill). The fluid does not
@@ -124,6 +122,80 @@ export default function Emblem() {
     [energyUniforms],
   );
 
+  // CONTOUR MODE, triggered by the LIQUID itself. Both bolt materials
+  // sample the live dye field at their own screen position — the very same
+  // gate (smoothstep 0.20→0.42) that charges the letters cyan — so the
+  // fill yields and the contour lights EXACTLY where and while the ink
+  // passes over the bolt. Per-pixel, in perfect sync with the colour
+  // change; cursor proximity alone does nothing.
+  const DYE_GATE_GLSL = /* glsl */ `
+    uniform sampler2D uDye;
+    varying vec4 vEClip;
+    float dyeGate() {
+      vec2 suv = vEClip.xy / vEClip.w * 0.5 + 0.5;
+      float d = 0.0;
+      if (suv.x > 0.0 && suv.x < 1.0 && suv.y > 0.0 && suv.y < 1.0)
+        d = texture2D(uDye, suv).r;
+      return smoothstep(0.20, 0.42, d);
+    }`;
+  const injectClipUv = useMemo(
+    () => (shader: THREE.WebGLProgramParametersWithUniforms) => {
+      shader.uniforms.uDye = energyUniforms.uDye;
+      shader.vertexShader = shader.vertexShader
+        .replace("#include <common>", "#include <common>\nvarying vec4 vEClip;")
+        .replace(
+          "#include <project_vertex>",
+          "#include <project_vertex>\nvEClip = gl_Position;",
+        );
+      shader.fragmentShader = shader.fragmentShader.replace(
+        "#include <common>",
+        `#include <common>\n${DYE_GATE_GLSL}`,
+      );
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [energyUniforms],
+  );
+  // Fill: goes out under the ink — opacity AND emissive together (opacity
+  // alone would be cancelled by any emissive boost).
+  const injectBoltFade = useMemo(
+    () => (material: THREE.MeshStandardMaterial) => {
+      if (material.userData.boltFade) return;
+      material.userData.boltFade = true;
+      material.onBeforeCompile = (shader) => {
+        injectClipUv(shader);
+        shader.fragmentShader = shader.fragmentShader
+          .replace(
+            "#include <color_fragment>",
+            `#include <color_fragment>
+             float boltGate = dyeGate();
+             diffuseColor.a *= 1.0 - boltGate * 0.92;`,
+          )
+          .replace(
+            "#include <emissivemap_fragment>",
+            `#include <emissivemap_fragment>
+             totalEmissiveRadiance *= 1.0 - boltGate * 0.85;`,
+          );
+      };
+    },
+    [injectClipUv],
+  );
+  // Shell: exists ONLY under the ink.
+  const injectShellGate = useMemo(
+    () => (material: THREE.MeshBasicMaterial) => {
+      if (material.userData.shellGate) return;
+      material.userData.shellGate = true;
+      material.onBeforeCompile = (shader) => {
+        injectClipUv(shader);
+        shader.fragmentShader = shader.fragmentShader.replace(
+          "#include <color_fragment>",
+          `#include <color_fragment>
+           diffuseColor.a *= dyeGate();`,
+        );
+      };
+    },
+    [injectClipUv],
+  );
+
   const letterGeos = useMemo(
     () =>
       LETTERS.map((l) => {
@@ -179,40 +251,20 @@ export default function Emblem() {
     // with a restrained overshoot — activation, not explosion.
     const on = seg(t, BEATS.boltOn, easeInOutCubic);
     const over = pulse(t, BEATS.boltOn[1], 0.35) * 0.5;
-
-    // --- Outline state (the colour-change moment): when the cursor draws
-    // near the bolt — the same gesture that charges the letters cyan — the
-    // bolt's FILL yields and only its glowing contour remains. Screen-space
-    // proximity: project the bolt to NDC and compare against the pointer.
-    const interNow = seg(t, BEATS.settle);
-    boltNdc.current
-      .set(O_CENTER[0], O_CENTER[1], 0)
-      .applyMatrix4(group.current.matrixWorld)
-      .project(camera);
-    const pdx = pointer.x - boltNdc.current.x;
-    const pdy = pointer.y - boltNdc.current.y;
-    const pDist = Math.hypot(pdx, pdy);
-    const nearTarget =
-      interNow * Math.max(0, Math.min(1, (0.4 - pDist) / 0.22));
-    // Smooth, interruptible follow — no snap in either direction.
-    outline.current += (nearTarget - outline.current) * Math.min(1, dt * 6);
-    const oc = outline.current;
-
-    // CONTOUR MODE: the fill truly goes out (opacity AND emissive together
-    // — opacity alone would be cancelled by any emissive boost, since
-    // opacity multiplies the whole fragment). The near-invisible fill still
-    // WRITES DEPTH, which clips the interior of the inverted-hull shell
-    // behind it — so what survives of the shell is exactly the rim: a pure
-    // glowing contour of the bolt.
-    boltMat.current.opacity = Math.max(emerged, on) * (1 - oc * 0.92);
+    // CONTOUR MODE lives in the shaders (dye-gated, per-pixel): the fill
+    // fades out and the shell's contour lights up exactly where the liquid
+    // covers the bolt. Here we only drive the activation ramps. The fill
+    // keeps WRITING DEPTH even at low alpha, which clips the interior of
+    // the inverted-hull shell — what survives is exactly the rim.
+    boltMat.current.opacity = Math.max(emerged, on);
     // Bolt brightness UNCHANGED at rest (still the protagonist). Only its
     // SPILL is contained: backlight and halo washed cyan onto the O's
     // metal, so they stay pulled down — the bolt's own glow stays the same.
-    boltMat.current.emissiveIntensity = (1.0 - oc * 0.85) * on + over * 0.6;
-    boltOutlineMat.current.opacity = oc * on;
-    haloMat.current.opacity = on * (1 - oc * 0.6);
+    boltMat.current.emissiveIntensity = 1.0 * on + over * 0.6;
+    boltOutlineMat.current.opacity = on;
+    haloMat.current.opacity = on;
     haloMat.current.emissiveIntensity = 0.16 * on;
-    boltLight.current.intensity = 4.5 * on + 3 * over + 3.0 * oc * on;
+    boltLight.current.intensity = 4.5 * on + 3 * over;
 
     // --- Stabilize: mass lands once the light is on.
     const dip = pulse(t, BEATS.stabilize[0], 0.3);
@@ -295,7 +347,12 @@ export default function Emblem() {
       {/* Bolt — dark until it becomes the scene's light source */}
       <mesh geometry={boltGeo} position={[0, 0, -0.26]}>
         <meshStandardMaterial
-          ref={boltMat}
+          ref={(m) => {
+            if (m) {
+              boltMat.current = m;
+              injectBoltFade(m);
+            }
+          }}
           color="#062a2a"
           emissive="#00d4d4"
           emissiveIntensity={0}
@@ -309,8 +366,8 @@ export default function Emblem() {
       {/* Bolt CONTOUR — inverted-hull shell: the same geometry scaled 6%
           around its own centroid, back faces only, drawn after the fill.
           The fill keeps writing depth, so the shell survives only where it
-          peeks past the silhouette: a clean glowing outline. Visible only
-          during the colour-change moment (opacity driven in useFrame). */}
+          peeks past the silhouette: a clean glowing outline. Its alpha is
+          dye-gated in-shader, so it exists only under the passing liquid. */}
       <mesh
         geometry={boltGeo}
         position={[
@@ -322,7 +379,12 @@ export default function Emblem() {
         renderOrder={10}
       >
         <meshBasicMaterial
-          ref={boltOutlineMat}
+          ref={(m) => {
+            if (m) {
+              boltOutlineMat.current = m;
+              injectShellGate(m);
+            }
+          }}
           color="#00eaea"
           side={THREE.BackSide}
           transparent
