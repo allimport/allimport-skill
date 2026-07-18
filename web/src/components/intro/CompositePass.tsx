@@ -122,8 +122,8 @@ export default function CompositePass({
         uDye: { value: null as THREE.Texture | null },
         // All Import identity cyan (--cyan: #00d4d4). Flat, no gradient.
         uCyan: { value: new THREE.Color(0x00d4d4) },
-        // All Import cyan ink — cursor paints the background from dark to cyan.
-        uInk: { value: new THREE.Color(0x00d4d4) },
+        // Ink paint-white (matches the old display pass exactly).
+        uInk: { value: new THREE.Color(0.965, 0.975, 1.0) },
         uReveal: { value: 0 },
       },
       transparent: true,
