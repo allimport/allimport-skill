@@ -43,11 +43,11 @@ const LETTER_EXTRUDE: THREE.ExtrudeGeometryOptions = {
 };
 
 const CYAN_EXTRUDE: THREE.ExtrudeGeometryOptions = {
-  depth: 0.14,
+  depth: 0.2,
   bevelEnabled: true,
-  bevelThickness: 0.02,
-  bevelSize: 0.02,
-  bevelSegments: 2,
+  bevelThickness: 0.03,
+  bevelSize: 0.03,
+  bevelSegments: 3,
   curveSegments: 24,
 };
 
