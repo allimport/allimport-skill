@@ -169,23 +169,21 @@ export default function Emblem() {
           .replace(
             "#include <color_fragment>",
             `#include <color_fragment>
+             // Under the ink the FILL vanishes almost completely (no body,
+             // no relief, no shadow) so all that is left is the smooth
+             // glowing contour shell — a clean lit outline of the bolt.
              float boltGate = dyeGate();
-             diffuseColor.a *= 1.0 - boltGate * 0.92;`,
+             diffuseColor.a *= 1.0 - boltGate * 0.98;`,
           )
           .replace(
             "#include <emissivemap_fragment>",
             `#include <emissivemap_fragment>
-             // Fresnel RIM: grazing faces (bevel, side wall) glow brighter
-             // than the flat front. A glowing solid reads as 3D volume when
-             // its silhouette is hotter than its face — this is what makes
-             // the bolt look dimensional instead of a flat cyan sticker.
-             float boltRim = pow(
-               1.0 - clamp(abs(dot(normalize(normal), normalize(vViewPosition))), 0.0, 1.0),
-               2.0);
-             totalEmissiveRadiance += totalEmissiveRadiance * boltRim * 0.9;
-             // Under the ink: fill goes dark/flat so only the contour shell
-             // survives — the liquid reveals just the bolt's outline.
-             totalEmissiveRadiance *= 1.0 - boltGate * 0.85;`,
+             // The bolt's 3D form comes from lighting + clearcoat on the
+             // light cyan metal (like the letters) — no fresnel rim, which
+             // fought the backlight and read as a weird double outline.
+             // Under the ink the fill glow is killed too, leaving only the
+             // shell's pure glowing outline.
+             totalEmissiveRadiance *= 1.0 - boltGate * 0.92;`,
           );
       };
     },
