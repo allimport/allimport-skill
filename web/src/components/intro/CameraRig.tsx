@@ -12,7 +12,7 @@ import { useIntroClock } from "./Scene";
  * the viewpoint so the logo rises to a masthead and frees the stage below.
  */
 
-const HALF_FOV_TAN = Math.tan((42 / 2) * (Math.PI / 180));
+const HALF_FOV_TAN = Math.tan((28 / 2) * (Math.PI / 180));
 /** Half-width the frame must contain (logo 3.5 + breathing margin). */
 const FIT_HALF_W = 4.15;
 

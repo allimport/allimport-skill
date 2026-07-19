@@ -72,7 +72,7 @@ export default function Scene({
         antialias: true,
         powerPreference: "high-performance",
       }}
-      camera={{ fov: 42, near: 0.1, far: 80, position: [0, 0, 12] }}
+      camera={{ fov: 28, near: 0.1, far: 120, position: [0, 0, 18] }}
       style={{ position: "absolute", inset: 0 }}
       aria-label="All Import"
       role="img"

@@ -1077,3 +1077,13 @@ body {
 .skip-link:focus {
   top: 1rem;
 }
+
+/* Tighten only the historia -> como-funciona boundary: the scroll rhythm
+   here read as too much dead space. Halve the two adjacent paddings; still
+   breathes (not cramped). Every other section keeps the default .sec rhythm. */
+#historia {
+  padding-bottom: clamp(1.25rem, 3vh, 2rem);
+}
+#como-funciona {
+  padding-top: clamp(1.25rem, 3vh, 2rem);
+}

@@ -410,7 +410,7 @@ export default function Emblem() {
           boltCenter.y * -0.06,
           -0.26 + boltCenter.z * -0.06,
         ]}
-        scale={1.025}
+        scale={1.05}
         renderOrder={10}
         ref={(m) => {
           if (m) m.layers.enable(LOGO_LAYER);
