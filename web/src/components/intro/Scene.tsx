@@ -69,7 +69,7 @@ export default function Scene({
     <Canvas
       dpr={[1, 1.75]}
       gl={{
-        antialias: false,
+        antialias: true,
         powerPreference: "high-performance",
       }}
       camera={{ fov: 42, near: 0.1, far: 80, position: [0, 0, 12] }}

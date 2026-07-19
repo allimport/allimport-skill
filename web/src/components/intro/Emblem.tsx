@@ -42,6 +42,12 @@ const LETTER_EXTRUDE: THREE.ExtrudeGeometryOptions = {
   curveSegments: 24,
 };
 
+/** Bolt albedo endpoints — the piece IGNITES: near-black cyan metal at rest,
+ *  bright cyan metal once the bolt activates. Restores the dark->lit beat that
+ *  a static light albedo had flattened. Lerped by the boltOn ramp in useFrame. */
+const BOLT_DARK = new THREE.Color("#0d3535");
+const BOLT_LIT = new THREE.Color("#8fe6e6");
+
 const CYAN_EXTRUDE: THREE.ExtrudeGeometryOptions = {
   // Letter-like proportions so the bolt has real 3D body (deep wall +
   // rounded bevel that catches the light), not a thin flat slab.
@@ -165,26 +171,23 @@ export default function Emblem() {
       material.userData.boltFade = true;
       material.onBeforeCompile = (shader) => {
         injectClipUv(shader);
-        shader.fragmentShader = shader.fragmentShader
-          .replace(
-            "#include <color_fragment>",
-            `#include <color_fragment>
-             // Under the ink the FILL vanishes almost completely (no body,
-             // no relief, no shadow) so all that is left is the smooth
-             // glowing contour shell — a clean lit outline of the bolt.
-             float boltGate = dyeGate();
-             diffuseColor.a *= 1.0 - boltGate * 0.98;`,
-          )
-          .replace(
-            "#include <emissivemap_fragment>",
-            `#include <emissivemap_fragment>
-             // The bolt's 3D form comes from lighting + clearcoat on the
-             // light cyan metal (like the letters) — no fresnel rim, which
-             // fought the backlight and read as a weird double outline.
-             // Under the ink the fill glow is killed too, leaving only the
-             // shell's pure glowing outline.
-             totalEmissiveRadiance *= 1.0 - boltGate * 0.92;`,
-          );
+        // ENERGY, not a shell. Done at emissivemap_fragment where `normal`
+        // and `vViewPosition` are available. Under the ink the bolt's flat
+        // FACES vanish (body, relief, shadow gone) but its SILHOUETTE stays
+        // lit and glowing via a view fresnel — so what remains reads as
+        // energy hugging the bolt's own edge, not an inflated copy.
+        shader.fragmentShader = shader.fragmentShader.replace(
+          "#include <emissivemap_fragment>",
+          `#include <emissivemap_fragment>
+           float boltGate = dyeGate();
+           float fres = pow(1.0 - clamp(abs(dot(normalize(normal),
+                        normalize(vViewPosition))), 0.0, 1.0), 2.5);
+           // interior fades to nothing; grazing rim (fres->1) keeps its body
+           diffuseColor.a *= 1.0 - boltGate * 0.98 * (1.0 - fres);
+           // face glow dies; rim glow survives and is pushed hotter
+           totalEmissiveRadiance *= 1.0 - boltGate * 0.92 * (1.0 - fres);
+           totalEmissiveRadiance += totalEmissiveRadiance * fres * boltGate * 1.6;`,
+        );
       };
     },
     [injectClipUv],
@@ -274,9 +277,12 @@ export default function Emblem() {
     // cyan metal's shading (bevel, side wall) stays readable instead of
     // being washed flat by a blown-out emissive.
     boltMat.current.emissiveIntensity = 0.55 * on + over * 0.45;
+    // IGNITION: albedo lerps dark -> lit with activation, so the bolt visibly
+    // powers on instead of being bright from frame zero.
+    boltMat.current.color.copy(BOLT_DARK).lerp(BOLT_LIT, on);
     boltOutlineMat.current.opacity = on;
     haloMat.current.opacity = on;
-    haloMat.current.emissiveIntensity = 0.16 * on;
+    haloMat.current.emissiveIntensity = 0.22 * on;
     boltLight.current.intensity = 4.5 * on + 3 * over;
 
     // --- Stabilize: mass lands once the light is on.
@@ -380,7 +386,7 @@ export default function Emblem() {
           // actually reveal the 3D form (near-black albedo showed no
           // shading). The glow is layered ON TOP via emissive, not instead
           // of the form. Same clearcoat/roughness recipe as the letters.
-          color="#8fe6e6"
+          color="#0d3535"
           emissive="#00d4d4"
           emissiveIntensity={0}
           roughness={0.5}
@@ -404,7 +410,7 @@ export default function Emblem() {
           boltCenter.y * -0.06,
           -0.26 + boltCenter.z * -0.06,
         ]}
-        scale={1.06}
+        scale={1.025}
         renderOrder={10}
         ref={(m) => {
           if (m) m.layers.enable(LOGO_LAYER);
@@ -417,7 +423,7 @@ export default function Emblem() {
               injectShellGate(m);
             }
           }}
-          color="#00eaea"
+          color="#22f0f0"
           side={THREE.BackSide}
           transparent
           opacity={0}
