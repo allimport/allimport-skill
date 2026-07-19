@@ -39,7 +39,7 @@ const PRESSURE_ITERS = 20;
 // dissolves continuously (injection and fade stay in equilibrium), so a
 // long scribble is a living ribbon under the hand, never an accumulating
 // coat of paint — stop moving and it is gone in about a second.
-const VEL_DISS = 2.1;
+const VEL_DISS = 2.35;
 // Dye fade is almost ALL erosion (constant subtraction), barely any
 // proportional dimming: the ink holds its opaque value along the whole
 // trail — so the stroke reads as a solid liquid RIBBON, not just the
@@ -51,15 +51,15 @@ const DYE_DISS = 0.06;
 // Tuned so peak ink expansion holds around 3.5% of the hero (measured):
 // higher erodes the trail faster (less expansion), lower lets it live
 // longer (more). Ink is bounded by this wall-clock lifetime, fps-invariant.
-const DYE_ERODE = 0.5;
+const DYE_ERODE = 0.52;
 // Low curl: high values shred the stroke edge into wispy spiral tendrils
 // that read as SMOKE. A liquid ribbon keeps its body coherent.
-const CURL_STRENGTH = 5.0;
+const CURL_STRENGTH = 3.0;
 const SPLAT_RADIUS = 0.0022; // rounded liquid blobs (reference look), letters stay legible
 // Splat velocity = gesture SPEED (uv/s) × this gain — frame-rate
 // independent (equals the classic force 5200 per-frame delta at 60 fps).
-const SPLAT_FORCE = 40;
-const SPLAT_MAX_V = 58;
+const SPLAT_FORCE = 30;
+const SPLAT_MAX_V = 46;
 
 const baseVert = /* glsl */ `
   varying vec2 vUv;
