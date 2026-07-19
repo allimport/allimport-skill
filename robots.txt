@@ -1,0 +1,4 @@
+User-Agent: *
+Allow: /
+
+Sitemap: https://allimport.github.io/allimport-skill/sitemap.xml
