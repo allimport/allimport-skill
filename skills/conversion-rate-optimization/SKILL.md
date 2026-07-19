@@ -1,4 +1,5 @@
 ---
+name: conversion-rate-optimization
 title: Conversion Rate Optimization Expert
 slug: conversion-rate-optimization-expert
 category: optimization
