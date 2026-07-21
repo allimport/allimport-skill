@@ -3,6 +3,8 @@
 .agents/
 .claude/*
 !.claude/settings.json
+!.claude/agents/
+!.claude/agents/**
 skills-lock.json
 
 # Graphify generated output (local knowledge graph)

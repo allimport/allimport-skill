@@ -62,7 +62,7 @@
 
 **COSTOS / LÍMITES:** [no especificado]
 
-**⚠️ Nota mía:** El repo `msltarzewski/agency-agents` casi seguro está mal transcripto. Un repo de ~144 subagentes de Claude Code organizados por departamentos (con `growth-hacker`, `frontend-developer`) coincide con **`contains-studio/agents`** o **`wshobson/agents`**. Verifico la URL real cuando lleguemos a ejecutar. Esto conecta directo con tu plan #3 y con la poda de skills (los subagentes van a `.claude/agents/`).
+**✅ VERIFICADO (2026-07-20):** El repo real es **`github.com/contains-studio/agents`** — 38 subagentes por departamentos (engineering 7, product 3, marketing 7, design 5, PM 3, ops 5, testing 5, bonus 2), incluye `growth-hacker` y `frontend-developer`. El `msltarzewski/agency-agents` y el "144" del video estaban MAL. Los subagentes van a `.claude/agents/`. **Decisión: NO instalar los 38** (bloat); creamos 2 curados a medida (`reviewer`, `web-qa`) y cherry-pickeamos de contains-studio si hace falta.
 
 ---
 
