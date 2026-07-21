@@ -48,4 +48,9 @@ Aplicar: RLS en Supabase, CORS restringido, credenciales en env vars, rate limit
 ## Cómo trabajar acá
 - Empezá leyendo `_research/PLAN-MAESTRO.md` (prioridades vigentes).
 - Tarea concreta > pedido vago. Verificá lo que hacés (build/lint/screenshot), no solo lo escribas.
-- Contexto = plata: una tarea por sesión, `/clear` entre tareas distintas.
+
+## Eficiencia de contexto (tokens)
+- **Buscá antes de leer:** usá `grep`/`find` para ubicar lo puntual antes de abrir carpetas o archivos enteros. No leas todo un directorio si necesitás una función.
+- **Una tarea = una sesión.** `/clear` entre tareas distintas; `/compact` dentro de una tarea larga; `/context` para vigilar la ventana.
+- Detalle durable → `docs/` (se lee bajo demanda), no repetido en el chat.
+- **Seguridad:** nunca commitear secretos ni `.mcp.json` (está en `.gitignore`); credenciales solo en variables de entorno.
