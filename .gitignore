@@ -1,7 +1,8 @@
 
 # Local agent skills (installed via npx skills add)
 .agents/
-.claude/
+.claude/*
+!.claude/settings.json
 skills-lock.json
 
 # Graphify generated output (local knowledge graph)
