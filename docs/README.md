@@ -23,6 +23,12 @@ la lee nativo; Gemini la usa como memoria/contexto. Sin puentes, sin sync.
 | 14 | [DOCUMENTATION](14-DOCUMENTATION.md) | Cómo documentar |
 | 15 | [DECISIONS](15-DECISIONS.md) | ADRs |
 | 16 | [FUTURE](16-FUTURE.md) | Radar de ideas |
+| 17 | [BUSINESS](17-BUSINESS.md) | Todo el negocio All Import |
+| 18 | [WORKFLOW](18-WORKFLOW.md) | De la idea a producción |
+| 19 | [TOOLS](19-TOOLS.md) | Herramientas: rol y cuándo usar |
+| 20 | [CONTEXT-RULES](20-CONTEXT-RULES.md) | Reglas para toda IA |
+| 21 | [BACKLOG](21-BACKLOG.md) | Pendientes priorizados |
+| 22 | [KNOWLEDGE-GAPS](22-KNOWLEDGE-GAPS.md) | Qué info falta (preguntas) |
 | — | [decisions/](decisions/) | ADRs numeradas |
 
 ## Cómo usar Obsidian con esto (#07)
