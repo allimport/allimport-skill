@@ -34,6 +34,16 @@ npm run lint     # linter
 - **Un cambio = una rama = un PR = validación verde = merge.** De a un paso.
 - **Nombres/estilo:** seguí el estilo del código que ya existe alrededor.
 
+## Comandos Frecuentes y Control de Sesión
+Uso obligatorio de los 5 comandos nativos de Claude Code en el flujo de All Import:
+1. **`/init`** — Generar o actualizar la memoria base y reglas de `CLAUDE.md` al iniciar un entorno o repositorio.
+2. **`/context`** — Chequear el porcentaje de la ventana de contexto utilizada.
+3. **`/compact`** — Comprimir la conversación cuando el contexto esté alto, antes de cambiar de tarea o alcanzar el límite.
+4. **`/plan`** — Activar el modo de planificación explícita antes de ejecutar cambios arquitectónicos o tareas complejas de múltiples archivos.
+5. **`/agents`** — Acceder y gestionar el panel de subagentes especializados (ej. `reviewer`, `web-qa`).
+
+Regla de sesión: **una tarea = una sesión**; `/clear` entre tareas distintas; `/compact` dentro de una tarea larga; `/context` para vigilar la ventana. Detalle ampliado en `docs/03-CLAUDE-CODE.md`.
+
 ## Reglas de oro (no negociables)
 1. **Nunca dejes de compilar.** Antes de dar por hecho un cambio en `web/`, corré `npm run lint` y `npm run build`.
 2. **Nunca commitees secretos** (API keys, tokens). Van a variables de entorno. Ojo con `.mcp.json`.
