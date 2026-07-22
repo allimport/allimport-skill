@@ -54,10 +54,20 @@ El dueño ya creó una skill real (`allimport-catalog-checker`) con `skill-creat
 Es sobre Claude.ai/Cowork (app de escritorio), NO Claude Code. Setup: app de escritorio → 4 carpetas (About Me / Projects / Templates / Outputs) → 2 archivos base (`about-me.md`, `anti-ai-style.md`) → dejar que Claude pregunte → un solo plugin → conectores → un Proyecto → tarea programada. Explicáselo por días; sin prompt de código.
 
 ### #04 — 5 cosas para no ser hackeado 🤝
-5 reglas: RLS en Supabase · CORS restringido · credenciales en variables de entorno · rate limiting · sanitizar inputs. **Variables de entorno ya está aplicado en el repo.** RLS/CORS/rate-limit aplican recién cuando exista backend/Supabase (no generes prompt de eso hoy — sería sobreingeniería). Skills: owasp-security-audit, secrets-detection, rate-limiting-implementation.
+Las 5 reglas, con el prompt literal que se le dice a Claude:
+1. **RLS (Row Level Security):** *"Activá RLS en Supabase para que cada usuario solo vea sus propios datos."*
+2. **CORS:** *"Configurá CORS para que solo mi app pueda hacer peticiones al backend."*
+3. **Variables de entorno:** *"Mové todas las credenciales sensibles a variables de entorno."* — **esto ya está aplicado en el repo.**
+4. **Rate limiting:** *"Agregá rate limiting para limitar peticiones por usuario por minuto."*
+5. **Sanitizar inputs:** *"Sanitizá todos los inputs para prevenir inyecciones SQL."*
+RLS/CORS/rate-limit aplican recién cuando exista backend/Supabase (no generes prompt de eso hoy — sería sobreingeniería). Skills: owasp-security-audit, secrets-detection, rate-limiting-implementation.
 
 ### #12 — Proteger a Claude 🤝
-Continuación del #04. 3 prompts: (1) encontrar vulnerabilidades y explicarlas simple; (2) detectar endpoints sin autenticación/validación; (3) validar datos de usuario contra inyección. Aplica de lleno cuando exista backend. Skills: owasp-security-audit, api-security-design.
+Continuación del #04. Los 3 prompts literales:
+1. *"Revisá mi código y decime qué vulnerabilidades de seguridad tiene. Explicame cada una en términos simples y cómo arreglarla."*
+2. *"Analizá mis rutas de API y decime cuáles no tienen autenticación o validación. Dame el código para protegerlas."*
+3. *"Revisá dónde recibo datos del usuario y decime si hay riesgo de inyección o datos maliciosos. Mostrame cómo validarlos correctamente."*
+Aplica de lleno cuando exista backend. Skills: owasp-security-audit, api-security-design.
 
 ### #06 — Ahorro de tokens 🤖
 Objetivo: que Claude no relea archivos enteros. Lo que ya está: reglas de tokens en CLAUDE.md, skills context-optimization / token-optimizer / repo-indexer / smart-file-selector. El video proponía un paquete de terceros "execution-runtime" (99% de ahorro = marketing; y correr código de terceros es riesgo → descartado). Si el dueño pide más, generá prompt para afinar las reglas del repo, no para instalar paquetes externos.
@@ -69,16 +79,19 @@ Grafo de conocimiento del código: se corre una vez, escanea, y las sesiones sig
 En la compu del dueño: instalar Obsidian (obsidian.md) → "Abrir carpeta como bóveda" → elegir la carpeta `docs/` del repo clonado. Obsidian y Claude leen los MISMOS archivos; cero sincronización. Requiere tener el repo clonado localmente.
 
 ### #15 — Conectores 🤝
-De los 15 del video, útiles HOY: GitHub, Playwright, Supabase (futuro), Figma, Obsidian, Vercel (futuro). NO instalar los 15. El dueño consigue el token del conector que toque; después generás el prompt para activarlo.
+Los 15 combos de la foto: Obsidian (segundo cerebro) · GitHub (reviews de PRs) · Notion (wiki) · Playwright (QA/tests de browser) · Figma (diseño→código) · Supabase (DB/auth/storage) · Excel (análisis de datos) · Chrome (automatización web) · Docker (DevOps) · Postgres (SQL) · Slack (asistente de equipo) · Vercel (deploy) · Jupyter (investigación) · AWS (cloud) · Terminal (dev 10x).
+**Útiles HOY para All Import: GitHub, Playwright, Figma, Obsidian; futuros: Supabase, Vercel. El resto NO aplica — no instalar los 15.** El dueño consigue el token del conector que toque; después generás el prompt para activarlo.
 
 ### #16 — Claude trabaja solo 🙋
-Plan nocturno autónomo: escribir un `NIGHT-PLAN` con tareas por bloques y reglas de oro (nunca romper build, nunca `git add -A` ni `push --force`, migraciones aditivas). Los guardrails (CI, permisos) ya existen. Hay plantilla en `_research/night-plan-template.md`. El dueño lo lanza en su sesión; explicale cómo.
+Plan nocturno autónomo: escribir un `NIGHT-PLAN` con tareas por bloques y reglas de oro (nunca romper build, nunca `git add -A` ni `push --force`, migraciones aditivas e idempotentes). Los guardrails (CI, permisos) ya existen en el repo. Ya hay una plantilla lista: el dueño le pide a Claude *"mostrame la plantilla de night-plan de `_research/night-plan-template.md` y armemos el plan de esta noche"*. Explicale el flujo; el plan corre en su sesión de Claude.
 
 ### #11 — Google Stitch 🤝
 Stitch (gratis) genera pantallas/design system; se conecta a Claude Code por MCP. El dueño consigue su API key de Google. Después, prompt con el comando: `claude mcp add stitch --transport http --url "https://stitch.googleapis.com/mcp" --header "X-Goog-Api-Key: <SU_KEY>"`. ⚠️ La key del video estaba expuesta: JAMÁS usarla; el dueño genera la suya. Útil para terminar la web (#01) y para vender webs.
 
 ### #02 — Agente de WhatsApp 🤝
-Agente que responde clientes 24/7. El dueño decide proveedor (**Meta API o Twilio**) y consigue credenciales + API key de Anthropic. Definir: nombre del negocio, rubro, para qué (responder/pedidos), nombre del agente, tono, horario, archivos de conocimiento (catálogo/precios/FAQ). La URL del repo "builder" del video no está confirmada — Claude evalúa si usar un repo o armarlo directo. Solo responde a quien escribe (opt-in).
+Agente que responde clientes 24/7. El dueño decide proveedor (**Meta API o Twilio**) y consigue credenciales + API key de Anthropic. Las 10 definiciones del agente (del video):
+1. Nombre del negocio (All Import) · 2. A qué se dedica · 3. Para qué el agente (responder consultas / agendar / tomar pedidos) · 4. Nombre del agente que ve el cliente · 5. Tono (profesional/amigable/vendedor) · 6. Horario de atención · 7. Archivos de conocimiento (catálogo, precios, FAQ) · 8. API key de Anthropic · 9. Proveedor (Meta o Twilio) · 10. Credenciales del proveedor.
+La URL del repo "builder" del video no está confirmada — Claude evalúa si usar un repo o armarlo directo. Solo responde a quien escribe (opt-in).
 
 ### #05 — Claude + Meta 🤝
 Estructurar campañas/catálogos de Meta. Requiere cuenta Meta Business. **Restricción dura: réplicas y vapers NO se anuncian (ban). Solo accesorios genéricos.** Claude estructura segmentación/copies; el dueño los carga en el Administrador de Anuncios. Skills: ad-copy-generator, funnel-builder.
@@ -93,7 +106,14 @@ Repo verificado: `github.com/contains-studio/agents` (38 subagentes por departam
 OpenMontage (URL sin confirmar: `calesthio/OpenMontage`): pipelines de video con Piper (voz), Remotion (render), footage libre (Pexels/NASA/Wikimedia). Ya existe la skill `remotion-video-creation`. Prompt: verificar el repo real y evaluar si aporta sobre Remotion + Higgsfield. Para fase de marketing; no urgente.
 
 ### #09 — 7 prompts 🙋
-Prompts genéricos de productividad (partir tareas en micro-pasos, abogado del diablo, estratega 30 días…). Guardados en `_research/prompts-utiles.md`. Son plantillas de chat; no montan nada. Prioridad baja.
+Plantillas genéricas de chat (no montan nada; prioridad baja). Las 7:
+1. **Anti-procrastinación:** "Tengo que hacer [tarea]. Partila en 5 micro-pasos de 10 min. Dame el primero ahora."
+2. **Editor implacable:** "Reescribí este texto como si lo publicara Harvard Business Review. Cortá lo innecesario."
+3. **Abogado del diablo:** "Acá está mi idea. Dame las 5 razones por las que va a fracasar. Sé brutal."
+4. **Reunión difícil:** "Simulá una reunión difícil. Sos el cliente escéptico. Yo presento. Empezá."
+5. **Punto ciego:** "Analizá este dato y decime qué NO estoy viendo."
+6. **Títulos:** "Creá 10 títulos para este post. Los 3 mejores con justificación."
+7. **Estratega:** "Sos mi estratega personal. Mi objetivo es [X]. Dame un plan de 30 días, semana por semana, con acciones específicas."
 
 ### #22 — Proyectos en Claude 🙋
 El dueño crea Proyectos en claude.ai (ej. marketing) con instrucciones globales pegadas. Tarea de navegador; explicale qué pegar (puede salir de `docs/17-BUSINESS.md`). Cerca del final.
