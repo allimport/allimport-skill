@@ -20,7 +20,7 @@ CLAUDE.md (memoria del repo) · higiene de secretos · CI (typecheck + build en 
 
 | Orden | # | Paso | Estado | Quién |
 |---|---|---|---|---|
-| 1 | 19 | 5 comandos de Claude | ⬜ | 🙋 |
+| 1 | 19 | 5 comandos de Claude | ✅ | — |
 | 2 | 20 | Crear skills / usar Claude | ⬜ | 🙋/🤖 |
 | 3 | 18 | Plan 7 días para dominar Claude | ⬜ | 🙋 |
 | 4 | 04 | 5 cosas para no ser hackeado | ⬜ | 🤝 |
@@ -44,8 +44,8 @@ CLAUDE.md (memoria del repo) · higiene de secretos · CI (typecheck + build en 
 
 ## Especificaciones por paso
 
-### #19 — 5 comandos de Claude Code 🙋
-El dueño practica los comandos nativos: `/init` (genera CLAUDE.md al abrir carpeta nueva), `/context` (% de ventana usada), `/compact` (comprime chat en tarea larga), `/plan` (propone antes de ejecutar; para cambios grandes), `/agents` (crear subagentes de tarea fija). Regla extra: `/clear` entre tareas distintas (lo que más tokens ahorra). Ya están documentados en el repo (`docs/03-CLAUDE-CODE.md`); esto es práctica, no código.
+### #19 — 5 comandos de Claude Code ✅ HECHO
+Los 5 comandos nativos ya están documentados en el repo y el dueño los usa: `/init` (genera CLAUDE.md), `/context` (% de ventana usada), `/compact` (comprime chat en tarea larga), `/plan` (propone antes de ejecutar), `/agents` (subagentes de tarea fija). Regla extra: `/clear` entre tareas distintas (lo que más tokens ahorra). Si el dueño pregunta por un comando, respondele con esto; no hay nada que ejecutar.
 
 ### #20 — Crear skills 🙋/🤖
 El dueño ya creó una skill real (`allimport-catalog-checker`) con `skill-creator`. Flujo: describir muy específico qué hace la skill → skill-creator pregunta (alcance, formato) → genera `SKILL.md` con frontmatter name/description. Si el dueño quiere otra skill a medida, generá prompt 🤖 usando `skill-creator`.
