@@ -5,14 +5,14 @@ Todo lo pendiente, en orden de ataque, sin comprimir. Nada plegado. Cruza con
 💻 compu vos · 🤝 cuenta/token vos.
 
 ## FASE A — Contenido (O1, foco, mueve la aguja YA)
-1. 🤖 **3 guiones de reel** (emprendedor 18-28). *(#4/#8)*
-2. 📱 **Perfil `@_agus_moreno_`**: bio, foto, link WhatsApp. *(#1)*
-3. 📱 **Bloque fijo diario** (horario no negociable). *(#2)*
-4. 📱 **Grabar los 3 reels** + CapCut → 🤖 subtítulos + contadores. *(#5)*
-5. 🤖 **1 semana de historias** (ejemplos) + 📱 subís. *(#6)*
-6. 🤖 **Carrusel de marca** (DESIGN) → 📱 subís. *(#8)*
-7. 📱 **Fotos de producto** → 🤖 edito a historias → 📱 subís. *(#7)*
-8. 🤖 **Investigar viralidad** del nicho → ajusto guiones. *(#16)*
+1. 🤖 **Investigar viralidad** del nicho (qué funciona + por qué) — VA PRIMERO, alimenta el guion. *(#16)*
+2. 🤖 **3 guiones de reel** basados en esa investigación (emprendedor 18-28). *(#4/#8)*
+3. 📱 **Perfil `@_agus_moreno_`**: bio, foto, link WhatsApp. *(#1)*
+4. 📱 **Bloque fijo diario** (horario no negociable). *(#2)*
+5. 📱 **Grabar los 3 reels** + CapCut → 🤖 subtítulos + contadores. *(#5)*
+6. 🤖 **1 semana de historias** (según lo viral) + 📱 subís. *(#6)*
+7. 🤖 **Carrusel de marca** (DESIGN) → 📱 subís. *(#8)*
+8. 📱 **Fotos de producto** → 🤖 edito a historias → 📱 subís. *(#7)*
 9. 🤖 **Clips de producto (Remotion)** cuando haga falta. *(#9)*
 10. 🤝 **Video IA hiperrealista** (opcional, ojo "fake"). *(#10/#37)*
 
@@ -65,4 +65,4 @@ Todo lo pendiente, en orden de ataque, sin comprimir. Nada plegado. Cruza con
 ---
 **Foco real:** FASE A (1-9) primero. FASE B se adelanta con lo que me pases. Todo lo demás
 existe y está en orden — nada descartado, nada escondido.
-**Siguiente acción:** paso 1 → genero los 3 guiones.
+**Siguiente acción:** paso 1 → investigo qué es viral en el nicho; con eso salen los guiones (paso 2).
