@@ -35,22 +35,30 @@ graphify install               # registra el skill (Windows se autodetecta)
 ⚠️ **Evitá `pip install` en Windows** — el README lo desaconseja (rompe con
 `ModuleNotFoundError`). Si el comando no aparece: `uv tool update-shell` y terminal nueva.
 
-Indexar el repo (parado en la carpeta del repo):
+Indexar (parado en la carpeta del repo):
 ```powershell
-graphify .                     # indexa todo (código + docs)
-graphify extract . --code-only # solo código: AST local, sin API key
-graphify . --update            # re-indexa solo lo que cambió
+graphify update _research      # local, SIN LLM ni API key
+graphify update docs
+graphify update contenido
 ```
-> En PowerShell es `graphify .` — **no** `/graphify .` (la barra es separador de rutas).
 
-Genera `graphify-out/` (local, ya en `.gitignore`).
+⚠️ **No corras `graphify update .` sobre todo el repo.** Probado: da **16.025 nodos** y los
+hubs quedan dominados por `skills/` y `web/` (código de terceros) — ruido puro. Sobre
+`_research/` da **197 nodos** y los hubs son tu negocio real (plan, agente, videos,
+próximos pasos). **Indexá solo las carpetas de conocimiento.**
+
+> En PowerShell es `graphify .` — **no** `/graphify .` (la barra es separador de rutas).
+> `graphify update` es el modo local sin LLM. Para extracción semántica de docs/PDFs/imágenes
+> se usa `/graphify` desde el asistente, o seteás `GEMINI_API_KEY` (tenés Gemini).
+
+Genera `graphify-out/` (local, ya en `.gitignore` a cualquier nivel — no ensucia el repo).
 
 ## 4. La unión real: volcar el grafo DENTRO de tu bóveda
 Graphify puede escribir el grafo como notas de Obsidian, en tu bóveda existente
-(no pisa tus notas ni tu config `.obsidian`):
+(no pisa tus notas ni tu config `.obsidian`). Usá las carpetas de conocimiento, no todo:
 
 ```powershell
-graphify . --obsidian --obsidian-dir "C:\ruta\a\allimport-skill"
+graphify _research --obsidian --obsidian-dir "C:\ruta\a\allimport-skill"
 ```
 
 Resultado: las conexiones que detecta Graphify aparecen como notas enlazadas en el mismo
