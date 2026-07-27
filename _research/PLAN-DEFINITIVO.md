@@ -4,14 +4,21 @@
 **Símbolos:** 📱 teléfono (vos) · 💻 compu · 🙋 tarea tuya · 🤖 lo hace Claude · 🤝 conseguís algo y después Claude · ✅ hecho.
 
 ## YA HECHO
-- ✅ 5 comandos Claude (paso 19)
-- ✅ Gem de Gemini (paso 21)
-- ✅ Web: páginas error/404/carga (paso 13)
-- ✅ Skill `allimport-catalog-checker` creada (paso 20)
-- ✅ Herramienta: analizador de chats → Excel proveedores
+- ✅ 5 comandos Claude (#19)
+- ✅ Gem de Gemini (#21 gem)
+- ✅ Web: páginas error/404/carga (#13)
+- ✅ Skill `allimport-catalog-checker` creada (#20 skill)
+- ✅ Herramienta: analizador de chats → HTML/CSV proveedores
 - ✅ Herramienta: editor de fotos para historias
 - ✅ Herramienta: Remotion (clips de producto animados)
 - ✅ 4 figuritas editadas listas para subir
+- ✅ **Calendario semanal** `contenido/CALENDARIO-SEMANAL.md` (#3)
+- ✅ **10 ganchos + guiones** `contenido/GANCHOS-Y-GUIONES.md` (#4)
+- ✅ **Branding** `contenido/DESIGN.md` (base del #8; faltan los carruseles)
+- ✅ **Template base de clientes** `proveedores/base-datos-clientes-template.csv` (base del #12; falta cargar)
+- ✅ **Repos instalados:** `contains-studio` 37 agentes (#18) · `claude-seo` 25 skills+18 agentes · `graphify` (#21) · `openmontage` (#17 skills; motor aparte)
+- ✅ **find-skills / register-skills.sh** documentados (#19)
+- ✅ **Docs:** `docs/ESTADO-INICIAL.md`, `docs/TERCEROS-PENDIENTES.md`, `README`/`CLAUDE.md` actualizados
 
 ## PENDIENTE — EN ORDEN
 
@@ -20,18 +27,18 @@
 2. Definir bloque fijo diario (hábito, no negociable) — 📱 vos *(PDF)*
 
 ### FASE 1 · Motor de contenido (foco #1)
-3. Calendario semanal de contenido — 🤖 💻 *(PDF)*
-4. 10 ganchos + guiones de reels — 🤖 💻 *(V8 + PDF)*
+3. ✅ Calendario semanal de contenido — HECHO (`contenido/CALENDARIO-SEMANAL.md`)
+4. ✅ 10 ganchos + guiones de reels — HECHO (`contenido/GANCHOS-Y-GUIONES.md`)
 5. Grabar reels a cámara + editar en CapCut (+ subtítulos .srt y contadores generados con Claude) — 📱 vos + 🤖 *(V3 + PDF)*
 6. Historias diarias 4-10 (lifestyle/movimiento/mentalidad/CTA) — 📱 vos *(PDF)*
-7. Editar fotos de producto para historias — 🤖 💻 → subís vos 📱
-8. Carruseles IG de marca (Claude Design + `DESIGN.md`) — 🤖 💻 → subís vos 📱 *(V9)*
-9. Clips de producto animados (Remotion) — 🤖 💻 *(paso 17 + V3)*
+7. Editar fotos de producto para historias — 🤖 💻 → subís vos 📱 *(herramienta lista en `historias/`; falta correrla con tus fotos)*
+8. Carruseles IG de marca (Claude Design + `DESIGN.md`) — 🤖 💻 → subís vos 📱 *(V9)* *(DESIGN.md ✅; faltan los carruseles)*
+9. Clips de producto animados (Remotion) — 🤖 💻 *(paso 17 + V3)* *(proyecto listo en `video/`)*
 10. Video de producto IA (opcional, evaluar; ojo "fake") — 🤖 *(V11 / Higgsfield)*
 
 ### FASE 2 · Ventas y seguimiento
 11. Etiquetar WhatsApp (compró/potencial/curioso) + seguimiento diario — 📱 vos *(PDF)*
-12. Base de datos de clientes (Excel) — 🤖 template → cargás vos *(PDF)*
+12. Base de datos de clientes — 🤖 template ✅ (`proveedores/base-datos-clientes-template.csv`) → cargás vos *(PDF)*
 13. Excel de proveedores mensual (correr el analizador) — 🤖 💻
 14. Agente de WhatsApp — 🤝 vos cuenta/token → 🤖 *(paso 02)*
 15. IA capta clientes (versión legal, opt-in) — depende de #14 *(paso 10)*
@@ -41,10 +48,10 @@
 17. Rutinas: métricas IG automáticas + plan nocturno autónomo — 💻 después *(V6 + paso 16)*
 
 ### FASE 4 · Tooling / infra (soporte)
-18. Repo de agentes (cherry-pick contains-studio) — 🤖 💻 *(paso 03)*
-19. skills.sh / `find-skills` (buscar-instalar skills) — 🤖 💻 *(V4)*
-20. Ahorro de tokens — 🤖 *(paso 06)*
-21. Graphify (grafo de conocimiento) — 🤖 *(paso 08)*
+18. ✅ Repo de agentes — HECHO (37 de `contains-studio` en `.claude/agents/`)
+19. ✅ skills.sh / `find-skills` — HECHO (documentado en `docs/ESTADO-INICIAL.md`)
+20. Ahorro de tokens — 🤖 *(paso 06)* *(nativo: repo-indexer/smart-file-selector/token-optimizer; NO instalar el "execution-runtime" de terceros)*
+21. ✅ Graphify (grafo de conocimiento) — instalado (`skills/graphify/`; motor `pip install graphifyy` pendiente 💻)
 22. Obsidian apuntando a `docs/` — 🙋 💻 vos *(paso 07)*
 23. Conectores (GitHub/Figma/Supabase/Vercel...) — 🤝 vos tokens → 🤖 *(paso 15)*
 24. Verificar comandos Revolutia antes de usar (terceros) — 🤖 *(V5)*
