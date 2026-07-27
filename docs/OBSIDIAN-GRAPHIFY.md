@@ -6,37 +6,64 @@ aliases: [Obsidian + Graphify, Segundo cerebro setup]
 # Unir Obsidian + Graphify (segundo cerebro)
 
 Los dos leen los MISMOS archivos del repo. Nada de sync. Obsidian = grafo visual +
-edición; Graphify = grafo consultable para que Claude gaste menos tokens. Centro de todo:
-[[MAPA-CONOCIMIENTO]].
+edición; Graphify = grafo consultable para que Claude gaste menos tokens (y no alucine).
+Centro de todo: [[MAPA-CONOCIMIENTO]].
 
-Qué ya dejé listo (🤖): el mapa hub con `[[wikilinks]]`, frontmatter con tags, y todo el
-conocimiento en `.md` (docs/ · _research/ · contenido/). El grafo ya tiene forma.
+Ya listo (🤖): el hub con `[[wikilinks]]`, frontmatter con tags, y todo el conocimiento en
+`.md` (docs/ · _research/ · contenido/). Comandos verificados contra el README oficial.
 
-Lo que hacés vos, una vez (💻, ~10 min):
+Lo que hacés vos, una vez (💻 Windows):
 
-## 1. Obsidian (grafo visual)
-1. Descargá Obsidian: https://obsidian.md
+## 1. Bajar el repo
+GitHub Desktop → Clone `allimport/allimport-skill` → rama **`claude/skills-workflow-audit-22vj5r`**.
+(O ZIP desde GitHub con esa rama seleccionada.)
+
+## 2. Obsidian (grafo visual)
+1. Instalá Obsidian: https://obsidian.md
 2. "Abrir carpeta como bóveda" → elegí **la raíz del repo** (`allimport-skill/`).
-   (Así entran docs/, _research/ y contenido/ en el grafo.)
-3. Abrí [[MAPA-CONOCIMIENTO]] y tocá el ícono de **grafo** (Graph view). Vas a ver todo
-   conectado desde el hub.
-4. Opcional: Settings → Files & Links → activar "Automatically update internal links".
+3. Abrí [[MAPA-CONOCIMIENTO]] → ícono de **grafo** (Graph view).
+4. Si se ve ruidoso: Settings → Files & Links → Excluded files → `skills/` y `web/`.
 
-> Nota: `skills/` tiene muchísimos `.md` de terceros. Si el grafo se ve ruidoso, en
-> Settings → Files & Links → "Excluded files" agregá `skills/` y `web/`.
+## 3. Graphify (grafo consultable)
+**No se clona el repo** — se instala el paquete `graphifyy` (el comando es `graphify`):
 
-## 2. Graphify (grafo consultable, ahorra tokens)
-1. Instalá el motor (sin cuenta): `pip install graphifyy`
-2. En la raíz del repo, corré la skill: `/graphify` (o `graphify .`).
-3. Genera `graphify-out/` (ya está en `.gitignore`, queda local).
-4. Después, cuando Claude necesita entender el repo, consulta el grafo en vez de releer
-   todo → menos tokens. Ver `skills/graphify/ENGINE.md`.
+```powershell
+uv tool install graphifyy      # recomendado (o: pipx install graphifyy)
+graphify install               # registra el skill (Windows se autodetecta)
+```
 
-## 3. Cómo se "unen"
-- Mismo repo, mismos `.md`. Editás en Obsidian → Claude y Graphify lo ven al instante.
-- El hub [[MAPA-CONOCIMIENTO]] es el centro de los dos grafos.
-- Regla: cada doc nuevo se enlaza desde el mapa → nada queda huérfano.
+⚠️ **Evitá `pip install` en Windows** — el README lo desaconseja (rompe con
+`ModuleNotFoundError`). Si el comando no aparece: `uv tool update-shell` y terminal nueva.
+
+Indexar el repo (parado en la carpeta del repo):
+```powershell
+graphify .                     # indexa todo (código + docs)
+graphify extract . --code-only # solo código: AST local, sin API key
+graphify . --update            # re-indexa solo lo que cambió
+```
+> En PowerShell es `graphify .` — **no** `/graphify .` (la barra es separador de rutas).
+
+Genera `graphify-out/` (local, ya en `.gitignore`).
+
+## 4. La unión real: volcar el grafo DENTRO de tu bóveda
+Graphify puede escribir el grafo como notas de Obsidian, en tu bóveda existente
+(no pisa tus notas ni tu config `.obsidian`):
+
+```powershell
+graphify . --obsidian --obsidian-dir "C:\ruta\a\allimport-skill"
+```
+
+Resultado: las conexiones que detecta Graphify aparecen como notas enlazadas en el mismo
+grafo de Obsidian, al lado de [[MAPA-CONOCIMIENTO]].
+
+Otras salidas útiles: `--svg` (imagen del grafo) · `--wiki` (wiki markdown) ·
+`--watch` (auto-sync al guardar).
 
 ## Mantenimiento
-- Después de agregar/mover docs importantes: volver a correr `/graphify` para refrescar el grafo.
+- Después de agregar/mover docs: `graphify . --update` y volver a correr `--obsidian`.
 - Obsidian se actualiza solo al guardar.
+- Si actualizás graphify y usás hooks de git: re-correr `graphify hook install`.
+
+## Nota
+La indexación completa (docs, PDFs, imágenes) usa subagentes del asistente; `--code-only`
+es 100% local sin API. Fuente: https://github.com/safishamsi/graphify
