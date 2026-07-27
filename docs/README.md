@@ -46,6 +46,8 @@ Además de los docs numerados, el conocimiento operativo vive en estas carpetas:
 | [proveedores/](../proveedores/) | Analizador de chats WhatsApp + base de clientes |
 | [TERCEROS-PENDIENTES.md](TERCEROS-PENDIENTES.md) | Herramientas de terceros que quedaron sin instalar y por qué |
 | [ESTADO-INICIAL.md](ESTADO-INICIAL.md) | Reporte de la pasada `init-todo` + hoja de ruta |
+| [MAPA-CONOCIMIENTO.md](MAPA-CONOCIMIENTO.md) | 🧠 Hub del segundo cerebro: enlaza todo con `[[wikilinks]]` (Obsidian + Graphify) |
+| [OBSIDIAN-GRAPHIFY.md](OBSIDIAN-GRAPHIFY.md) | Cómo unir Obsidian + Graphify sobre esta base |
 
 ## Cómo usar Obsidian con esto (#07)
 Instalá Obsidian → "Abrir una carpeta como bóveda" → elegí **esta carpeta `docs/`**.
