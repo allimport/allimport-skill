@@ -1,0 +1,4 @@
+nombre;fecha;producto;monto;pago;envio_retiro;telefono;etiqueta
+Ejemplo Juan Perez;27/07/2026;Auriculares TWS;32000;efectivo;retiro en mano;3510000000;compró
+Ejemplo Meli;27/07/2026;consulta parlante;;;;3510000001;potencial
+Ejemplo Nico;27/07/2026;;;;;3510000002;curioso

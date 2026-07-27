@@ -31,6 +31,22 @@ la lee nativo; Gemini la usa como memoria/contexto. Sin puentes, sin sync.
 | 22 | [KNOWLEDGE-GAPS](22-KNOWLEDGE-GAPS.md) | Qué info falta (preguntas) |
 | — | [decisions/](decisions/) | ADRs numeradas |
 
+## Plan, contenido y análisis (foco: redes)
+Además de los docs numerados, el conocimiento operativo vive en estas carpetas:
+
+| Ruta | Qué es |
+|---|---|
+| [_research/PLAN-DEFINITIVO.md](../_research/PLAN-DEFINITIVO.md) | **Plan maestro:** 34 pasos + opcionales, priorizado por el foco en redes |
+| [_research/videos-analisis.md](../_research/videos-analisis.md) | Análisis de los videos de estrategia (12 nuevos + previos) |
+| [_research/fotos-analisis.md](../_research/fotos-analisis.md) | Análisis de fotos de producto |
+| [_research/gem/](../_research/gem/) | Pack de instrucciones + conocimiento para el Gem de Gemini |
+| [contenido/](../contenido/) | Motor de contenido: calendario, ganchos/guiones, branding (DESIGN) |
+| [historias/](../historias/) | Editor de fotos → historias de Instagram |
+| [video/](../video/) | Clips de producto animados (Remotion) |
+| [proveedores/](../proveedores/) | Analizador de chats WhatsApp + base de clientes |
+| [TERCEROS-PENDIENTES.md](TERCEROS-PENDIENTES.md) | Herramientas de terceros que quedaron sin instalar y por qué |
+| [ESTADO-INICIAL.md](ESTADO-INICIAL.md) | Reporte de la pasada `init-todo` + hoja de ruta |
+
 ## Cómo usar Obsidian con esto (#07)
 Instalá Obsidian → "Abrir una carpeta como bóveda" → elegí **esta carpeta `docs/`**.
 Obsidian y Claude leen los mismos archivos. Cero sync.

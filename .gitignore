@@ -10,5 +10,9 @@ skills-lock.json
 # Graphify generated output (local knowledge graph)
 graphify-out/
 
+# Remotion (video/) generated output — se regenera con npm install / render
+video/node_modules/
+video/out/
+
 # MCP config with real tokens — copy .mcp.json.example to .mcp.json locally
 .mcp.json

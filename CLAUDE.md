@@ -6,7 +6,13 @@ Memoria del proyecto para Claude Code. Leé esto antes de trabajar.
 Repo de **All Import** (Córdoba, Argentina · @allimport.cba). Contiene:
 - **`web/`** — landing de la marca (Next.js 15 + React 19 + three.js/R3F + Tailwind 4 + TypeScript). Se deploya como export estático a GitHub Pages.
 - **`skills/`** — biblioteca de skills para Claude Code (77 skills, cada una en `skills/<nombre>/SKILL.md`).
-- **`_research/`** — conocimiento del proyecto: plan maestro, análisis de videos/fotos, prompts útiles. **Leé `_research/PLAN-MAESTRO.md` para el contexto y las prioridades.**
+- **`_research/`** — conocimiento del proyecto: plan maestro, análisis de videos/fotos, prompts útiles. **Leé `_research/PLAN-DEFINITIVO.md` para el plan y las prioridades vigentes** (foco en redes).
+- **`contenido/`** — motor de contenido para redes: calendario semanal, 10 ganchos+guiones de reel, `DESIGN.md` (branding).
+- **`historias/`** — editor de fotos → historias de Instagram (Python + Pillow).
+- **`video/`** — clips de producto animados (proyecto Remotion).
+- **`proveedores/`** — analizador de chats de WhatsApp (→ HTML/CSV) + plantilla de base de clientes.
+- **`docs/`** — núcleo documental (SSOT). Índice en `docs/README.md`; reporte de estado en `docs/ESTADO-INICIAL.md`; terceros diferidos en `docs/TERCEROS-PENDIENTES.md`.
+- **`.claude/agents/`** — subagentes: `reviewer` y `web-qa` (propios) + 37 agentes de `contains-studio/agents` (solo `.md`).
 
 > El **producto/app de All Import todavía no existe como código** en este repo. Hoy hay landing + skills. Cuando exista el producto (con backend/DB), va con el mismo estándar.
 
@@ -56,7 +62,7 @@ Regla de sesión: **una tarea = una sesión**; `/clear` entre tareas distintas; 
 Aplicar: RLS en Supabase, CORS restringido, credenciales en env vars, rate limiting, sanitizar inputs. Prompts listos en `_research/prompts-utiles.md`.
 
 ## Cómo trabajar acá
-- Empezá leyendo `_research/PLAN-MAESTRO.md` (prioridades vigentes).
+- Empezá leyendo `_research/PLAN-DEFINITIVO.md` (prioridades vigentes; foco en redes). `_research/PLAN-MAESTRO.md` queda como contexto histórico.
 - Tarea concreta > pedido vago. Verificá lo que hacés (build/lint/screenshot), no solo lo escribas.
 
 ## Eficiencia de contexto (tokens)
