@@ -63,11 +63,11 @@
 33. SEO de la web (auditoría) — 🤖 💻 *(V7 / V12)*
 34. Google Stitch (diseño→código por MCP) — 🤝 vos API key → 🤖 *(paso 11)*
 
-## DESCARTAR / OJO
-- **Meta ads de réplicas y vapers** = ban de cuenta *(paso 05)*. Solo orgánico + WhatsApp.
-- **V5 Revolutia** (`/ultraplan /goal /agents /ultrareview`) = comandos de terceros, no nativos → verificar antes.
-- **V11 Seedance** = video 100% IA, riesgo "fake". Opcional.
-- **V10** (Chat/Cowork/Code) = solo explicación, no es tarea.
+## OPCIONALES / CON CUIDADO (no se descartan, se usan con ojo)
+35. **Claude + Meta** — campañas/catálogos. ⚠️ NO anunciar réplicas ni vapers (ban); solo accesorios genéricos + orgánico *(paso 05)* 🤝
+36. **Comandos Revolutia** (`/ultraplan /goal /agents /ultrareview`) — de terceros, no nativos → verificar antes de confiar *(V5)* 🤖
+37. **Seedance / video IA** — anuncios de producto generados por IA. Ojo look "fake". Alternativa: Higgsfield (ya disponible) *(V11)* 🤖
+38. **Chat/Cowork/Code** — saber cuál usar por tarea (referencia) *(V10)* — leer, no hay que hacer nada
 
 ## Reglas
 - Foco: redes/contenido primero. Web al final.
