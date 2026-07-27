@@ -7,6 +7,12 @@ Crecer en redes de forma **semi-automatizada**: vos ponés la cara (grabás vide
 fotos), Claude hace el resto (edita, genera guiones + ejemplos de historias, investiga
 qué quiere el mercado y qué es viral). Marca personal `@_agus_moreno_`.
 
+## Modelo de negocio (foco real)
+El core es **mayorista / reventa + acompañamiento**: le vendés a gente que quiere
+**emprender** (18-28, con algo de ahorro) productos de reventa + tu mentoría ("contás
+conmigo para lo que sea"). El contenido atrae emprendedores → el agente los asesora y arma
+combos → vos cerrás y acompañás. Ese es el loop. (También hay venta minorista, secundaria.)
+
 ## Los 3 objetivos concretos
 
 ### O1 · Motor de contenido asistido

@@ -14,7 +14,11 @@ Maneja la memoria de clientes: quién es, qué compró, en qué etapa está, có
 
 ## Archivo base
 `proveedores/base-datos-clientes-template.csv` — separador `;`. Columnas:
-`nombre;fecha;producto;monto;pago;envio_retiro;telefono;etiqueta` (+ `notas` opcional).
+`nombre;fecha;tipo_compra;presupuesto;primera_vez_emprende;zona;producto;cantidad;monto;pago;envio_retiro;telefono;etiqueta;notas`.
+- `tipo_compra`: mayorista / minorista.
+- `presupuesto`: número ARS (para armar el combo de emprender).
+- `primera_vez_emprende`: si / no.
+- `zona`: para definir entrega (Córdoba capital / cercanías / fuera).
 
 ## Etiquetas (del plan, fijas)
 - **compró** — ya compró al menos una vez.

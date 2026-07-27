@@ -1,4 +1,4 @@
-nombre;fecha;producto;monto;pago;envio_retiro;telefono;etiqueta
-Ejemplo Juan Perez;27/07/2026;Auriculares TWS;32000;efectivo;retiro en mano;3510000000;compró
-Ejemplo Meli;27/07/2026;consulta parlante;;;;3510000001;potencial
-Ejemplo Nico;27/07/2026;;;;;3510000002;curioso
+nombre;fecha;tipo_compra;presupuesto;primera_vez_emprende;zona;producto;cantidad;monto;pago;envio_retiro;telefono;etiqueta;notas
+Ejemplo Pedro;27/07/2026;mayorista;50000;si;Cordoba capital;Auriculares TWS;5;;transferencia;punto de encuentro;3510000000;potencial;quiere emprender reventa, armar combo
+Ejemplo Meli;27/07/2026;minorista;;;Alta Cordoba;parlante;1;;efectivo;retiro El Olmos;3510000001;curioso;consulto precio
+Ejemplo Nico;27/07/2026;mayorista;100000;no;Rio Cuarto;varios;10;;transferencia;envio proveedor;3510000002;compró;100% pago adelantado, despacho dia siguiente
