@@ -5,14 +5,14 @@ Memoria del proyecto para Claude Code. Leé esto antes de trabajar.
 ## Qué es esto
 Repo de **All Import** (Córdoba, Argentina · @allimport.cba). Contiene:
 - **`web/`** — landing de la marca (Next.js 15 + React 19 + three.js/R3F + Tailwind 4 + TypeScript). Se deploya como export estático a GitHub Pages.
-- **`skills/`** — biblioteca de skills para Claude Code (77 skills, cada una en `skills/<nombre>/SKILL.md`).
+- **`skills/`** — biblioteca de skills para Claude Code (base + terceros: `claude-seo` 25 skills, `graphify`, `openmontage`). Cada una en `skills/<nombre>/SKILL.md`.
 - **`_research/`** — conocimiento del proyecto: plan maestro, análisis de videos/fotos, prompts útiles. **Leé `_research/PLAN-DEFINITIVO.md` para el plan y las prioridades vigentes** (foco en redes).
 - **`contenido/`** — motor de contenido para redes: calendario semanal, 10 ganchos+guiones de reel, `DESIGN.md` (branding).
 - **`historias/`** — editor de fotos → historias de Instagram (Python + Pillow).
 - **`video/`** — clips de producto animados (proyecto Remotion).
 - **`proveedores/`** — analizador de chats de WhatsApp (→ HTML/CSV) + plantilla de base de clientes.
 - **`docs/`** — núcleo documental (SSOT). Índice en `docs/README.md`; reporte de estado en `docs/ESTADO-INICIAL.md`; terceros diferidos en `docs/TERCEROS-PENDIENTES.md`.
-- **`.claude/agents/`** — subagentes: `reviewer` y `web-qa` (propios) + 37 agentes de `contains-studio/agents` (solo `.md`).
+- **`.claude/agents/`** — subagentes: `reviewer` y `web-qa` (propios) + 37 de `contains-studio/agents` + 18 de `claude-seo` (solo `.md`).
 
 > El **producto/app de All Import todavía no existe como código** en este repo. Hoy hay landing + skills. Cuando exista el producto (con backend/DB), va con el mismo estándar.
 

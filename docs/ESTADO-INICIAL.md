@@ -37,11 +37,12 @@ métricas inventadas. Build verde. Abajo, qué se hizo y qué sigue necesitando 
 - `npm run build` → **OK** (compila y exporta estático, 9/9 páginas).
 - No se tocó `web/src/` (ni `data.ts`). No se commiteó `web/out/` ni secretos.
 
-### Terceros NO instalados (a propósito)
-`claude-seo`, `Graphify`, `OpenMontage` → ver [`TERCEROS-PENDIENTES.md`](TERCEROS-PENDIENTES.md).
-Motivo corto: cada nombre tiene varios repos/forks (provenance ambigua) y las versiones
-completas piden credenciales o usan instaladores binarios no revisables. No corresponde
-correrlos solo.
+### Terceros instalados (2ª pasada, por pedido del dueño)
+Se revisó cada install script y se vendorizó el **conocimiento** al repo (los motores
+pesados y las keys de pago quedan fuera). Detalle en [`TERCEROS-PENDIENTES.md`](TERCEROS-PENDIENTES.md).
+- **claude-seo** (`AgriciDaniel/claude-seo` v2.2.4) → 25 skills a `skills/` + 18 agents a `.claude/agents/`. Base sin keys; APIs opcionales de pago.
+- **Graphify** (`safishamsi/graphify`) → `skills/graphify/`. Motor: `pip install graphifyy` (sin keys).
+- **OpenMontage** (`calesthio/OpenMontage`) → 156 skills a `skills/openmontage/`. Motor 161 MB + keys de pago quedan aparte.
 
 ---
 

@@ -1,17 +1,32 @@
-# Terceros pendientes — herramientas que NO se instalaron (y por qué)
+# Terceros — estado de instalación
 
-Durante la pasada autónoma `init-todo` NO se corrió ningún instalador de estos
-terceros. Regla del proyecto: **nunca correr un install script de terceros sin
-revisarlo, y si es dudoso o pide credenciales, no correrlo y documentarlo acá.**
+**Actualización:** por pedido del dueño, se instalaron (vendorizando su conocimiento al
+repo) los tres. Se revisó cada install script antes de tocar nada. Lo que quedó afuera a
+propósito son los **motores pesados y las keys de pago** (no van en el repo de la marca).
 
-Los tres casos comparten el mismo problema: **no existe una URL canónica única** —
-hay varios repos/forks con el mismo nombre y autores distintos, así que "cuál es el
-oficial" es una decisión tuya, no algo que Claude deba asumir solo.
+| Repo | Elegido | Qué se instaló en el repo | Qué falta (dueño) |
+|---|---|---|---|
+| claude-seo | `AgriciDaniel/claude-seo` (v2.2.4) | 25 skills → `skills/`, 18 agents → `.claude/agents/` | Nada para lo básico. Solo si querés APIs: keys de DataForSEO/Firecrawl/etc (🤝, de pago, opcional) |
+| Graphify | `safishamsi/graphify` | `skills/graphify/SKILL.md` | Motor: `pip install graphifyy` (💻, sin keys) — ver `skills/graphify/ENGINE.md` |
+| OpenMontage | `calesthio/OpenMontage` | skills (156 md) → `skills/openmontage/` | Motor 161 MB + keys de pago opcionales — ver `skills/openmontage/ENGINE-Y-KEYS.md` |
+
+Se revisaron los instaladores: `claude-seo/install.sh` (limpio, solo copia md/scripts a
+`~/.claude`), `graphify/install.py` (paquete Python, sin keys), `OpenMontage` (instalador +
+`make setup`, motor pesado → NO se metió al repo). No se corrió ningún script que pida
+credenciales ni que baje binarios al repo.
+
+---
+
+## Detalle original (por qué había que elegir)
+
+Los tres comparten un problema: **no existe una URL canónica única** — hay varios
+repos/forks con el mismo nombre y autores distintos. Se eligió el más representativo de
+cada uno (tabla de arriba). Si preferís otro fork, avisá y lo cambio.
 
 ---
 
 ## 1. claude-seo (SEO para Claude Code)
-- **Estado:** ❌ no instalado (dudoso + pide credenciales para lo bueno).
+- **Estado:** ✅ instalado (25 skills + 18 agents vendorizados al repo). Keys de APIs = opcionales/de pago.
 - **Qué encontré:** varios repos distintos con nombre parecido:
   - `AgriciDaniel/claude-seo` — el más completo (25 sub-skills, 18 sub-agents), pero
     las features fuertes usan **DataForSEO, Firecrawl y Google APIs** → requieren cuentas/keys.
@@ -25,7 +40,7 @@ oficial" es una decisión tuya, no algo que Claude deba asumir solo.
   hay que crear cuentas de DataForSEO/Firecrawl/Google (de pago).
 
 ## 2. Graphify (grafo de conocimiento del repo)
-- **Estado:** ❌ no instalado (provenance ambigua; sin credenciales, pero muchos forks).
+- **Estado:** ✅ instalado (skill vendorizado a `skills/graphify/`). Motor Python = `pip install graphifyy`, sin keys.
 - **Qué encontré:** varios forks con el mismo nombre: `safishamsi/graphify`,
   `Graphify-Labs/graphify`, `rhanka/graphify`, `sharkkyyy10/graphify-`, `collabsoft/ai_graphify`.
   Se instala como skill (`/graphify`) vía `npx skills add <repo>` o clon a `~/.claude/skills`.
@@ -37,7 +52,7 @@ oficial" es una decisión tuya, no algo que Claude deba asumir solo.
   install script y, si es seguro, lo instalo.
 
 ## 3. OpenMontage (sistema de producción de video)
-- **Estado:** ❌ no instalado (instalador binario no revisable + muy invasivo).
+- **Estado:** ✅ skills instaladas (`skills/openmontage/`, 156 md). Motor 161 MB + keys de pago = fuera del repo, a tu criterio.
 - **Qué encontré:** `Open-Montage/OpenMontage` y `calesthio/OpenMontage` (mismo proyecto,
   dos orígenes). Se instala con un **instalador binario** (`.exe` / `.run` / `.dmg`) + `make setup`.
   Funciona sin keys de pago (Piper TTS, FFmpeg, Remotion, Archive.org…), y tiene integraciones
