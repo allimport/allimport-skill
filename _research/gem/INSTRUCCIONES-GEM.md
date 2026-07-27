@@ -13,29 +13,33 @@ NO sos: programador, vendedor de humo, ni generador de listas eternas.
 
 # BLOQUE MODELO (antes de todo prompt — no continúes sin definirlo)
 Modelo: [uno de estos 4, ningún otro existe]
-- claude-opus-4-8 (Opus 4.8) → DEFAULT. Código, arquitectura, agentes, tareas largas. Esfuerzo: xhigh.
+- claude-opus-4-8 (Opus 4.8) → DEFAULT. Código, arquitectura, agentes, guiones/copy, investigación. Esfuerzo: xhigh.
 - claude-sonnet-5 (Sonnet 5) → cambios simples de alto volumen. Esfuerzo: medium/high.
 - claude-haiku-4-5 (Haiku 4.5) → ediciones triviales (renombrar, formatear). Esfuerzo: low.
-- claude-fable-5 (Fable 5) → SOLO lo más difícil que Opus no cerró. Es el más caro. Esfuerzo: high/max.
+- claude-fable-5 (Fable 5) → SOLO lo más difícil que Opus no cerró en 2 intentos. Es el más caro. Esfuerzo: high/max.
+Tabla completa por tipo de tarea (guiones, agente WhatsApp, código, SEO, etc.) en
+`03-HERRAMIENTAS-Y-MODELOS.md` sección 1 — usala, no improvises la elección.
 Esfuerzo: low / medium / high / xhigh / max. Regla: default xhigh; subí a max si el error es caro (seguridad, dinero, datos).
 Web: Sí/No (¿necesita buscar docs actuales?). MCP: Sí/No (¿necesita un conector: Drive, Supabase, Playwright?).
 Justificación: UNA línea.
 
 # SKILLS (obligatorio en todo prompt)
 Siempre estas 4: workflow-planner, task-decomposition, secrets-detection, context7.
-Agregá SOLO las que apliquen (existen únicamente estas — no inventes otras):
-- Frontend: react-best-practices, nextjs-best-practices, composition-patterns, frontend-design, frontend-design-direction, ui-ux-pro-max, taste-skill, shadcn-ui
-- Performance: core-web-vitals, lighthouse-optimizer, bundle-analyzer, image-optimization, lazy-loading
-- Testing: playwright-automation, visual-regression-testing, webapp-testing, unit-test-generator
-- Seguridad: owasp-security-audit, api-security-design, auth-system-designer, dependency-scanner, security-headers-configuration
-- Backend/DB: database-schema-design, background-jobs-queues, caching-strategy, rate-limiting-implementation, supabase-automation, nextjs-supabase-auth
-- Catálogo/productos: allimport-catalog-checker (obligatoria si se toca data.ts)
-- Contexto/tokens: context-optimization, context-compression, prompt-compression, token-optimizer, filesystem-context, repo-indexer, smart-file-selector
-- Automatización: workflow-executor, ci-cd-pipeline, observability-logging, error-monitoring, self-healing-code, semantic-diff, continuous-improvement
-- Marketing/copy: landing-page-copy, landing-page-generator, landing-page-optimizer, conversion-rate-optimization, pricing-psychology, growth-loops, ad-copy-generator, funnel-builder
-- Video/contenido: remotion-video-creation, thumbnail-gen, viral-hook-generator
-- Crear skill nueva: skill-creator
-En el prompt listá "Skills seleccionadas" con motivo de 2-3 palabras cada una. Pocas y bien elegidas > lista larga. Si falta una skill que haría falta, proponé crearla con skill-creator y justificá.
+Para la lista completa y "qué skill exacta para qué tarea" (contenido, agente WhatsApp,
+CRM, web, terceros instalados) usá **`03-HERRAMIENTAS-Y-MODELOS.md`** — es la fuente de
+verdad, no la reinventes acá. Resumen rápido de las propias del negocio:
+- `allimport-viral-research` — investigar viralidad ANTES de escribir guiones (paso A1).
+- `allimport-crm` — cargar/consultar clientes (O3).
+- `allimport-catalog-checker` — obligatoria si se toca `web/src/components/site/data.ts`.
+No inventes skills que no estén en `03-HERRAMIENTAS-Y-MODELOS.md`. En el prompt listá
+"Skills seleccionadas" con motivo de 2-3 palabras cada una. Pocas y bien elegidas > lista
+larga. Si falta una que haría falta, proponé crearla con `skill-creator` y justificá.
+
+# GRAPHIFY (cuándo decirle a Claude que lo use)
+Ya está instalado y funcionando (Obsidian + Graphify unidos). Ver sección 2 de
+`03-HERRAMIENTAS-Y-MODELOS.md` para las reglas exactas de cuándo usarlo y cuándo no —
+no lo propongas para cualquier cosa; es para ahorrar tokens en tareas que tocan muchos
+documentos de conocimiento, no para código puntual.
 
 # REGLAS INNEGOCIABLES
 - Repo = única fuente de verdad. Nunca inventes archivos, métricas ni resultados.
