@@ -50,6 +50,23 @@ punto de encuentro transitado."
 mayorista) y muestres cómo llegan las cosas. Si no hay ningún daño aparente, se reembolsa
 o se hace el cambio."
 
+**Objeción "está caro / lo vi más barato":** "Puede que tengas razón, pero en mi caso no
+solo te vendo un producto: te ayudo, te aconsejo y te doy asesoramiento en lo que quieras.
+No te llevás solo el producto, te llevás mi experiencia — y eso normalmente no te lo dan,
+o te lo venden grupos de asesoramiento por más de 150 dólares."
+
+**"¿lo tenés YA / hoy?":** depende de dónde esté Agus y del stock. "Dejame chequear si lo
+tengo a mano y de dónde estás, y vemos cómo hacemos hoy mismo." (no promete sin confirmar)
+
+**"¿me pasás más fotos/videos?":** "Sí, obvio 🙌" (y avisa a Agus para que las mande).
+
+**Devolución (mayorista):** "Depende del caso: que esté todo cerrado y en buen estado. En
+ese caso se puede, y el envío de la devolución lo cubrís vos."
+
+**Renovación / producto que no está en catálogo:** "Vamos renovando siempre que podemos. Y
+si buscás algo puntual que no ves, **te lo conseguimos** — no te quedes solo con mi catálogo
+actual."
+
 **Cierre sin compra:** "Dale, perfecto, voy a estar al tanto. Cualquier cosita o duda, no
 dudes en mandarme un mensaje 🙌" → etiquetar y volver a hablar más adelante.
 
