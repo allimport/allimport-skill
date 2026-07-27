@@ -1,31 +1,68 @@
-# PRÓXIMOS PASOS — en orden (qué hacemos primero)
+# PRÓXIMOS PASOS — lista definitiva, ordenada y COMPLETA
 
-Ordenado por impacto en los objetivos + dependencias. Hacer de arriba hacia abajo.
-🤖 lo hago solo · 📱 teléfono vos · 💻 compu vos · 🤝 cuenta/token vos.
+Todo lo pendiente, en orden de ataque, sin comprimir. Nada plegado. Cruza con
+`PLAN-DEFINITIVO.md` (#) y `LISTA-POR-OBJETIVOS.md`. 🤖 lo hago solo · 📱 teléfono vos ·
+💻 compu vos · 🤝 cuenta/token vos.
 
-## AHORA — arrancar el contenido (O1, mueve la aguja ya)
-1. 🤖 **3 guiones de reel** (ángulo emprendedor 18-28). — sin esperar nada.
-2. 📱 **Ajustar perfil `@_agus_moreno_`** (bio, foto, link WhatsApp).
-3. 📱 **Grabar los 3 reels** + editar en CapCut → 🤖 te hago subtítulos + contadores.
-4. 🤖 **1 semana de historias** (ejemplos listos) + 🤖 **1 carrusel de marca**.
-5. 📱 **Sacar fotos de producto** → 🤖 las edito a historias → 📱 subís.
-6. 🤖 **Investigar viralidad** del nicho → ajusto los próximos guiones.
+## FASE A — Contenido (O1, foco, mueve la aguja YA)
+1. 🤖 **3 guiones de reel** (emprendedor 18-28). *(#4/#8)*
+2. 📱 **Perfil `@_agus_moreno_`**: bio, foto, link WhatsApp. *(#1)*
+3. 📱 **Bloque fijo diario** (horario no negociable). *(#2)*
+4. 📱 **Grabar los 3 reels** + CapCut → 🤖 subtítulos + contadores. *(#5)*
+5. 🤖 **1 semana de historias** (ejemplos) + 📱 subís. *(#6)*
+6. 🤖 **Carrusel de marca** (DESIGN) → 📱 subís. *(#8)*
+7. 📱 **Fotos de producto** → 🤖 edito a historias → 📱 subís. *(#7)*
+8. 🤖 **Investigar viralidad** del nicho → ajusto guiones. *(#16)*
+9. 🤖 **Clips de producto (Remotion)** cuando haga falta. *(#9)*
+10. 🤝 **Video IA hiperrealista** (opcional, ojo "fake"). *(#10/#37)*
 
-## EN PARALELO — preparar el agente (O2)
-7. 📱 **Pasarme precios + combos** de reventa → 🤖 armo la tabla + el system prompt completo.
-8. 📱 **Más mensajes reales tuyos** → 🤖 completo `VOZ-AGUS.md` (que suene 100% a vos).
-9. 💻 **Levantar n8n + WAHA** en Docker (te doy los pasos) + 🤝 API key Anthropic + 📱 vincular WhatsApp (QR).
-10. 🤖 **Armar el workflow** (responde 12-19 + etiqueta + handoff a vos + memoria) → probamos con vos antes de abrirlo.
+## FASE B — Agente WhatsApp (O2, en paralelo con lo que me pases)
+11. 📱 **Precios + combos** → 🤖 tabla + system prompt completo. *(#14)*
+12. 📱 **Más mensajes reales** → 🤖 completo `VOZ-AGUS.md`. *(#14)*
+13. 💻 **Docker n8n + WAHA** (te doy pasos) + 🤝 API key Anthropic + 📱 QR WhatsApp. *(#14)*
+14. 🤖 **Armar workflow** (responde 12-19 + etiqueta + handoff + memoria) → probamos con vos. *(#14)*
+15. 🤝 **Captación de leads legal** (opt-in, follow-up a quien entra) — depende de #14. *(#15)*
 
-## DESPUÉS — memoria/CRM (O3, sale del agente)
-11. El agente **carga cada cliente** en la planilla (etiqueta + notas).
-12. 🤖 **Reportes semanales**: potenciales para seguir, compras del mes.
+## FASE C — CRM / memoria (O3, sale del agente)
+16. El agente **carga cada cliente** en la planilla (etiqueta + notas). *(#12)*
+17. 📱 **Etiquetar y seguir** por WhatsApp (compró/potencial/curioso). *(#11)*
+18. 🤖 **Reportes**: potenciales para seguir, compras del mes.
+19. 💻 **Correr analizador de proveedores** del mes (precios). *(#13-analizador)*
 
-## CUANDO HAYA AIRE — infra/soporte
-13. 💻 Obsidian → `docs/` · 🤝 conectores (GitHub/Vercel/etc.) · web (terminar → 🤝 Vercel → SEO 🤖).
-14. 🤝 Seguridad (recién cuando exista backend).
+## FASE D — Investigación y rutinas
+20. 🤖 **Marco de viralidad/competencia** → 📱 vos me pasás qué ves. *(#16)*
+21. 💻 **Rutinas: métricas IG + plan nocturno autónomo** (con guardrails). *(#17)*
+
+## FASE E — Tooling / infra
+22. 🤖 **Ahorro de tokens** (nativo). *(#20)*
+23. 💻 **Obsidian → `docs/`**. *(#22)*
+24. 🤝 **Conectores** (GitHub/Figma/Supabase/Vercel). *(#23)*
+25. 🤖 **Verificar comandos Revolutia**. *(#24/#36)*
+26. 🙋 **Proyectos en Claude** (marketing, etc.). *(#25)*
+27. 🙋 **Plan 7 días Cowork**. *(#26)*
+28. 🙋 **7 prompts productividad** (guardados, baja). *(#27)*
+
+## FASE F — Seguridad (recién con backend)
+29. 🤝 **5 cosas anti-hackeo** (RLS/CORS/env/rate-limit/sanitizar). *(#28)*
+30. 🤝 **Proteger Claude** (3 prompts). *(#29)*
+
+## FASE G — Web (última prioridad)
+31. 🤖 **Terminar la web**. *(#30)*
+32. 🤖 **Web cinemática GSAP**. *(#31)*
+33. 🤝 **Deploy Vercel**. *(#32)*
+34. 🤖 **SEO web** (claude-seo ya instalado). *(#33)*
+35. 🤝 **Google Stitch** (diseño→código). *(#34)*
+
+## OPCIONALES / con cuidado
+36. 🤝 **Claude + Meta** ⚠️ no anunciar réplicas/vapers (ban). *(#35)*
+37. 🤖 **Seedance / video IA** (ojo "fake"; ya tenés Remotion/Higgsfield). *(#37)*
+38. 🙋 **Chat/Cowork/Code** — referencia de cuál usar. *(#38)*
+
+## PENDIENTES SUELTOS (no del plan, salieron ahora)
+- 📱 **Arrastrar los 14 videos** del Drive a sus carpetas (V01-V12 creadas).
+- 📱 **Identificar los 2 videos** sin clasificar del Drive.
 
 ---
-**Regla:** 1-6 es el foco (redes). 7-10 se adelanta con lo que vos me pases. Nada se traba:
-si freno, es porque falta algo de la lista de bloqueos (`LISTA-POR-OBJETIVOS.md`).
-**Siguiente acción concreta:** paso 1 → genero los 3 guiones ahora.
+**Foco real:** FASE A (1-9) primero. FASE B se adelanta con lo que me pases. Todo lo demás
+existe y está en orden — nada descartado, nada escondido.
+**Siguiente acción:** paso 1 → genero los 3 guiones.
