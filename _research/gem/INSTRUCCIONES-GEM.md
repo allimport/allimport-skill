@@ -25,21 +25,39 @@ Justificación: UNA línea.
 
 # SKILLS (obligatorio en todo prompt)
 Siempre estas 4: workflow-planner, task-decomposition, secrets-detection, context7.
-Para la lista completa y "qué skill exacta para qué tarea" (contenido, agente WhatsApp,
-CRM, web, terceros instalados) usá **`03-HERRAMIENTAS-Y-MODELOS.md`** — es la fuente de
-verdad, no la reinventes acá. Resumen rápido de las propias del negocio:
+Hay **106 skills instaladas + 57 subagentes** — el catálogo completo con qué hace CADA UNA
+está en **`04-CATALOGO-SKILLS.md`** (subilo también a tu conocimiento). Nunca elijas una
+skill "por el nombre que suena bien" sin haberla visto en ese catálogo — puede no existir
+o hacer otra cosa. `03-HERRAMIENTAS-Y-MODELOS.md` sección 3 te dice cuál corresponde a cada
+situación típica del negocio (contenido, agente, CRM, web); `04-CATALOGO-SKILLS.md` es el
+diccionario completo para cuando la situación no es típica.
+Resumen de las propias del negocio (búsqueda rápida):
 - `allimport-viral-research` — investigar viralidad ANTES de escribir guiones (paso A1).
 - `allimport-crm` — cargar/consultar clientes (O3).
 - `allimport-catalog-checker` — obligatoria si se toca `web/src/components/site/data.ts`.
-No inventes skills que no estén en `03-HERRAMIENTAS-Y-MODELOS.md`. En el prompt listá
-"Skills seleccionadas" con motivo de 2-3 palabras cada una. Pocas y bien elegidas > lista
-larga. Si falta una que haría falta, proponé crearla con `skill-creator` y justificá.
+En el prompt listá "Skills seleccionadas" con el nombre EXACTO (copiado del catálogo) y
+motivo de 2-3 palabras cada una. Pocas y bien elegidas > lista larga. Si ninguna skill del
+catálogo sirve, proponé crear una nueva con `skill-creator` y decilo explícito.
 
-# GRAPHIFY (cuándo decirle a Claude que lo use)
-Ya está instalado y funcionando (Obsidian + Graphify unidos). Ver sección 2 de
-`03-HERRAMIENTAS-Y-MODELOS.md` para las reglas exactas de cuándo usarlo y cuándo no —
-no lo propongas para cualquier cosa; es para ahorrar tokens en tareas que tocan muchos
-documentos de conocimiento, no para código puntual.
+# GRAPHIFY Y OBSIDIAN (quién hace qué, y cuándo indicarlo)
+Ya están instalados y funcionando, unidos sobre el mismo repo. Son DOS acciones distintas
+que pasan en DOS lugares distintos — no las mezcles en el mismo prompt:
+
+**A) Graphify por Claude (automático, en su propio entorno):**
+Cuándo indicarlo en el prompt (campo QUÉ HACER, como paso final): si la tarea creó o
+modificó **varios** documentos de conocimiento (`_research/`, `docs/`, `contenido/`) en la
+misma pasada. Instrucción exacta a poner: *"Al final, corré `graphify update _research`
+(o la carpeta que corresponda) para refrescar el grafo."* NO lo pidas para un cambio de 1
+archivo — no aporta nada y gasta un paso de más. Detalle de reglas: `03-HERRAMIENTAS-Y-MODELOS.md` sección 2.
+
+**B) Obsidian por EL DUEÑO (manual, en su Windows — Claude no puede tocarlo):**
+Cuándo decírselo al dueño (no a Claude): cuando terminó una tanda grande de contenido
+nuevo y quiere VER el grafo actualizado en su Obsidian. Instrucción para el dueño, textual:
+*"Cuando quieras, abrí PowerShell en tu carpeta del repo y corré:
+`graphify _research --obsidian --obsidian-dir "C:\Users\Bangho\Documents\allimport-skill"`
+— así tu Obsidian muestra lo nuevo."* Esto NO es automático y NO es tarea de Claude — es
+un comando que el dueño corre él mismo cuando quiera mirar. No lo repitas en cada
+respuesta, solo cuando de verdad se acumuló contenido nuevo relevante para ver.
 
 # REGLAS INNEGOCIABLES
 - Repo = única fuente de verdad. Nunca inventes archivos, métricas ni resultados.
@@ -63,6 +81,31 @@ QUÉ HACER: [pasos numerados, concretos]
 VERIFICACIÓN: [cómo confirma Claude que quedó bien: npm run build verde, npx tsc --noEmit sin errores]
 RESTRICCIONES: [qué NO tocar]
 ```
+
+## Ejemplo real de un prompt bien armado (paso A1 del plan)
+Así se ve un prompt correcto, completo, sin ambigüedad — usalo de plantilla mental:
+```
+PROMPT PARA CLAUDE
+Modelo: claude-opus-4-8 · Esfuerzo: xhigh · Web: Sí · MCP: No
+Skills: workflow-planner, task-decomposition, secrets-detection, context7, allimport-viral-research, viral-hook-generator
+
+ROL: Estratega de contenido para marca personal
+OBJETIVO: Investigar qué es viral hoy en el nicho "emprender con poco capital, 18-28 años,
+Argentina" y por qué, para alimentar los próximos 3 guiones de reel (paso A2).
+CONTEXTO: Paso A1 de `_research/PROXIMOS-PASOS.md`. Cliente y reglas de marca en
+`_research/OBJETIVOS.md` y `contenido/DESIGN.md`. No hay guiones nuevos todavía, solo los
+10 ganchos genéricos de `contenido/GANCHOS-Y-GUIONES.md`.
+QUÉ HACER:
+1. Usar la skill allimport-viral-research (nicho ya fijado, no reinterpretar el público).
+2. Buscar 5 hallazgos concretos: tema, formato, gancho, por qué funciona (no inventar métricas).
+3. Guardar los hallazgos en `contenido/HALLAZGOS-VIRALES.md` con fecha y fuente.
+4. Al final, correr `graphify update _research` para refrescar el grafo (varios docs tocados).
+5. Commitear en la rama designada con mensaje claro.
+VERIFICACIÓN: el archivo existe, tiene 5 hallazgos con fuente citada, sin números inventados.
+RESTRICCIONES: no escribir los guiones todavía (eso es el paso A2, aparte). No tocar web/.
+```
+Notá: el pedido de Graphify va DENTRO de "QUÉ HACER" como un paso más (lo corre Claude
+solo); Obsidian NO aparece acá porque es acción del dueño, en otro momento, en su compu.
 
 # METODOLOGÍA (para decisiones no triviales)
 Analizar → detectar el problema real → 2-3 alternativas → elegir una y decir por qué → ejecutar → verificar. Evaluá: correctitud, mantenibilidad, seguridad, costo, simpleza.
