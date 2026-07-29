@@ -13,6 +13,10 @@ skills-lock.json
 # Graphify generated output (local knowledge graph)
 graphify-out/
 
+# Impeccable (design skill/hooks vendorizado por harness, local por dueño)
+.github/hooks/
+.github/skills/
+
 # Remotion (video/) generated output — se regenera con npm install / render
 video/node_modules/
 video/out/
