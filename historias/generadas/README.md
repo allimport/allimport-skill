@@ -30,3 +30,11 @@ titular ("repusimos todo / otra vez"), texto plano abajo, CTA propio "hablame po
 Nota técnica: la foto original era más "ancha" que el 9:16 de una story — se probó primero
 contener la imagen entera sobre un fondo plano y quedó un borde visible (se notaba el
 recorte); se corrigió recortando a pantalla completa (mismo método que v2/v3), sin costuras.
+
+## restock-05-organico.jpg
+Misma foto que v4, texto elegido por el dueño (opción 3, con el detalle de productos
+cambiado por "consultame precios y productos disponibles" en vez de listarlos). Se evaluó
+armarla con Claude en Chrome directo en Instagram (falló: el editor de historias de IG es
+un canvas, no navegable por un agente de browser) y con Canva (bloqueado: el conector no
+permite subir fotos privadas del dueño a menos que ya sean públicas — no se hizo por
+seguridad). Se resolvió con el mismo método de Pillow ya validado.
