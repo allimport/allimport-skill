@@ -7,8 +7,15 @@ propósito son los **motores pesados y las keys de pago** (no van en el repo de 
 | Repo | Elegido | Qué se instaló en el repo | Qué falta (dueño) |
 |---|---|---|---|
 | claude-seo | `AgriciDaniel/claude-seo` (v2.2.4) | 25 skills → `skills/`, 18 agents → `.claude/agents/` | Nada para lo básico. Solo si querés APIs: keys de DataForSEO/Firecrawl/etc (🤝, de pago, opcional) |
-| Graphify | `safishamsi/graphify` | `skills/graphify/SKILL.md` | Motor: `pip install graphifyy` (💻, sin keys) — ver `skills/graphify/ENGINE.md` |
-| OpenMontage | `calesthio/OpenMontage` | skills (156 md) → `skills/openmontage/` | Motor 161 MB + keys de pago opcionales — ver `skills/openmontage/ENGINE-Y-KEYS.md` |
+| Graphify | `safishamsi/graphify` | `skills/graphify/SKILL.md` + **motor instalado y skill registrado** (2026-07-29) | Nada — completo |
+| OpenMontage | `calesthio/OpenMontage` | skills (156 md) → `skills/openmontage/` | Motor 161 MB revisado (seguro) pero a propósito NO instalado acá — ver sección 3, es para tu compu (💻) |
+| agent-browser / UI UX Pro Max / Playwright / skillui | ver sección 4 | Los 4 instalados y funcionando en este entorno | Nada |
+| Impeccable | `pbakaus/impeccable` | — | Bloqueado por política de red de esta sesión (⛔, no por vos) — correr en tu PC (💻) |
+
+**Ya no queda nada pendiente por decisión mía o falta de revisión.** Lo único que sigue
+sin hacer son las **2 cosas que solo vos podés resolver**: cuentas/keys de pago
+(claude-seo completo, OpenMontage con IA en la nube) y correr en tu compu lo que esta
+sesión no puede por su política de red (Impeccable, motor de OpenMontage si lo querés).
 
 Se revisaron los instaladores: `claude-seo/install.sh` (limpio, solo copia md/scripts a
 `~/.claude`), `graphify/install.py` (paquete Python, sin keys), `OpenMontage` (instalador +
@@ -40,30 +47,37 @@ cada uno (tabla de arriba). Si preferís otro fork, avisá y lo cambio.
   hay que crear cuentas de DataForSEO/Firecrawl/Google (de pago).
 
 ## 2. Graphify (grafo de conocimiento del repo)
-- **Estado:** ✅ instalado (skill vendorizado a `skills/graphify/`). Motor Python = `pip install graphifyy`, sin keys.
-- **Qué encontré:** varios forks con el mismo nombre: `safishamsi/graphify`,
-  `Graphify-Labs/graphify`, `rhanka/graphify`, `sharkkyyy10/graphify-`, `collabsoft/ai_graphify`.
-  Se instala como skill (`/graphify`) vía `npx skills add <repo>` o clon a `~/.claude/skills`.
-  No pide keys de pago; parsea el repo local a un grafo consultable.
-- **Por qué se difirió:** demasiados forks equivalentes → hay que elegir cuál confiar antes
-  de correr su instalador. Es **FASE 4** (soporte), no bloquea el foco de redes.
-  Nota: el repo ya reserva `graphify-out/` en `.gitignore` para su salida.
-- **Qué necesita del dueño (🤝/💻):** decidir el fork oficial. Cuando lo elijas, reviso su
-  install script y, si es seguro, lo instalo.
+- **Estado:** ✅ instalado del todo (2026-07-29): skill vendorizado a `skills/graphify/` +
+  **motor Python instalado y probado** (`uv tool install graphifyy`, sin keys) + skill
+  **registrado formalmente** con `graphify install --project` (agrega hooks + sección en
+  `CLAUDE.md`). El grafo (`graphify-out/`, gitignorado) ya existe y está poblado.
+- **Corrección de portabilidad:** el registro automático dejó los hooks de
+  `.claude/settings.json` con la ruta absoluta de Linux `/root/.local/bin/graphify` —
+  se hubiera roto en tu PC Windows. Se cambió a `graphify` a secas (usa el PATH), así
+  funciona en cualquier máquina donde el motor esté instalado.
+- **Qué hacen los hooks:** antes de cada `Bash`/`Grep`/`Read`/`Glob`, Claude Code corre
+  `graphify hook-guard` y te sugiere `graphify query "..."` en vez de grep crudo cuando
+  hay grafo disponible — más preciso y gasta menos contexto.
+- **Qué necesita del dueño:** nada para lo básico. Ya está andando en este entorno; en tu
+  PC solo hace falta tener `graphify` instalado (ya lo tenés, de la sesión de Obsidian).
 
 ## 3. OpenMontage (sistema de producción de video)
-- **Estado:** ✅ skills instaladas (`skills/openmontage/`, 156 md). Motor 161 MB + keys de pago = fuera del repo, a tu criterio.
+- **Estado:** ✅ skills instaladas (`skills/openmontage/`, 156 md). Motor 161 MB = revisado
+  pero **no instalado acá a propósito** (no es un bloqueo, es la decisión correcta).
 - **Qué encontré:** `Open-Montage/OpenMontage` y `calesthio/OpenMontage` (mismo proyecto,
-  dos orígenes). Se instala con un **instalador binario** (`.exe` / `.run` / `.dmg`) + `make setup`.
-  Funciona sin keys de pago (Piper TTS, FFmpeg, Remotion, Archive.org…), y tiene integraciones
-  **opcionales** de pago (Kling, Runway, Veo, ElevenLabs, Suno…).
-- **Por qué se difirió:** el método de install es un **binario descargado** que no se puede
-  revisar como un script, y agrega 500+ archivos de skills (muy invasivo). Corre contra la
-  regla de "revisar antes de correr". Es **FASE 4/marketing**.
+  dos orígenes). Se instala con `git clone` + `make setup`.
+- **Revisión del Makefile (2026-07-29):** lo leí entero. El target `setup` corre
+  `pip install -r requirements.txt`, `npm install` (Remotion), `pip install piper-tts`,
+  cachea `hyperframes` por npx, y copia `.env.example` → `.env`. **Sin sudo, sin
+  credenciales obligatorias, no escribe fuera de su propia carpeta.** Es seguro.
+- **Por qué NO lo instalé igual acá:** aunque es seguro, esta sesión en la nube es
+  **efímera** (se borra sola) y el motor **nunca se iba a commitear al repo** (161 MB de
+  GPU/ffmpeg/node, decisión de arquitectura, no de seguridad). Instalarlo acá sería
+  trabajo perdido apenas se cierre la sesión — cero beneficio para vos.
 - **Alternativa que YA tenés:** para clips de producto ya está **Remotion** en [`video/`](../video/)
   (más simple y bajo tu control). Higgsfield está disponible por MCP para video IA puntual.
-- **Qué necesita del dueño (🤝/💻):** decidir si querés algo tan grande. Si sí, se instala en
-  una máquina tuya (no en este entorno) revisando el instalador oficial.
+- **Qué necesita del dueño (💻):** si en algún momento querés el motor completo, se instala
+  en tu compu real (con Remote Control) donde persiste: `git clone https://github.com/calesthio/OpenMontage && cd OpenMontage && make setup`.
 
 ---
 
@@ -73,7 +87,7 @@ cada uno (tabla de arriba). Si preferís otro fork, avisá y lo cambio.
 | **agent-browser** (Vercel Labs) | ✅ CLI real instalado ahora (corrección: antes solo estaba el stub del skill, no la herramienta) | Lo que ya había (`skills/agent-browser/SKILL.md`) era solo la documentación/skill, no el binario. Se instaló el paquete real: `npm install -g agent-browser` (v0.27.0) + `agent-browser install`. La descarga de Chrome propio falló (dominio `googlechromelabs.github.io` bloqueado por la política de red de esta sesión, mismo motivo que Impeccable), así que se lo apuntó al Chromium ya cacheado del entorno (`AGENT_BROWSER_EXECUTABLE_PATH=/opt/pw-browsers/chromium`) — con eso el binario levanta y ejecuta comandos bien. La navegación real a sitios externos (`agent-browser open <url>`) falla en esta sesión por el mismo proxy restrictivo (`ERR_TUNNEL_CONNECTION_FAILED` / `ERR_PROXY_CONNECTION_FAILED`), no por la instalación. Va a andar completo en tu compu real (sin ese proxy restrictivo) — ahí conviene instalarlo igual (`npm install -g agent-browser && agent-browser install`, sin el paso extra del executable-path). |
 | **UI UX Pro Max** | ✅ ya estaba instalada | `skills/ui-ux-pro-max/SKILL.md` v2.6.2 — sistema de diseño (84 estilos, 161 paletas, 73 combos de tipografía) según el tipo de producto. |
 | **Playwright** | ✅ instalado | Ya estaba disponible global en el entorno (browsers cacheados). Se agregó `@playwright/test` como devDependency de `web/` (`npm install -D @playwright/test`) para poder correr QA visual local/CI de la landing. `npm run build` sigue verde. Ya había 3 skills que lo cubren: `playwright-automation`, `browser-automation`, `webapp-testing`.
-| **skillui** (`amaancoderx/skillui`) | ✅ CLI verificado, no instalado un target todavía | Extrae el sistema de diseño (colores, tipografía, animaciones) de cualquier sitio a `DESIGN.md` + `.skill`. 100% análisis estático + Playwright, **sin IA, sin API keys**. Se corre puntual: `npx skillui --url <sitio-que-te-guste> --mode ultra`. No corrí ningún sitio porque elegir la referencia de diseño es una decisión tuya — decime qué sitio te gusta y lo corro. |
+| **skillui** (`amaancoderx/skillui`) | ✅ instalado y corrido | Extrae el sistema de diseño (colores, tipografía, animaciones) de cualquier sitio/proyecto a `DESIGN.md` + `.skill`. 100% análisis estático + Playwright, **sin IA, sin API keys**. Lo corrí sobre `web/` (la propia landing, no un sitio externo — copiar el look de otra marca es decisión tuya, así que no elegí ninguna). Resultado vendorizado en `skills/allimport-web-design/` (skill + `references/DESIGN.md`: 7 colores, tipografía Montserrat Alternates, grid de 4px, 15 patrones de componente — todo extraído del código real). Si más adelante querés clonar el estilo de OTRO sitio, decime cuál y corro `npx skillui --url <sitio> --mode ultra`. |
 | **Impeccable** (`pbakaus/impeccable`, 44k+ estrellas) | ⛔ bloqueado en esta sesión (no es error mío, es política de red) | Vocabulario de diseño para Claude (23 comandos: `polish`, `audit`, `critique`, etc.), sin keys ni credenciales. Al correr `npx impeccable install` esta sesión en la nube devuelve `403` porque el dominio desde donde descarga las skills (`impeccable.style`) **no está en la lista de dominios permitidos de esta sesión** — no es algo que deba/pueda evitar, es una política de la organización. **Se soluciona corriéndolo en tu compu real** (con Remote Control, que ya tenés andando): abrí PowerShell en la carpeta del repo y pedile a Claude *"corré `npx impeccable install --providers=claude --scope=project` acá"*. |
 
 ## Cómo retomar cualquiera de estos
