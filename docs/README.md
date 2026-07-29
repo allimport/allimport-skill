@@ -48,6 +48,8 @@ Además de los docs numerados, el conocimiento operativo vive en estas carpetas:
 | [ESTADO-INICIAL.md](ESTADO-INICIAL.md) | Reporte de la pasada `init-todo` + hoja de ruta |
 | [MAPA-CONOCIMIENTO.md](MAPA-CONOCIMIENTO.md) | 🧠 Hub del segundo cerebro: enlaza todo con `[[wikilinks]]` (Obsidian + Graphify) |
 | [OBSIDIAN-GRAPHIFY.md](OBSIDIAN-GRAPHIFY.md) | Cómo unir Obsidian + Graphify sobre esta base |
+| [FLUJOS-DE-TRABAJO.md](FLUJOS-DE-TRABAJO.md) | Cómo separar las sesiones de Claude en 3 módulos (contenido, visual, agente+CRM) |
+| [REMOTE-CONTROL.md](REMOTE-CONTROL.md) | Claude Code corriendo en la compu real (Remote Control) |
 
 ## Cómo usar Obsidian con esto (#07)
 Instalá Obsidian → "Abrir una carpeta como bóveda" → elegí **esta carpeta `docs/`**.

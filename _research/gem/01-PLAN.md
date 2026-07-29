@@ -87,6 +87,8 @@ zona/etiqueta/notas`, skill `allimport-crm`.
 | E5 | Proyectos en Claude (marketing, etc.) | ⬜ | 🙋 |
 | E6 | Plan 7 días para dominar Cowork | ⬜ | 🙋 |
 | E7 | 7 prompts de productividad | ✅ guardados (baja prioridad) | — |
+| E8 | Remote Control (Claude en la compu real) | ✅ instalado y probado | — |
+| E9 | Flujos de trabajo separados por módulo (3 chats: contenido/visual/agente+CRM) | ✅ `docs/FLUJOS-DE-TRABAJO.md` | — |
 
 **E2 detalle (recién completado):** Obsidian instalado apuntando a la raíz del repo +
 Graphify (`graphifyy` vía pipx) instalado, indexando `_research/` con extracción semántica

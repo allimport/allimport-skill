@@ -37,6 +37,8 @@ sin sync. Abrí este archivo primero.
 
 ## 🧩 Infra
 - [[OBSIDIAN-GRAPHIFY]] — cómo unir Obsidian + Graphify (esta base).
+- [[FLUJOS-DE-TRABAJO]] — separación en 3 módulos por sesión.
+- [[REMOTE-CONTROL]] — Claude Code corriendo en la compu real.
 - [[ESTADO-INICIAL]] — reporte de instalación.
 - [[TERCEROS-PENDIENTES]] — repos de terceros + qué necesitan.
 - [[README]] (docs) — índice del núcleo documental.
