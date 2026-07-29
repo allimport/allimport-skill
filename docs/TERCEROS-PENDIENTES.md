@@ -9,13 +9,13 @@ propósito son los **motores pesados y las keys de pago** (no van en el repo de 
 | claude-seo | `AgriciDaniel/claude-seo` (v2.2.4) | 25 skills → `skills/`, 18 agents → `.claude/agents/` | Nada para lo básico. Solo si querés APIs: keys de DataForSEO/Firecrawl/etc (🤝, de pago, opcional) |
 | Graphify | `safishamsi/graphify` | `skills/graphify/SKILL.md` + **motor instalado y skill registrado** (2026-07-29) | Nada — completo |
 | OpenMontage | `calesthio/OpenMontage` | skills (156 md) → `skills/openmontage/` | Motor 161 MB revisado (seguro) pero a propósito NO instalado acá — ver sección 3, es para tu compu (💻) |
-| agent-browser / UI UX Pro Max / Playwright / skillui | ver sección 4 | Los 4 instalados y funcionando en este entorno | Nada |
-| Impeccable | `pbakaus/impeccable` | — | Bloqueado por política de red de esta sesión (⛔, no por vos) — correr en tu PC (💻) |
+| agent-browser / UI UX Pro Max / Playwright / skillui | ver sección 4 | Los 5 instalados y funcionando (4 en la nube + agent-browser también verificado en tu PC) | Nada |
+| Impeccable | `pbakaus/impeccable` | ver sección 4 | ✅ instalado y verificado en tu PC (2026-07-29) — nada pendiente |
 
-**Ya no queda nada pendiente por decisión mía o falta de revisión.** Lo único que sigue
-sin hacer son las **2 cosas que solo vos podés resolver**: cuentas/keys de pago
-(claude-seo completo, OpenMontage con IA en la nube) y correr en tu compu lo que esta
-sesión no puede por su política de red (Impeccable, motor de OpenMontage si lo querés).
+**Ya no queda nada pendiente por decisión mía, falta de revisión, ni bloqueo técnico.**
+Lo único que sigue sin hacer son las **cuentas/keys de pago**, que solo vos podés crear:
+claude-seo completo (DataForSEO/Firecrawl/Google) y OpenMontage con IA en la nube
+(Kling/Runway/Veo/ElevenLabs/Suno) — ambas opcionales, no bloquean nada del plan actual.
 
 Se revisaron los instaladores: `claude-seo/install.sh` (limpio, solo copia md/scripts a
 `~/.claude`), `graphify/install.py` (paquete Python, sin keys), `OpenMontage` (instalador +
