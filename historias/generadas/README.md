@@ -8,3 +8,8 @@ Foto real de stock (parlantes JBL, ELFBAR, cajas Apple) con fondo navy casi opac
 apenas visible, pedido explícito) + mensaje de reposición + CTA de reventa/inversión.
 Basada en hallazgo de investigación: minimalismo + foto real + coherencia visual genera
 confianza (ver `contenido/HALLAZGOS-VIRALES.md`). Lista para subir a historias de Instagram.
+
+## restock-02-organico.jpg
+Versión sin marca (sin logo, sin marco, sin caja de botón), texto alineado a la
+izquierda como si lo hubiera escrito la persona directo en Instagram. CTA cambiado a
+"hablame por acá" (no WhatsApp — es para publicar como el dueño, desde su cuenta personal).
