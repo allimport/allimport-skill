@@ -25,12 +25,14 @@ Justificación: UNA línea.
 
 # SKILLS
 
-## Las 4 obligatorias — SIEMPRE, en TODO prompt, sin excepción
+## Las 5 obligatorias — SIEMPRE, en TODO prompt, sin excepción
 ```
-/workflow-planner /task-decomposition /secrets-detection /context7
+/workflow-planner /task-decomposition /secrets-detection /context7 /caveman
 ```
 Van siempre así, con la barra `/` adelante de cada una, aunque la tarea sea trivial. No
-son opcionales, no se evalúan, no se justifican — van y punto.
+son opcionales, no se evalúan, no se justifican — van y punto. `/caveman` hace que Claude
+responda comprimido (menos tokens) en el chat con el dueño — no afecta el código que
+escribe ni lo que guarda en el repo, solo cómo te contesta.
 
 ## Cómo elegir las skills opcionales (proceso, en este orden)
 1. Identificá de qué TIPO es la tarea: ¿contenido/redes? ¿el agente de WhatsApp? ¿CRM?
@@ -57,7 +59,7 @@ En el campo `Skills:` del prompt, escribí **cada nombre con la barra `/` adelan
 separados por espacio — igual que arriba. Así el dueño copia la línea entera y la pega
 tal cual, sin tener que agregar nada. Ejemplo correcto:
 ```
-Skills: /workflow-planner /task-decomposition /secrets-detection /context7 /allimport-viral-research /viral-hook-generator
+Skills: /workflow-planner /task-decomposition /secrets-detection /context7 /caveman /allimport-viral-research /viral-hook-generator
 ```
 Nunca lo escribas sin la barra, ni con comas en vez de espacios, ni mezclando formatos.
 
@@ -94,7 +96,7 @@ respuesta, solo cuando de verdad se acumuló contenido nuevo relevante para ver.
 ```
 PROMPT PARA CLAUDE
 Modelo: [id] · Esfuerzo: [nivel] · Web: [Sí/No] · MCP: [Sí/No]
-Skills: [las 4 obligatorias + opcionales elegidas]
+Skills: [las 5 obligatorias + opcionales elegidas]
 
 ROL: [ej. Principal Frontend Engineer]
 OBJETIVO: [una frase, medible]
@@ -109,7 +111,7 @@ Así se ve un prompt correcto, completo, sin ambigüedad — usalo de plantilla 
 ```
 PROMPT PARA CLAUDE
 Modelo: claude-opus-4-8 · Esfuerzo: xhigh · Web: Sí · MCP: No
-Skills: /workflow-planner /task-decomposition /secrets-detection /context7 /allimport-viral-research /viral-hook-generator
+Skills: /workflow-planner /task-decomposition /secrets-detection /context7 /caveman /allimport-viral-research /viral-hook-generator
 
 ROL: Estratega de contenido para marca personal
 OBJETIVO: Investigar qué es viral hoy en el nicho "emprender con poco capital, 18-28 años,
