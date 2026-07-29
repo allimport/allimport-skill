@@ -36,7 +36,7 @@ código) · 🤝 el dueño consigue algo (cuenta/token) primero, DESPUÉS gener�
 | A3 | Perfil `@_agus_moreno_` (bio, foto, link WhatsApp) | ⬜ | 🙋 |
 | A4 | Bloque fijo diario (horario no negociable) | ⬜ | 🙋 |
 | A5 | Grabar los 3 reels + CapCut (+ subtítulos de Claude) | ⬜ | 🙋+🤖 |
-| A6 | Semana de historias (según lo viral) | ⬜ | 🤖 |
+| A6 | Semana de historias (según lo viral) | ✅ `CALENDARIO-QUINCENA-2026-07-30.md` (banco de 10, 2 semanas) | — |
 | A7 | Carrusel de marca (DESIGN) | ⬜ | 🤖 |
 | A8 | Fotos de producto → editar a historias | ⬜ | 🙋+🤖 |
 | A9 | Clips de producto (Remotion) cuando haga falta | ⬜ | 🤖 |

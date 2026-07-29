@@ -57,3 +57,8 @@ DOM  historias (4-10)  (planificar la semana)
 - Constancia > perfección. Mejor un reel simple hoy que uno perfecto nunca.
 - Nada de métricas inventadas. Medir es mirar qué guardó/compartió la gente, no inventar.
 - Todo el contenido respeta el tono y branding de [DESIGN.md](DESIGN.md).
+
+## Instancia concreta vigente
+[CALENDARIO-QUINCENA-2026-07-30.md](CALENDARIO-QUINCENA-2026-07-30.md) — fechas reales
+30/07 al 12/08/2026, con el banco de 10 historias y los 3 reels ya escritos asignados a
+día. PDF completo (hallazgos + banco + calendario + guiones): [pdf/Plan-Contenido-AllImport.pdf](pdf/Plan-Contenido-AllImport.pdf).
