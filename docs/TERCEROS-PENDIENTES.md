@@ -67,6 +67,15 @@ cada uno (tabla de arriba). Si preferís otro fork, avisá y lo cambio.
 
 ---
 
+## 4. Herramientas de diseño/UI (pedido 2026-07-29, video sobre navegación web + UI para Claude Code)
+| Herramienta | Estado | Detalle |
+|---|---|---|
+| **agent-browser** (Vercel Labs) | ✅ ya estaba instalada | `skills/agent-browser/SKILL.md` (symlink en `.claude/skills/`), coincide con el repo oficial `vercel-labs/agent-browser`. Le da a Claude control de navegador (click/escribir/extraer) para sitios sin API. |
+| **UI UX Pro Max** | ✅ ya estaba instalada | `skills/ui-ux-pro-max/SKILL.md` v2.6.2 — sistema de diseño (84 estilos, 161 paletas, 73 combos de tipografía) según el tipo de producto. |
+| **Playwright** | ✅ instalado | Ya estaba disponible global en el entorno (browsers cacheados). Se agregó `@playwright/test` como devDependency de `web/` (`npm install -D @playwright/test`) para poder correr QA visual local/CI de la landing. `npm run build` sigue verde. Ya había 3 skills que lo cubren: `playwright-automation`, `browser-automation`, `webapp-testing`.
+| **skillui** (`amaancoderx/skillui`) | ✅ CLI verificado, no instalado un target todavía | Extrae el sistema de diseño (colores, tipografía, animaciones) de cualquier sitio a `DESIGN.md` + `.skill`. 100% análisis estático + Playwright, **sin IA, sin API keys**. Se corre puntual: `npx skillui --url <sitio-que-te-guste> --mode ultra`. No corrí ningún sitio porque elegir la referencia de diseño es una decisión tuya — decime qué sitio te gusta y lo corro. |
+| **Impeccable** (`pbakaus/impeccable`, 44k+ estrellas) | ⛔ bloqueado en esta sesión (no es error mío, es política de red) | Vocabulario de diseño para Claude (23 comandos: `polish`, `audit`, `critique`, etc.), sin keys ni credenciales. Al correr `npx impeccable install` esta sesión en la nube devuelve `403` porque el dominio desde donde descarga las skills (`impeccable.style`) **no está en la lista de dominios permitidos de esta sesión** — no es algo que deba/pueda evitar, es una política de la organización. **Se soluciona corriéndolo en tu compu real** (con Remote Control, que ya tenés andando): abrí PowerShell en la carpeta del repo y pedile a Claude *"corré `npx impeccable install --providers=claude --scope=project` acá"*. |
+
 ## Cómo retomar cualquiera de estos
 1. Elegís el repo oficial (me pasás la URL exacta).
 2. Reviso el install script / README.
