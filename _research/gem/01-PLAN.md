@@ -31,8 +31,8 @@ código) · 🤝 el dueño consigue algo (cuenta/token) primero, DESPUÉS gener�
 ## FASE A · Contenido (O1, foco #1, hacer primero)
 | # | Paso | Estado | Quién |
 |---|---|---|---|
-| A1 | Investigar viralidad del nicho (qué funciona + por qué) | ⬜ | 🤖 |
-| A2 | 3 guiones de reel basados en esa investigación | ⬜ (depende A1) | 🤖 |
+| A1 | Investigar viralidad del nicho (qué funciona + por qué) | ✅ `contenido/HALLAZGOS-VIRALES.md` | — |
+| A2 | 3 guiones de reel basados en esa investigación | ✅ `contenido/GANCHOS-Y-GUIONES.md` | — |
 | A3 | Perfil `@_agus_moreno_` (bio, foto, link WhatsApp) | ⬜ | 🙋 |
 | A4 | Bloque fijo diario (horario no negociable) | ⬜ | 🙋 |
 | A5 | Grabar los 3 reels + CapCut (+ subtítulos de Claude) | ⬜ | 🙋+🤖 |

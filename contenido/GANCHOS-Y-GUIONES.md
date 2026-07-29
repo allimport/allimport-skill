@@ -85,6 +85,58 @@ que quiere empezar a emprender.
 
 ---
 
+## Guiones completos (paso A2)
+
+Basados en `HALLAZGOS-VIRALES.md` (paso A1). Misma estructura repetida a propósito
+(Hallazgo 2: repetir el esqueleto que funciona). Grabar tal cual, a cámara, sin mostrar
+producto (regla de marca). Duración objetivo: 30-45 seg.
+
+### Guion 1 — "El error que te frena a los 20: esperar tener 'suficiente' plata"
+*(Hallazgo 1 y 4: hook de impacto + ángulo "arrancar con poco capital")*
+
+- **HOOK (0-3s):** "Si estás esperando juntar 'la plata suficiente' para arrancar, quiero
+  decirte algo: nunca va a ser suficiente."
+- **PROBLEMA (3-12s):** "Todos hacemos lo mismo — guardamos, esperamos el momento perfecto,
+  y ese momento no llega nunca. Mientras tanto, no pasa nada. Un año, dos años iguales."
+- **SOLUCIÓN (12-28s):** "Yo no arranqué con un capital grande. Arranqué con lo que tenía y
+  un producto que la gente ya estaba buscando. Se puede empezar con poco — la clave no es
+  cuánto tenés, es con qué arrancás y cómo lo movés."
+- **PRUEBA SOCIAL (28-36s):** "Cada semana hablo con alguien que arranca así, de cero, y en
+  un mes ya está vendiendo. No es magia, es animarse a dar el primer paso."
+- **CTA (36-42s):** "Si estás en esa etapa de 'quiero pero no sé cómo', escribime. Te cuento
+  cómo armamos algo con lo que tengas."
+
+### Guion 2 — "Lo que nadie te dice de comprar mayorista: no es solo el producto"
+*(Hallazgo 1: hook de impacto; diferencial real de Agus: mentoría incluida)*
+
+- **HOOK (0-3s):** "Cuando comprás mayorista para revender, la mayoría solo te vende el
+  producto. Yo no hago eso."
+- **PROBLEMA (3-14s):** "Conseguís el producto, pero después estás solo: no sabés cómo
+  venderlo, a quién, a qué precio, ni cómo arrancar de verdad. Ahí es donde la mayoría se
+  frena."
+- **SOLUCIÓN (14-30s):** "Con nosotros no te llevás solo la mercadería — te llevás
+  acompañamiento real. Te ayudo, te aconsejo, armamos juntos cómo arrancar. Eso normalmente
+  te lo cobran en grupos de asesoramiento por más de 150 dólares, y acá va incluido."
+- **PRUEBA SOCIAL (30-38s):** "Por eso la gente vuelve, no solo a comprar más, sino a
+  preguntarme qué sigue."
+- **CTA (38-44s):** "Si buscás algo para revender y encima que alguien te acompañe,
+  escribime y vemos con qué presupuesto arrancás."
+
+### Guion 3 — "Cómo elijo qué vender (para no fundir la plata en el intento)"
+*(Hallazgo 4: ángulo práctico "cómo arranqué"; valor educativo, no venta directa)*
+
+- **HOOK (0-3s):** "Antes de comprar un solo producto para revender, me hago 3 preguntas.
+  Si no te las hacés vos, es plata que se puede perder."
+- **PROBLEMA (3-13s):** "La gente arranca comprando lo que A ELLA le gusta, no lo que el
+  cliente busca. Y así terminás con stock que no se mueve."
+- **SOLUCIÓN (13-30s):** "Pregunta uno: ¿la gente ya lo está buscando? Pregunta dos: ¿lo
+  puedo conseguir a un precio que me deje margen real? Pregunta tres: ¿lo puedo entregar
+  fácil? Si las tres dan bien, ahí sí conviene."
+- **PRUEBA SOCIAL (30-38s):** "Por elegir así es que no me quedé colgado con productos que
+  no se venden — y es lo mismo que te ayudo a pensar cuando arrancás con nosotros."
+- **CTA (38-44s):** "Guardá este reel para cuando elijas tu primer producto. Y si querés que
+  lo pensemos juntos, escribime."
+
 ## Cómo generar variantes
 Pedile a Claude: *"generá 5 hooks nuevos con la estructura de GANCHOS-Y-GUIONES.md para
 el tema X"*. Mantené siempre: hook de 3 seg, prueba social real, CTA suave.
