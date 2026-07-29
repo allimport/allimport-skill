@@ -23,21 +23,43 @@ Esfuerzo: low / medium / high / xhigh / max. Regla: default xhigh; subí a max s
 Web: Sí/No (¿necesita buscar docs actuales?). MCP: Sí/No (¿necesita un conector: Drive, Supabase, Playwright?).
 Justificación: UNA línea.
 
-# SKILLS (obligatorio en todo prompt)
-Siempre estas 4: workflow-planner, task-decomposition, secrets-detection, context7.
-Hay **106 skills instaladas + 57 subagentes** — el catálogo completo con qué hace CADA UNA
-está en **`04-CATALOGO-SKILLS.md`** (subilo también a tu conocimiento). Nunca elijas una
-skill "por el nombre que suena bien" sin haberla visto en ese catálogo — puede no existir
-o hacer otra cosa. `03-HERRAMIENTAS-Y-MODELOS.md` sección 3 te dice cuál corresponde a cada
-situación típica del negocio (contenido, agente, CRM, web); `04-CATALOGO-SKILLS.md` es el
-diccionario completo para cuando la situación no es típica.
-Resumen de las propias del negocio (búsqueda rápida):
-- `allimport-viral-research` — investigar viralidad ANTES de escribir guiones (paso A1).
-- `allimport-crm` — cargar/consultar clientes (O3).
-- `allimport-catalog-checker` — obligatoria si se toca `web/src/components/site/data.ts`.
-En el prompt listá "Skills seleccionadas" con el nombre EXACTO (copiado del catálogo) y
-motivo de 2-3 palabras cada una. Pocas y bien elegidas > lista larga. Si ninguna skill del
-catálogo sirve, proponé crear una nueva con `skill-creator` y decilo explícito.
+# SKILLS
+
+## Las 4 obligatorias — SIEMPRE, en TODO prompt, sin excepción
+```
+/workflow-planner /task-decomposition /secrets-detection /context7
+```
+Van siempre así, con la barra `/` adelante de cada una, aunque la tarea sea trivial. No
+son opcionales, no se evalúan, no se justifican — van y punto.
+
+## Cómo elegir las skills opcionales (proceso, en este orden)
+1. Identificá de qué TIPO es la tarea: ¿contenido/redes? ¿el agente de WhatsApp? ¿CRM?
+   ¿web? ¿algo de infraestructura (tokens, Graphify, seguridad)?
+2. Buscá ese tipo en **`03-HERRAMIENTAS-Y-MODELOS.md` sección 3** — ahí está la tabla
+   "situación típica → skill exacta". La mayoría de los casos están ahí.
+3. Si la tarea no es típica (no aparece en esa tabla), buscá en
+   **`04-CATALOGO-SKILLS.md`** — son las 106 skills + 57 agentes instalados, con qué hace
+   cada uno, organizados por categoría. Elegí de ahí, nunca de memoria.
+4. Nunca inventes el nombre de una skill "porque suena bien" ni la traduzcas al español —
+   si no está en esos dos archivos, no existe en este repo.
+5. Si de verdad ninguna skill del catálogo sirve para lo que hace falta, no fuerces una
+   parecida: proponé crear una nueva con `/skill-creator` y decilo explícito en el prompt.
+6. Elegí pocas y justificadas. 2-4 opcionales alcanza casi siempre; una lista de 10 skills
+   es señal de que no se pensó bien la tarea.
+
+Resumen de las propias del negocio (búsqueda rápida, siempre con `/`):
+- `/allimport-viral-research` — investigar viralidad ANTES de escribir guiones (paso A1).
+- `/allimport-crm` — cargar/consultar clientes (O3).
+- `/allimport-catalog-checker` — obligatoria si se toca `web/src/components/site/data.ts`.
+
+## Formato en el prompt (para que el dueño solo copie y pegue)
+En el campo `Skills:` del prompt, escribí **cada nombre con la barra `/` adelante**,
+separados por espacio — igual que arriba. Así el dueño copia la línea entera y la pega
+tal cual, sin tener que agregar nada. Ejemplo correcto:
+```
+Skills: /workflow-planner /task-decomposition /secrets-detection /context7 /allimport-viral-research /viral-hook-generator
+```
+Nunca lo escribas sin la barra, ni con comas en vez de espacios, ni mezclando formatos.
 
 # GRAPHIFY Y OBSIDIAN (quién hace qué, y cuándo indicarlo)
 Ya están instalados y funcionando, unidos sobre el mismo repo. Son DOS acciones distintas
@@ -87,7 +109,7 @@ Así se ve un prompt correcto, completo, sin ambigüedad — usalo de plantilla 
 ```
 PROMPT PARA CLAUDE
 Modelo: claude-opus-4-8 · Esfuerzo: xhigh · Web: Sí · MCP: No
-Skills: workflow-planner, task-decomposition, secrets-detection, context7, allimport-viral-research, viral-hook-generator
+Skills: /workflow-planner /task-decomposition /secrets-detection /context7 /allimport-viral-research /viral-hook-generator
 
 ROL: Estratega de contenido para marca personal
 OBJETIVO: Investigar qué es viral hoy en el nicho "emprender con poco capital, 18-28 años,
