@@ -22,3 +22,11 @@ combinado con texto plano estilo **"Classic"** para el resto — son 2 de los 4 
 nativos que ofrece Instagram (Classic, Modern, Neon, Typewriter, Strong). Mismo fondo
 casi negro y foto apenas visible que la v2, sin logo ni marco. CTA propio: invita a
 vender o invertir y cierra con "hablame por acá, te cuento cómo arranqué yo".
+
+## restock-04-organico.jpg
+Segunda tanda de stock (foto nueva: cables, cargadores, JBL, ELFBAR, cajas Apple), mismo
+tratamiento validado: fondo casi negro (foto apenas visible), estilo "Strong" de IG en el
+titular ("repusimos todo / otra vez"), texto plano abajo, CTA propio "hablame por acá".
+Nota técnica: la foto original era más "ancha" que el 9:16 de una story — se probó primero
+contener la imagen entera sobre un fondo plano y quedó un borde visible (se notaba el
+recorte); se corrigió recortando a pantalla completa (mismo método que v2/v3), sin costuras.
