@@ -38,3 +38,13 @@ armarla con Claude en Chrome directo en Instagram (falló: el editor de historia
 un canvas, no navegable por un agente de browser) y con Canva (bloqueado: el conector no
 permite subir fotos privadas del dueño a menos que ya sean públicas — no se hizo por
 seguridad). Se resolvió con el mismo método de Pillow ya validado.
+
+## restock-06-organico.jpg
+Misma foto y texto que v5, con la regla de "look profesional" aplicada: un solo estilo
+para el título (Strong: pill blanco + texto negro) y un solo estilo para el resto
+(Classic), sin mezclar. Un único color de acento en toda la pieza — la frase "hablame por
+acá" resaltada en el celeste/cyan real de la marca (`#00d4d4`, el mismo de `web/`) dentro
+del renglón del CTA — el resto del texto queda en blanco/negro. Menos variedad = más
+prolijo. También se armó una versión equivalente directo en Canva (diseño del dueño,
+`DAHQzI7tICs`): fondo semi-transparente + pills + texto ya está, falta que el dueño
+inserte su foto ahí y la mande al fondo (instrucciones dadas en el chat).
