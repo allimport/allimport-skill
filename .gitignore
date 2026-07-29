@@ -1,6 +1,9 @@
 
 # Local agent skills (installed via npx skills add)
 .agents/
+
+# Bóveda de Obsidian del dueño (apunta a la raíz del repo en su PC)
+.obsidian/
 .claude/*
 !.claude/settings.json
 !.claude/agents/
