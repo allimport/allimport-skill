@@ -13,3 +13,12 @@ confianza (ver `contenido/HALLAZGOS-VIRALES.md`). Lista para subir a historias d
 Versión sin marca (sin logo, sin marco, sin caja de botón), texto alineado a la
 izquierda como si lo hubiera escrito la persona directo en Instagram. CTA cambiado a
 "hablame por acá" (no WhatsApp — es para publicar como el dueño, desde su cuenta personal).
+
+## restock-03-organico.jpg
+Mensaje reescrito por Claude (no el texto literal dictado por el dueño) + estilo de
+texto nativo de Instagram investigado y replicado: el estilo **"Strong"** de IG Stories
+(pill blanco redondeado detrás de cada línea, texto en negro, negrita) para el titular,
+combinado con texto plano estilo **"Classic"** para el resto — son 2 de los 4 estilos
+nativos que ofrece Instagram (Classic, Modern, Neon, Typewriter, Strong). Mismo fondo
+casi negro y foto apenas visible que la v2, sin logo ni marco. CTA propio: invita a
+vender o invertir y cierra con "hablame por acá, te cuento cómo arranqué yo".
