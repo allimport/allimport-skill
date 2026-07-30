@@ -50,6 +50,8 @@ Además de los docs numerados, el conocimiento operativo vive en estas carpetas:
 | [OBSIDIAN-GRAPHIFY.md](OBSIDIAN-GRAPHIFY.md) | Cómo unir Obsidian + Graphify sobre esta base |
 | [FLUJOS-DE-TRABAJO.md](FLUJOS-DE-TRABAJO.md) | Cómo separar las sesiones de Claude en 3 módulos (contenido, visual, agente+CRM) |
 | [REMOTE-CONTROL.md](REMOTE-CONTROL.md) | Claude Code corriendo en la compu real (Remote Control) |
+| [DISEÑO.md](DISEÑO.md) | 🎨 Índice único de todo lo visual: sistema de marca, reglas validadas, skills y herramientas |
+| [contenido/SISTEMA-VENTAS-MARCA-PERSONAL.md](../contenido/SISTEMA-VENTAS-MARCA-PERSONAL.md) | Sistema de ventas por marca personal (4 etapas: atracción → WhatsApp → difusión → posventa) |
 
 ## Cómo usar Obsidian con esto (#07)
 Instalá Obsidian → "Abrir una carpeta como bóveda" → elegí **esta carpeta `docs/`**.

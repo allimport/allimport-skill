@@ -31,7 +31,13 @@ Maneja la memoria de clientes: quién es, qué compró, en qué etapa está, có
 3. Para leer/editar/ordenar/filtrar la planilla usar la skill `xlsx` (o CSV directo).
 4. **Privacidad:** la planilla REAL (con teléfonos) es privada. NO commitearla al repo;
    solo se versiona el template vacío. Guardarla local.
-5. Seguimiento: potencial → mensaje a las 24-48h; curioso → aportar valor, no vender.
+5. Seguimiento por etiqueta (cadencia, del sistema de ventas — ver
+   `contenido/SISTEMA-VENTAS-MARCA-PERSONAL.md`):
+   - **compró** → seguimiento semanal, ofertas puntuales, resolver reclamos sin discutir.
+   - **potencial** → 2-3 días seguidos reactivando curiosidad; si no responde, pasa al
+     mes siguiente (no insistir más allá de eso).
+   - **curioso** → contacto suave una vez por mes, sin ofrecer nada todavía — aportar
+     valor, no vender.
 
 ## Salidas útiles
 - "Lista de potenciales para seguir hoy" (filtra etiqueta=potencial, ordena por fecha).

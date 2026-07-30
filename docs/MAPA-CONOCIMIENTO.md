@@ -19,7 +19,11 @@ sin sync. Abrí este archivo primero.
 - [[CALENDARIO-SEMANAL]] — 3 reels/sem + historias diarias.
 - [[GANCHOS-Y-GUIONES]] — 10 ganchos hook→problema→solución→prueba→CTA.
 - [[DESIGN]] — branding (colores, tipografía, tono).
+- [[SISTEMA-VENTAS-MARCA-PERSONAL]] — las 4 etapas del embudo (atracción→WhatsApp→difusión→posventa), banco de historias por franja horaria, mezcla de contenido de reels.
 - Skill: `allimport-viral-research` · `viral-hook-generator`.
+
+## 🎨 Diseño visual
+- [[DISEÑO]] — hub único: sistema de marca real, reglas de estilo validadas, skills y herramientas (Canva, Claude Design, skillui).
 
 ## 💬 O2 · Agente de WhatsApp
 - [[AGENTE-WHATSAPP]] — spec de comportamiento (12-19, no cobra, handoff).

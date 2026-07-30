@@ -42,6 +42,13 @@ Mezclá tipos, no todas del mismo. Rotación sugerida:
 
 Regla: al menos **1 CTA suave por día**, nunca 7 ventas seguidas.
 
+**Estructura por franja horaria** (del sistema de ventas, ver
+[SISTEMA-VENTAS-MARCA-PERSONAL.md](SISTEMA-VENTAS-MARCA-PERSONAL.md)): al menos 1
+historia de **mañana**, 1 de **tarde** y 1 de **noche** por día — elegís 1-2 opciones de
+cada bloque según lo que tengas para mostrar esa jornada (mañana: disponibilidad/stock del
+día · tarde: unboxing/pedidos armados/prueba social · noche: cierre del día/resultados).
+Usar pedidos y comprobantes reales siempre que sea posible.
+
 ## Semana de un vistazo
 ```
 LUN  reel autoridad     + historias (4-10)
