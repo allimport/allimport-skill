@@ -53,10 +53,12 @@ necesita:
   de `web/src` + blurb de marca. Ver bitácora de la conversación para el paso a paso.
 - **skillui** (`npx skillui`) — la herramienta que generó el `DESIGN.md` de la sección 1.
   Se re-corre solo si la web cambia de look; no es algo para usar todo el tiempo.
-- **Prompt maestro de stories** (`PROMPT DISEÑO SECUENCIAS DE STORIES — ALL IMPORT`,
-  adaptado del sistema de Nico Azero) — genera un HTML con secuencias de stories
-  (hook/prueba/cierre) usando el sistema de diseño de arriba. Fotos reales en
-  [`historias/stock-fotos/`](../historias/stock-fotos).
+- **Prompt maestro de stories** — [`contenido/PROMPT-MAESTRO-STORIES.md`](../contenido/PROMPT-MAESTRO-STORIES.md)
+  (adaptado del sistema de Nico Azero) — genera un HTML con secuencias de stories
+  (hook/prueba/cierre) usando el sistema de diseño de arriba. Se pega como texto en un
+  chat nuevo de Claude Design (con el design system enganchado). Fotos reales en
+  [`historias/stock-fotos/`](../historias/stock-fotos). Guiones ya escritos en
+  [`contenido/GUIONES-STORIES.md`](../contenido/GUIONES-STORIES.md).
 
 ## 5. Dónde están las piezas ya hechas
 - [`historias/generadas/`](../historias/generadas) — las historias de restock ya editadas,
