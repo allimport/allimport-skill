@@ -102,8 +102,12 @@ cuenta personal @_agus_moreno_, sin branding visible (ver §0).
 
 ## 5. FONDO DE CADA STORY (4 capas en orden Z)
 
-1. **`.bg-photo`** full-bleed, `background-size: cover`, `position: center`, `filter: contrast(1.05) brightness(1.05)`, opacity 1
-2. **`.vignette`** `radial-gradient(ellipse at center, rgba(0,0,0,0.15) 35%, rgba(0,0,0,0.55) 85%, rgba(0,0,0,0.78) 100%)`
+1. **`.bg-photo`** full-bleed, `background-size: cover`, `position: center`, `filter: contrast(1.05) brightness(1.0)`, opacity 1
+2. **`.vignette`** — **degradado vertical asimétrico, NO radial parejo:** más claro arriba (se
+   alcanza a ver bien el producto), bien oscuro abajo (donde va el texto, para que se lea
+   siempre). Overall más oscuro que un producto-photo normal — tiene que notarse que hay
+   una foto atrás, pero apenas, nunca a brillo casi completo.
+   `linear-gradient(to bottom, rgba(2,4,8,0.35) 0%, rgba(2,4,8,0.5) 40%, rgba(2,4,8,0.75) 70%, rgba(2,4,8,0.92) 100%)`
 3. **`.glow`** circular cyan difuso (1000–1100px), `radial-gradient(circle, rgba(0,212,212,0.45) 0%, rgba(0,212,212,0) 60%)`, `filter: blur(80px)`, posicionado según slide
 4. **`.noise`** SVG fractal opacity 0.06
 

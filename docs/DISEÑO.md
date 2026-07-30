@@ -27,8 +27,14 @@ los mismos errores)*
 - **Un solo color de acento** por pieza — el cyan de marca `#00d4d4` — nunca todo
   coloreado. Si el fondo del elemento es sólido en el acento (pill, botón CTA), el texto
   va oscuro encima, no blanco — el cyan es demasiado claro para contraste con blanco.
-- Fondo con **degradado** (oscuro arriba/abajo donde va el texto, más suave al medio para
-  que se insinúe el producto) — nunca un velo plano parejo.
+- Fondo con **degradado**, nunca un velo plano parejo. Dos variantes válidas según el
+  layout:
+  - Piezas Pillow (título arriba + CTA abajo, como `historias/`): oscuro arriba/abajo
+    donde va el texto, más suave al medio para que se insinúe el producto.
+  - Piezas del sistema de stories HTML (Claude Design, punchline arriba + CTA abajo):
+    degradado vertical asimétrico — **más claro arriba** (se ve el producto), **bien
+    oscuro abajo** (donde va el texto, para que se lea siempre). Ver
+    `PROMPT-MAESTRO-STORIES.md` §5.
 - Texto **alineado a la izquierda**, no centrado, para contenido de cuenta personal (se
   ve como hecho a mano, no como placa de marca).
 - **Sin logo ni marco** en contenido de la cuenta personal `@_agus_moreno_` — sí se puede
