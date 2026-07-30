@@ -48,30 +48,34 @@ Si querés arrancar a revender, o simplemente te sobran unos mangos y los queré
 *(Falta una STORY tipo PRUEBA en el medio para cuando tengas una captura real de un
 comprobante o un mensaje de cliente agradeciendo — por ahora la secuencia queda en 2.)*
 
-## Guión 2 — Vasos térmicos / cafeteros (listo para usar)
+## Guión 2 — Vasos térmicos / cafeteros (v2, más creativo)
 ```
 STORY 1 · HOOK
-Vasos térmicos
-recién llegados
+esto
+se vende solo
 
-— IDEALES PARA REVENDER
+— VASOS TÉRMICOS, RECIÉN LLEGADOS
 
 STORY 2 · CIERRE
-Si querés arrancar a revender, o simplemente te sobran unos mangos y los querés hacer rendir
+No es un producto que tengas que convencer a nadie de comprar — la gente ya los busca
+
+no dejes pasar la oportunidad de hacer unos pesos con algo que prácticamente se vende solo
 
 [HABLAME POR ACÁ]
 ```
 
-## Guión 3 — Fundas de celular, silicona y transparentes (listo para usar)
+## Guión 3 — Fundas de celular, silicona y transparentes (v2, más creativo)
 ```
 STORY 1 · HOOK
-Fundas nuevas
-silicona y transparentes
+todo el mundo
+necesita una
 
-— TODOS LOS MODELOS
+— FUNDAS NUEVAS: SILICONA Y TRANSPARENTES, TODOS LOS MODELOS
 
 STORY 2 · CIERRE
-Si querés arrancar a revender, o simplemente te sobran unos mangos y los querés hacer rendir
+Rotan rápido y casi no hay que venderlas — se venden solas
+
+si tenés unos mangos guardados, esta es la oportunidad de hacerlos rendir
 
 [HABLAME POR ACÁ]
 ```
