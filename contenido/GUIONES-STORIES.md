@@ -80,10 +80,10 @@ queda al final porque ahí es donde apunta la flecha del sticker en el diseño r
 
 ```
 STORY 1 · CIERRE
+Buen día ☀️
 Hoy tomamos pedidos
 MINORISTA Y MAYORISTA
 
-Buen día ☀️
 ¿Estás pensando en armar tu propio emprendimiento y no sabés por dónde arrancar? Te leo, contame qué tenés en mente y armamos un plan juntos
 
 [HABLAME POR ACÁ]
