@@ -19,7 +19,7 @@ load_dotenv()
 logger = logging.getLogger("agentkit")
 
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
-MODEL = "gemini-2.5-flash"
+MODEL = "gemini-flash-latest"
 
 KNOWLEDGE_PLACEHOLDER = "{KNOWLEDGE_CATALOGO}"
 
