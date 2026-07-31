@@ -93,5 +93,18 @@ Te leo, contame qué tenés en mente y armamos un plan juntos
 [HABLAME POR ACÁ]
 ```
 
+## Guión 4 — Motivadora (una sola historia)
+Pieza suelta, no secuencia — condensa las 3 ideas motivadoras (constancia, seguir a
+pesar de los "no", enfocarse en el objetivo) en un solo slide.
+
+```
+STORY 1 · CIERRE
+Nadie construyó nada grande de un día para el otro
+
+Cada pedido, cada mensaje, cada "no" que te dicen, te acerca más a tu objetivo
+
+— SEGUÍ, VAS BIEN
+```
+
 ## Próximos guiones
 Se agregan acá a medida que se escriben — uno por bloque, mismo formato de arriba.
