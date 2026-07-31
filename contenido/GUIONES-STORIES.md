@@ -73,5 +73,25 @@ rotan rápido y casi no hay que venderlas — es tu oportunidad de hacer unos pe
 — FUNDAS NUEVAS · CONSULTAME QUÉ MODELO Y COLOR TENGO PARA VOS
 ```
 
+## Guión 3 — Toma de pedidos + gancho emprendedores (31/07)
+Secuencia de 2 stories para el día de hoy: abre anunciando que se toman pedidos
+minorista y mayorista, cierra con la invitación a quien está por arrancar su propio
+emprendimiento y no sabe por dónde.
+
+```
+STORY 1 · HOOK
+Hoy
+tomamos pedidos
+
+— MINORISTA Y MAYORISTA
+
+STORY 2 · CIERRE
+¿Estás pensando en armar tu propio emprendimiento y no sabés por dónde arrancar?
+
+Te leo, contame qué tenés en mente y armamos un plan juntos
+
+[HABLAME POR ACÁ]
+```
+
 ## Próximos guiones
 Se agregan acá a medida que se escriben — uno por bloque, mismo formato de arriba.
