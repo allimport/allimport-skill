@@ -21,3 +21,7 @@ agent-skills-for-context-engineering · impeccable · taste-skill · marketing-s
 ## Buscar/identificar en tu Drive (no vi nombre exacto)
 skill-creator · claude-mem · napkin · humanizer · design-skill · ui-ux-pro-max
 web-search-mcp · n8n-mcp · seo-skill
+
+## Vendorizadas desde repo externo
+whatsapp-agentkit (github.com/Hainrixz/whatsapp-agentkit, MIT) · graphify (nueva, escrita en este repo)
+Carpeta central de integración: `integrations/whatsapp-obsidian/`

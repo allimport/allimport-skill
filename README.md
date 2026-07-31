@@ -111,5 +111,10 @@ Stack curado de skills para Claude Code / agentes autónomos + dev SaaS. 87 skil
 ### Extra / colecciones
 - **caveman** — colección vendoreada (commit, compress, review, stats, etc.)
 
+### Agentes de negocio / grafo de conocimiento
+- **whatsapp-agentkit** — construye un agente de WhatsApp con IA (vendorizado desde [Hainrixz/whatsapp-agentkit](https://github.com/Hainrixz/whatsapp-agentkit))
+- **graphify** — convierte historial de conversaciones/knowledge base en un grafo de notas Markdown con `[[wikilinks]]`
+- Pipeline completo (agente → grafo → Obsidian): ver `integrations/whatsapp-obsidian/README.md`
+
 ## MCP
 Ver `_MCP-SETUP.md` para el `.mcp.json` de ejemplo (playwright, supabase, figma, filesystem, git, context7) que usan varias de estas skills.
