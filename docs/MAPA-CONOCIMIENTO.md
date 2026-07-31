@@ -41,7 +41,7 @@ sin sync. Abrí este archivo primero.
 
 ## 🧩 Infra
 - [[OBSIDIAN-GRAPHIFY]] — cómo unir Obsidian + Graphify (esta base).
-- [[FLUJOS-DE-TRABAJO]] — separación en 3 módulos por sesión.
+- [[FLUJOS-DE-TRABAJO]] — separación en 4 chats por sesión.
 - [[REMOTE-CONTROL]] — Claude Code corriendo en la compu real.
 - [[ESTADO-INICIAL]] — reporte de instalación.
 - [[TERCEROS-PENDIENTES]] — repos de terceros + qué necesitan.
