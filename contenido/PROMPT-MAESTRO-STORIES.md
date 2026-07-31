@@ -75,11 +75,11 @@ Stack: `'Satoshi', 'Manrope', 'Inter', system-ui, sans-serif`
 | Hook pre/post | 56–64px | 500–700 | −0.01em | 1.15 |
 | Headline punchline | 60–72px | 400 (con b 900) | −0.012em | 1.2 |
 | Texto top ("Esta es la cuenta de") | 40–56px | 500 | −0.005em | 1.2 |
-| Texto bottom (cierre de slide) | 38–40px | 500 | normal | 1.35 |
+| Texto bottom (cierre de slide) | 46–50px | 500 | normal | 1.35 |
 | Mention pill (@usuario) | 32px | 900 | 0.01em | 1 |
-| CTA pill | 30px | 900 uppercase | 0.04em | 1 |
+| CTA pill | 34px | 900 uppercase | 0.04em | 1 |
 | Counter "0X / 0N" | 22px | 400 | 0.2em | 1 |
-| Kicker / footer label | 22–24px | 900 uppercase | 0.18em | 1 |
+| Kicker / footer label | 30–34px | 900 uppercase | 0.16em | 1 |
 | Logo pill text | 22px | 900 | 0.14em uppercase | 1 |
 
 ## 4. CHROME COMÚN A TODAS LAS STORIES
@@ -94,7 +94,10 @@ Padding interior 80px en los 4 lados.
 **Top-left:** vacío — sin logo-pill ni watermark de marca. Estas stories son para la
 cuenta personal @_agus_moreno_, sin branding visible (ver §0).
 
-**Top-right:** counter "0X / 0N" en blanco, 22px, tracking 0.2em.
+**Top-right:** counter "0X / 0N" en blanco, 22px, tracking 0.2em. **Excepción:** si las
+stories son piezas de producto independientes (tipo CIERRE sueltas, no una secuencia
+narrativa donde una historia depende de la anterior), **NO mostrar el counter ni la
+progress bar** — cada story de producto es autónoma, no una "parte X de N".
 
 **Bottom-right (slides intermedias):** `swipe` con texto "SIGUIENTE" gris 18px tracking 0.18em + flecha "→".
 
@@ -103,11 +106,11 @@ cuenta personal @_agus_moreno_, sin branding visible (ver §0).
 ## 5. FONDO DE CADA STORY (4 capas en orden Z)
 
 1. **`.bg-photo`** full-bleed, `background-size: cover`, `position: center`, `filter: contrast(1.05) brightness(1.0)`, opacity 1
-2. **`.vignette`** — **degradado vertical asimétrico, NO radial parejo:** más claro arriba (se
-   alcanza a ver bien el producto), bien oscuro abajo (donde va el texto, para que se lea
-   siempre). Overall más oscuro que un producto-photo normal — tiene que notarse que hay
-   una foto atrás, pero apenas, nunca a brillo casi completo.
-   `linear-gradient(to bottom, rgba(2,4,8,0.35) 0%, rgba(2,4,8,0.5) 40%, rgba(2,4,8,0.75) 70%, rgba(2,4,8,0.92) 100%)`
+2. **`.vignette`** — **degradado vertical asimétrico, NO radial parejo:** claro arriba (el
+   producto se tiene que ver bien, no apenas insinuado), bien oscuro abajo (donde va el
+   texto, para que se lea siempre). Punto medio: se nota que hay un tratamiento oscuro,
+   pero el producto es protagonista, no un fondo casi negro.
+   `linear-gradient(to bottom, rgba(2,4,8,0.15) 0%, rgba(2,4,8,0.3) 40%, rgba(2,4,8,0.55) 70%, rgba(2,4,8,0.8) 100%)`
 3. **`.glow`** circular cyan difuso (1000–1100px), `radial-gradient(circle, rgba(0,212,212,0.45) 0%, rgba(0,212,212,0) 60%)`, `filter: blur(80px)`, posicionado según slide
 4. **`.noise`** SVG fractal opacity 0.06
 
@@ -148,7 +151,14 @@ Cada vez que el guión use **mayúsculas**, comillas dobles, asteriscos, o palab
 ### TIPO C · CIERRE / CTA
 - `.content` con `padding-top: 180px; justify-content: space-between;`
 - Punchline grande (60–72px) arriba con highlights
-- Bloque inferior: texto medium 40px + **CTA pill** cyan sólido (`background: var(--accent); color: #0A0C10;` padding 22×44px, radius 999px, font 30px black uppercase, glow `box-shadow: 0 14px 50px rgba(0,212,212,0.5)`) + kicker abajo
+- Bloque inferior: texto medium 46-50px + **CTA pill** cyan sólido (`background: var(--accent); color: #0A0C10;` padding 22×44px, radius 999px, font 34px black uppercase, glow `box-shadow: 0 14px 50px rgba(0,212,212,0.5)`) — el texto de la pill termina con una **flecha apuntando hacia abajo** (↓, dibujada con SVG o borders, color #0A0C10 igual que el texto) — indica que se responde en el cuadro de respuesta nativo de Instagram, que queda debajo de la story. + kicker abajo
+
+**Copy del kicker cuando el producto tiene variantes** (modelos, colores, talles): en vez
+de listar todas las variantes ("todos los modelos", "todos los colores"), redactar como
+invitación a preguntar — ej. "consultame qué modelo y color tengo para vos" en vez de
+"silicona y transparentes, todos los modelos". Aplica el criterio del guión: si el texto
+del guión ya lo deja abierto, mantenelo así; si el guión lista variantes específicas,
+mantenelas.
 
 ## 8. COMPONENTES REUTILIZABLES (clases CSS)
 

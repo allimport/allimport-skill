@@ -70,7 +70,7 @@ rotan rápido y casi no hay que venderlas — es tu oportunidad de hacer unos pe
 
 [HABLAME POR ACÁ]
 
-— FUNDAS NUEVAS · SILICONA Y TRANSPARENTES, TODOS LOS MODELOS
+— FUNDAS NUEVAS · CONSULTAME QUÉ MODELO Y COLOR TENGO PARA VOS
 ```
 
 ## Próximos guiones
