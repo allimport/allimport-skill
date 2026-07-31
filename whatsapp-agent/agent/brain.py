@@ -1,22 +1,25 @@
-# agent/brain.py — Cerebro del agente: conexión con Claude API
+# agent/brain.py — Cerebro del agente: conexión con la API de Gemini
 # Generado por AgentKit
 
 """
 Lógica de IA del agente. Lee el system prompt de prompts.yaml, le inyecta el
-contenido de /knowledge, y genera respuestas usando la API de Anthropic Claude.
+contenido de /knowledge, y genera respuestas usando la API de Google Gemini
+(capa gratuita — GEMINI_API_KEY sacada de aistudio.google.com/apikey).
 """
 
 import os
 import glob
 import yaml
 import logging
-from anthropic import AsyncAnthropic
+from google import genai
+from google.genai import types
 from dotenv import load_dotenv
 
 load_dotenv()
 logger = logging.getLogger("agentkit")
 
-client = AsyncAnthropic(api_key=os.getenv("ANTHROPIC_API_KEY"))
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
+MODEL = "gemini-2.5-flash"
 
 KNOWLEDGE_PLACEHOLDER = "{KNOWLEDGE_CATALOGO}"
 
@@ -78,9 +81,18 @@ def obtener_mensaje_fallback() -> str:
     return config.get("fallback_message", "Disculpa, no entendí tu mensaje. ¿Podrías reformularlo?")
 
 
+def _a_formato_gemini(historial: list[dict]) -> list[types.Content]:
+    """Gemini usa role 'model' en vez de 'assistant' — traduce el historial."""
+    contenidos = []
+    for msg in historial:
+        role = "model" if msg["role"] == "assistant" else "user"
+        contenidos.append(types.Content(role=role, parts=[types.Part(text=msg["content"])]))
+    return contenidos
+
+
 async def generar_respuesta(mensaje: str, historial: list[dict]) -> str:
     """
-    Genera una respuesta usando Claude API.
+    Genera una respuesta usando la API de Gemini.
 
     Args:
         mensaje: El mensaje nuevo del usuario
@@ -88,7 +100,7 @@ async def generar_respuesta(mensaje: str, historial: list[dict]) -> str:
                    así se decide si corresponde el saludo con nombre.
 
     Returns:
-        La respuesta generada por Claude
+        La respuesta generada por Gemini
     """
     if not mensaje or len(mensaje.strip()) < 2:
         return obtener_mensaje_fallback()
@@ -96,19 +108,21 @@ async def generar_respuesta(mensaje: str, historial: list[dict]) -> str:
     es_primer_mensaje = len(historial) == 0
     system_prompt = cargar_system_prompt(es_primer_mensaje)
 
-    mensajes = [{"role": msg["role"], "content": msg["content"]} for msg in historial]
-    mensajes.append({"role": "user", "content": mensaje})
+    contenidos = _a_formato_gemini(historial)
+    contenidos.append(types.Content(role="user", parts=[types.Part(text=mensaje)]))
 
     try:
-        response = await client.messages.create(
-            model="claude-sonnet-4-6",
-            max_tokens=1024,
-            system=system_prompt,
-            messages=mensajes,
+        response = await client.aio.models.generate_content(
+            model=MODEL,
+            contents=contenidos,
+            config=types.GenerateContentConfig(
+                system_instruction=system_prompt,
+                max_output_tokens=1024,
+            ),
         )
-        respuesta = response.content[0].text
-        logger.info(f"Respuesta generada ({response.usage.input_tokens} in / {response.usage.output_tokens} out)")
+        respuesta = response.text
+        logger.info("Respuesta generada con Gemini")
         return respuesta
     except Exception as e:
-        logger.error(f"Error Claude API: {e}")
+        logger.error(f"Error Gemini API: {e}")
         return obtener_mensaje_error()
