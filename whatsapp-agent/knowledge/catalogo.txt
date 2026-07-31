@@ -1,41 +1,44 @@
 CATÁLOGO — ALL IMPORT (Córdoba, Argentina)
 Todos los precios en pesos argentinos. Todo se ve y prueba en mano antes de pagar.
 
-1. Camiseta Argentina — Indumentaria — $45.000
+1. Camiseta Argentina (id: remera) — Indumentaria — $45.000
    Calidad jugador, la misma que se ve en la tele. Escudo y detalles bordados, no estampados.
    Talles: S, M, L, XL, XXL. Disponible para entrega inmediata.
 
-2. Camiseta Messi 10 — Indumentaria — $45.000
+2. Camiseta Messi 10 (id: remera-messi) — Indumentaria — $45.000
    Nombre y número bordados, no estampados. Misma tela calidad jugador que la selección.
    Talles: S, M, L, XL, XXL. Disponible para entrega inmediata.
 
-3. Auriculares TWS Pro — Audio — $32.000
+3. Auriculares TWS Pro (id: tws) — Audio — $32.000
    Cancelación de ruido activa, estuche con carga inalámbrica, emparejamiento instantáneo.
    Disponible para entrega inmediata.
 
-4. Kit iPhone Premium — Accesorios — $55.000
+4. Kit iPhone Premium (id: combo) — Accesorios — $55.000
    Cable Lightning, cubo 20W y más, todo junto. Carga rápida real de 20W incluida.
    Disponible para entrega inmediata.
 
-5. Parlante Bluetooth RGB — Audio — $35.000
+5. Parlante Bluetooth RGB (id: parlante) — Audio — $35.000
    Sonido potente, luces RGB reactivas a la música, batería para toda la juntada.
    Disponible para entrega inmediata.
 
-6. Batería Magnética 5000mAh — Energía — $35.000
+6. Batería Magnética 5000mAh (id: battery) — Energía — $35.000
    Se adhiere sola al teléfono, carga sin cables, fina y liviana.
    Disponible para entrega inmediata.
 
-7. Cargador USB-C a Lightning + 20W — Carga — $28.000
+7. Cargador USB-C a Lightning + 20W (id: cable-lightning) — Carga — $28.000
    Carga rápida real de 20W, cable trenzado reforzado, cubo incluido.
    Disponible para entrega inmediata.
 
-8. Cargador USB-C a USB-C + 20W — Carga — $28.000
+8. Cargador USB-C a USB-C + 20W (id: cable-usbc) — Carga — $28.000
    Para Android y notebooks, carga rápida real de 20W, cable reforzado + cubo incluido.
    Disponible para entrega inmediata.
 
-9. Vaper Descartable Premium — Lifestyle — $35.000
+9. Vaper Descartable Premium (id: vaper) — Lifestyle — $35.000
    Sellado de fábrica, larga duración real. Consultar sabores disponibles.
    Disponible para entrega inmediata.
+
+Cuando el cliente quiera ver un producto (o cuando ayude a cerrar la venta), usá la
+herramienta enviar_foto con el "id" de ese producto.
 
 CÓMO FUNCIONA (para explicarle al cliente si pregunta):
 1. Escribís por WhatsApp y te decimos qué hay y cuánto sale.

@@ -6,15 +6,17 @@ Servidor principal del agente de WhatsApp de All Import.
 Usa el proveedor Twilio a través de la capa de providers.
 """
 
+import csv
+import io
 import os
 import logging
 from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request, HTTPException
-from fastapi.responses import PlainTextResponse
+from fastapi.responses import PlainTextResponse, StreamingResponse
 from dotenv import load_dotenv
 
 from agent.brain import generar_respuesta
-from agent.memory import inicializar_db, guardar_mensaje, obtener_historial
+from agent.memory import inicializar_db, guardar_mensaje, obtener_historial, listar_clientes
 from agent.providers import obtener_proveedor
 
 load_dotenv()
@@ -26,6 +28,7 @@ logger = logging.getLogger("agentkit")
 
 proveedor = obtener_proveedor()
 PORT = int(os.getenv("PORT", 8000))
+ADMIN_TOKEN = os.getenv("ADMIN_TOKEN")
 
 
 @asynccontextmanager
@@ -45,6 +48,31 @@ app = FastAPI(title="All Import — Agente de WhatsApp", version="1.0.0", lifesp
 async def health_check():
     """Endpoint de salud para Railway/monitoreo."""
     return {"status": "ok", "service": "agentkit"}
+
+
+@app.get("/clientes.csv")
+async def exportar_clientes(token: str = ""):
+    """
+    Exporta la ficha de todos los clientes como CSV (se abre directo en Excel).
+    Protegido con ADMIN_TOKEN — sin ese token en el .env, el endpoint queda
+    deshabilitado (nunca expuesto sin protección).
+    """
+    if not ADMIN_TOKEN or token != ADMIN_TOKEN:
+        raise HTTPException(status_code=403, detail="Token inválido o ADMIN_TOKEN no configurado")
+
+    clientes = await listar_clientes()
+    buffer = io.StringIO()
+    columnas = ["telefono", "nombre", "estado", "producto_interes", "encuentro", "notas", "actualizado"]
+    writer = csv.DictWriter(buffer, fieldnames=columnas)
+    writer.writeheader()
+    writer.writerows(clientes)
+    buffer.seek(0)
+
+    return StreamingResponse(
+        iter([buffer.getvalue()]),
+        media_type="text/csv",
+        headers={"Content-Disposition": "attachment; filename=clientes.csv"},
+    )
 
 
 @app.get("/webhook")
@@ -71,7 +99,7 @@ async def webhook_handler(request: Request):
             # Historial ANTES de guardar el mensaje actual: vacío == primer mensaje
             historial = await obtener_historial(msg.telefono)
 
-            respuesta = await generar_respuesta(msg.texto, historial)
+            respuesta = await generar_respuesta(msg.texto, historial, msg.telefono)
 
             await guardar_mensaje(msg.telefono, "user", msg.texto)
             await guardar_mensaje(msg.telefono, "assistant", respuesta)

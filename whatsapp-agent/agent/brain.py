@@ -15,13 +15,69 @@ from google import genai
 from google.genai import types
 from dotenv import load_dotenv
 
+from agent.tools import registrar_cliente, enviar_foto, escalar_a_humano
+from agent.catalogo import PRODUCTOS
+
 load_dotenv()
 logger = logging.getLogger("agentkit")
 
 client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 MODEL = "gemini-flash-latest"
+MAX_RONDAS_TOOLS = 4  # límite de idas y vueltas de function calling por mensaje
 
 KNOWLEDGE_PLACEHOLDER = "{KNOWLEDGE_CATALOGO}"
+
+TOOLS = types.Tool(function_declarations=[
+    types.FunctionDeclaration(
+        name="registrar_cliente",
+        description=(
+            "Guardá o actualizá lo que sabés de este cliente. Llamala cada vez que "
+            "aprendas algo nuevo: su nombre, si compró o decidió no comprar, qué "
+            "producto le interesó, o el día/lugar de encuentro que acordaron. "
+            "Podés llamarla varias veces en la misma charla."
+        ),
+        parameters=types.Schema(
+            type=types.Type.OBJECT,
+            properties={
+                "nombre": types.Schema(type=types.Type.STRING, description="Nombre del cliente, si lo dijo"),
+                "estado": types.Schema(
+                    type=types.Type.STRING,
+                    enum=["consultando", "compro", "no_compro"],
+                    description="Estado de la venta con este cliente",
+                ),
+                "producto_interes": types.Schema(type=types.Type.STRING, description="Producto que le interesó o compró"),
+                "encuentro": types.Schema(type=types.Type.STRING, description="Día y lugar acordado para la entrega, si se coordinó"),
+                "notas": types.Schema(type=types.Type.STRING, description="Cualquier otro dato relevante del cliente"),
+            },
+        ),
+    ),
+    types.FunctionDeclaration(
+        name="enviar_foto",
+        description="Mandá la foto real de un producto del catálogo por WhatsApp.",
+        parameters=types.Schema(
+            type=types.Type.OBJECT,
+            properties={
+                "producto_id": types.Schema(
+                    type=types.Type.STRING,
+                    enum=list(PRODUCTOS.keys()),
+                    description="Id del producto (ver catálogo)",
+                ),
+            },
+            required=["producto_id"],
+        ),
+    ),
+    types.FunctionDeclaration(
+        name="escalar_a_humano",
+        description="Avisale al dueño del negocio que este cliente necesita atención humana (reclamo, algo que no podés resolver, urgente).",
+        parameters=types.Schema(
+            type=types.Type.OBJECT,
+            properties={
+                "motivo": types.Schema(type=types.Type.STRING, description="Por qué hace falta un humano"),
+            },
+            required=["motivo"],
+        ),
+    ),
+])
 
 
 def cargar_config_prompts() -> dict:
@@ -90,17 +146,36 @@ def _a_formato_gemini(historial: list[dict]) -> list[types.Content]:
     return contenidos
 
 
-async def generar_respuesta(mensaje: str, historial: list[dict]) -> str:
+async def _ejecutar_tool(nombre: str, args: dict, telefono: str) -> dict:
+    """Despacha una llamada a función que pidió Gemini a la implementación real."""
+    try:
+        if nombre == "registrar_cliente":
+            return await registrar_cliente(telefono, **args)
+        if nombre == "enviar_foto":
+            return await enviar_foto(telefono, **args)
+        if nombre == "escalar_a_humano":
+            return await escalar_a_humano(telefono, **args)
+        return {"ok": False, "error": f"Herramienta desconocida: {nombre}"}
+    except Exception as e:
+        logger.error(f"Error ejecutando tool {nombre}: {e}")
+        return {"ok": False, "error": str(e)}
+
+
+async def generar_respuesta(mensaje: str, historial: list[dict], telefono: str) -> str:
     """
-    Genera una respuesta usando la API de Gemini.
+    Genera una respuesta usando la API de Gemini, ejecutando las herramientas
+    (registrar_cliente, enviar_foto, escalar_a_humano) que el modelo pida en
+    el camino.
 
     Args:
         mensaje: El mensaje nuevo del usuario
         historial: Mensajes anteriores de este contacto. Vacío == primer mensaje,
                    así se decide si corresponde el saludo con nombre.
+        telefono: Número del contacto — se lo pasamos a las tools sin que el
+                  modelo tenga que repetirlo en cada llamada.
 
     Returns:
-        La respuesta generada por Gemini
+        La respuesta de texto final generada por Gemini
     """
     if not mensaje or len(mensaje.strip()) < 2:
         return obtener_mensaje_fallback()
@@ -111,16 +186,31 @@ async def generar_respuesta(mensaje: str, historial: list[dict]) -> str:
     contenidos = _a_formato_gemini(historial)
     contenidos.append(types.Content(role="user", parts=[types.Part(text=mensaje)]))
 
+    config = types.GenerateContentConfig(
+        system_instruction=system_prompt,
+        max_output_tokens=1024,
+        tools=[TOOLS],
+    )
+
     try:
-        response = await client.aio.models.generate_content(
-            model=MODEL,
-            contents=contenidos,
-            config=types.GenerateContentConfig(
-                system_instruction=system_prompt,
-                max_output_tokens=1024,
-            ),
-        )
-        respuesta = response.text
+        response = await client.aio.models.generate_content(model=MODEL, contents=contenidos, config=config)
+
+        for _ in range(MAX_RONDAS_TOOLS):
+            partes = response.candidates[0].content.parts or []
+            llamadas = [p.function_call for p in partes if p.function_call]
+            if not llamadas:
+                break
+
+            contenidos.append(response.candidates[0].content)
+            partes_resultado = []
+            for llamada in llamadas:
+                resultado = await _ejecutar_tool(llamada.name, dict(llamada.args or {}), telefono)
+                partes_resultado.append(types.Part.from_function_response(name=llamada.name, response=resultado))
+            contenidos.append(types.Content(role="user", parts=partes_resultado))
+
+            response = await client.aio.models.generate_content(model=MODEL, contents=contenidos, config=config)
+
+        respuesta = response.text or obtener_mensaje_fallback()
         logger.info("Respuesta generada con Gemini")
         return respuesta
     except Exception as e:
