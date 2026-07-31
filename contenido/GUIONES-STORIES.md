@@ -73,5 +73,21 @@ rotan rápido y casi no hay que venderlas — es tu oportunidad de hacer unos pe
 — FUNDAS NUEVAS · CONSULTAME QUÉ MODELO Y COLOR TENGO PARA VOS
 ```
 
+## Guión 3 — Hoy tomamos pedidos (minorista + mayorista)
+1 sola story, mismo estilo CIERRE que los guiones anteriores. El subtítulo
+MINORISTA Y MAYORISTA va pegado al hook (no como kicker), y [HABLAME POR ACÁ]
+queda al final porque ahí es donde apunta la flecha del sticker en el diseño real.
+
+```
+STORY 1 · CIERRE
+Hoy tomamos pedidos
+MINORISTA Y MAYORISTA
+
+Buen día ☀️
+¿Estás pensando en armar tu propio emprendimiento y no sabés por dónde arrancar? Te leo, contame qué tenés en mente y armamos un plan juntos
+
+[HABLAME POR ACÁ]
+```
+
 ## Próximos guiones
 Se agregan acá a medida que se escriben — uno por bloque, mismo formato de arriba.
