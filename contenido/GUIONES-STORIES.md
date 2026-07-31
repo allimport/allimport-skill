@@ -74,36 +74,39 @@ rotan rápido y casi no hay que venderlas — es tu oportunidad de hacer unos pe
 ```
 
 ## Guión 3 — Toma de pedidos + gancho emprendedores (31/07)
-Secuencia de 2 stories para el día de hoy: abre anunciando que se toman pedidos
-minorista y mayorista, cierra con la invitación a quien está por arrancar su propio
-emprendimiento y no sabe por dónde.
+Una sola historia (no secuencia): anuncia que se toman pedidos minorista y mayorista,
+y cierra con la invitación a quien está por arrancar su propio emprendimiento.
 
 ```
-STORY 1 · HOOK
-Hoy
-tomamos pedidos
+STORY 1 · CIERRE
+Hoy tomamos pedidos
 
-— MINORISTA Y MAYORISTA
-
-STORY 2 · CIERRE
-¿Estás pensando en armar tu propio emprendimiento y no sabés por dónde arrancar?
-
-Te leo, contame qué tenés en mente y armamos un plan juntos
+¿Estás pensando en armar tu propio emprendimiento y no sabés por dónde arrancar? Te leo, contame qué tenés en mente y armamos un plan juntos
 
 [HABLAME POR ACÁ]
+
+— MINORISTA Y MAYORISTA
 ```
 
-## Guión 4 — Motivadora (una sola historia)
-Pieza suelta, no secuencia — condensa las 3 ideas motivadoras (constancia, seguir a
-pesar de los "no", enfocarse en el objetivo) en un solo slide.
+## Guión 4 — Motivadoras (3 piezas sueltas)
+3 piezas independientes, no una secuencia narrativa (sin counter/progress bar, mismo
+criterio que Guión 2) — constancia, arrancar a pesar del miedo, enfocarse en el objetivo.
 
 ```
 STORY 1 · CIERRE
 Nadie construyó nada grande de un día para el otro
 
+Hoy es un ladrillo más. Mañana también. Así se hacen los sueños
+
+STORY 2 · CIERRE
+Si esperás a sentirte 100% listo, nunca vas a empezar
+
+Empezá con lo que tenés, donde estás. El resto se aprende en el camino
+
+STORY 3 · CIERRE
 Cada pedido, cada mensaje, cada "no" que te dicen, te acerca más a tu objetivo
 
-— SEGUÍ, VAS BIEN
+Seguí. Vas bien
 ```
 
 ## Próximos guiones
