@@ -1,6 +1,6 @@
 # allimport-skills
 
-Stack curado de skills para Claude Code / agentes autónomos + dev SaaS. 87 skills, cada una en `skills/<nombre>/SKILL.md`.
+Stack curado de skills para Claude Code / agentes autónomos + dev SaaS. 88 skills, cada una en `skills/<nombre>/SKILL.md`.
 
 ## Instalación
 - Skills de Drive: copiá cada carpeta listada en `MANIFEST.md` dentro de `~/.claude/skills/`.
@@ -107,6 +107,7 @@ Stack curado de skills para Claude Code / agentes autónomos + dev SaaS. 87 skil
 ### Visual / video
 - **thumbnail-gen** — genera thumbnails
 - **remotion-video-creation** — creación de videos con Remotion
+- **sound-design-short-video** — asigna SFX/transiciones a cada beat de un guion de video corto (TikTok/Reels) según su función narrativa
 
 ### Extra / colecciones
 - **caveman** — colección vendoreada (commit, compress, review, stats, etc.)
