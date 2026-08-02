@@ -64,6 +64,28 @@ Fuente: análisis de tácticas de retención de 6 cuentas de referencia en edici
 - **00:08 — Escritura táctil:** cada vez que el texto aparece letra por letra en pantalla, suena un teclado mecánico pesado (*Mechanical Keyboard 4*).
 - **00:10 — Elementos emergentes:** al aparecer bloques de texto nuevos simulando chats o pop-ups, un *Button* (clic profundo).
 
+## Tendencias virales 2025-2026 (investigación web, complementa lo anterior)
+
+### SFX tonal vs. genérico
+La crítica más citada por editores profesionales en 2026: los *whooshes* y *risers* genéricos de librería están sobreusados y "no encajan en la tonalidad musical del video". La alternativa que están adoptando: **efectos tonales** (risers, impacts y swells afinados en la misma tonalidad que la música/score), que se sienten como parte de la banda sonora en vez de un sonido "pegado" encima. Priorizar packs de SFX tonales sobre los genéricos de stock cuando el video tiene música de fondo definida. — [multiply.sound en TikTok](https://www.tiktok.com/@multiply.sound/video/7504866296241081646)
+
+### Densidad de SFX en los primeros segundos
+El patrón algorítmico observado en edits de alta retención: **bass hit/boom** en el primer frame del hook visual, **whoosh** en cada corte de cámara (si los cortes son más rápidos que ~0.8s), y **riser** justo antes del remate/punchline. Algunos editores llegan a apilar 5-7 SFX distintos en los primeros 5 segundos del video — la ventana crítica de retención. — [YouTubeSFX](https://youtubesfx.com/tiktok-sound-effects/)
+
+### Catálogo de SFX más usados 2025-2026
+Confirma y amplía la tabla de categorías de la skill: *whoosh* (transición), *pop* (resaltar texto/elemento), *click* (botón/UI), *camera/flash* (transición foto), *keyboard typing* (contenido de productividad/escritura), *bell/ding* (logro), *riser/sweep up* (anticipación), *bass drop/boom* (énfasis de cambio), *chime/sparkle* (efecto mágico/revelación), *glitch/digital error* (vibra futurista o disonancia). — [Epidemic Sound — TikTok trends](https://www.epidemicsound.com/blog/latest-tiktok-trends/), [HeyOrca — trending audio](https://www.heyorca.com/blog/trending-audio-for-reels-tiktok)
+
+### Estilo "brainrot" (meme absurdista, Gen Alpha)
+Categoría de nicho en auge: sonidos cortos, absurdos e instantáneamente reconocibles (ej. memes tipo "oi oi oi a eye eye", Angry Birds meme, Skibidi/Sigma, alarmas exageradas con distorsión glitch) usados para golpes de comedia donde el chiste "llega antes de que el espectador entienda por qué se ríe". Útil como variante de la categoría *Cartoon/quitar seriedad* de la skill, pero con un registro más caótico/absurdo que el clásico *Slide Whistle*. No confundir con el resto de categorías: este estilo sacrifica narrativa por shock/absurdo puro. — [MyInstants Pro — brainrot](https://www.myinstantspro.com/category/brainrot)
+
+### Técnicas de edición visual que acompañan al sonido
+- **Micro-shifts / zoom punch:** micro-zooms y saltos sutiles de encuadre sincronizados con el whoosh/pop, para simular una producción más dinámica de lo que realmente es.
+- **Jump cuts agresivos:** cortar partes de una toma continua para generar urgencia; reordenar clips de una sola toma puede hacer que una acción mundana se vea más emocionante.
+- **Kinetic typography / AI captions:** subtítulos animados palabra por palabra (no bloques estáticos) — se menciona junto a la tipografía animada ya presente en la skill como regla de oro.
+- **Apertura vertical-first:** el primer plano debe llenar todo el frame 9:16 con movimiento inmediato y bold — los primeros ~1s deciden el scroll-stop antes de que exista tiempo para un hook hablado.
+- **Regla de retención temprana:** si la retención cae fuerte en los primeros 3 segundos, el diagnóstico habitual es que el hook de edición (visual+sonoro combinado) no fue suficientemente agresivo, no solo el guion.
+— [CapCut — Viral Hook](https://www.capcut.com/explore/Viral-hook), [Video Editing Trends 2026](https://offshoreclipping.com/blog/video-editing-trends/), [Trending Viral Video Editing Techniques](https://dl.iir.edu.ua/iir-news/trending-viral-video-editing-techniques-1767647373)
+
 ## Prompt de síntesis (para alimentar a Claude directamente)
 
 > Actúa como un experto en retención y edición de formato corto (TikTok/Reels). A partir de ahora, aplicaremos las siguientes reglas de diseño sonoro y visual a mis guiones:

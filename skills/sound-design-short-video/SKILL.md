@@ -50,6 +50,8 @@ Diseño sonoro y de edición para video vertical corto (TikTok/Reels/Shorts), ba
 - Prioriza foleys hiper-específicos (lápiz, teclado, papel) sobre efectos genéricos "quemados" (sobreutilizados) para un acabado profesional.
 - Un riser o impact va SIEMPRE antes del dato más importante o polémico, nunca después — es anticipación, no reacción.
 - Los pops/clics de anclaje deben sincronizarse frame-accurate con la aparición del elemento en pantalla, no aproximado.
+- Si el video tiene música de fondo definida, preferir SFX tonales (afinados en la misma tonalidad que la música) sobre whooshes/risers genéricos de stock — se sienten parte de la banda sonora en vez de "pegados" encima.
+- En el hook (primeros ~3-5s), apilar densidad de SFX: bass hit/boom en el primer frame, whoosh en cada corte si son más rápidos que ~0.8s, riser antes del remate. Si la retención cae fuerte ahí, el problema suele ser que el combo visual+sonoro no fue suficientemente agresivo.
 
 ## Output esperado
 Guion devuelto línea por línea con las marcas `[efecto — momento]` insertadas en cada beat, listo para pasarle a un editor humano o a un motor de generación de video.
