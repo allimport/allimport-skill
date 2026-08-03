@@ -21,5 +21,9 @@ graphify-out/
 video/node_modules/
 video/out/
 
+# OpenMontage / HyperFrames — motor pesado (161 MB), se clona local dentro del
+# repo para tenerlo todo en un solo lugar, pero nunca se commitea (ver TERCEROS-PENDIENTES.md §3)
+video/openmontage/
+
 # MCP config with real tokens — copy .mcp.json.example to .mcp.json locally
 .mcp.json
