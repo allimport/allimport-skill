@@ -1,0 +1,36 @@
+====================================================
+  ALL IMPORT - Analizador de chats (version actual)
+====================================================
+
+QUE HACE
+Lee TODOS los chats de WhatsApp (ZIP) que pongas en esta carpeta, agarra cada
+producto con su precio y su FOTO, y arma un informe. No instala nada.
+
+QUE NECESITAS EN LA CARPETA (todo junto)
+- Los ZIP de WhatsApp (los chats exportados).
+- analizar_completo.py
+- CORRER_COMPLETO.bat
+
+COMO USAR
+1. Doble clic en  CORRER_COMPLETO.bat
+2. Se abre una ventana negra, trabaja un rato (con los grupos grandes tarda).
+3. Cuando dice LISTO, en la carpeta aparecen:
+   - Informe_COMPLETO.html   -> doble clic: se abre en el navegador con las FOTOS
+   - Productos_COMPLETO.csv  -> se abre con LibreOffice
+   - carpeta _fotos_extraidas -> todas las fotos sueltas
+
+CAMBIAR EL PERIODO (opcional)
+Por defecto lee TODAS las fechas.
+Para ver solo lo reciente:
+1. Clic derecho en analizar_completo.py -> Abrir con -> Bloc de notas.
+2. Arriba dice:  DIAS_ATRAS = 9999
+3. Cambiá 9999 por 20 (ultimos 20 dias) o el numero que quieras. Guardá (Ctrl+S).
+4. Doble clic de nuevo en CORRER_COMPLETO.bat.
+
+QUE ESPERAR (honesto)
+- Cada foto es un producto. Si el proveedor escribio el precio, aparece; si el
+  precio esta SOLO en la foto, el producto igual aparece y dice "precio EN LA FOTO"
+  (lo miras vos en la imagen).
+- Los precios ahora son solo numeros reales ($ / mil / la docena). Se descartan
+  watts, codigos de modelo, años (Mundial 2026), cantidades, telefonos y links.
+- Sin combos.

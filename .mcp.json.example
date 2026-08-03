@@ -1,0 +1,27 @@
+{
+  "_comment": "Plantilla. Copiá a .mcp.json (ignorado por git) y pegá tus tokens reales. NUNCA commitees tokens.",
+  "mcpServers": {
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest"]
+    },
+    "supabase": {
+      "command": "npx",
+      "args": ["-y", "@supabase/mcp-server-supabase@latest"],
+      "env": {
+        "SUPABASE_ACCESS_TOKEN": "TU_TOKEN_AQUI"
+      }
+    },
+    "figma": {
+      "command": "npx",
+      "args": ["-y", "figma-developer-mcp", "--figma-api-key=TU_TOKEN_AQUI"]
+    },
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp"],
+      "env": {
+        "CONTEXT7_API_KEY": "TU_TOKEN_AQUI"
+      }
+    }
+  }
+}

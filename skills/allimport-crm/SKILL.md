@@ -1,0 +1,45 @@
+---
+name: allimport-crm
+description: Gestiona la base de clientes de All Import (planilla con etiquetas compró/potencial/curioso). Use when the user asks to add/update a client, "cargá este cliente", "quién compró", "clientes potenciales", seguimiento de WhatsApp, o exportar la lista. Trabaja sobre proveedores/base-datos-clientes-template.csv y respeta las etiquetas del plan. Datos personales = privados, nunca commitear la planilla real llena.
+---
+
+# All Import — CRM de clientes
+
+Maneja la memoria de clientes: quién es, qué compró, en qué etapa está, cómo seguirlo.
+
+## Cuándo usar
+- "Cargá/actualizá este cliente", "quién compró", "clientes potenciales", "a quién le hago
+  seguimiento", "exportá la lista".
+- Cuando el agente de WhatsApp (O2) registra un contacto nuevo.
+
+## Archivo base
+`proveedores/base-datos-clientes-template.csv` — separador `;`. Columnas:
+`nombre;fecha;tipo_compra;presupuesto;primera_vez_emprende;zona;producto;cantidad;monto;pago;envio_retiro;telefono;etiqueta;notas`.
+- `tipo_compra`: mayorista / minorista.
+- `presupuesto`: número ARS (para armar el combo de emprender).
+- `primera_vez_emprende`: si / no.
+- `zona`: para definir entrega (Córdoba capital / cercanías / fuera).
+
+## Etiquetas (del plan, fijas)
+- **compró** — ya compró al menos una vez.
+- **potencial** — preguntó por un producto/precio, no cerró.
+- **curioso** — interactuó (like/comentario/DM) sin intención clara.
+
+## Reglas
+1. Una fila por cliente. Si ya existe (mismo teléfono) → **actualizar**, no duplicar.
+2. Fecha `dd/mm/aaaa`. Monto solo número (ARS).
+3. Para leer/editar/ordenar/filtrar la planilla usar la skill `xlsx` (o CSV directo).
+4. **Privacidad:** la planilla REAL (con teléfonos) es privada. NO commitearla al repo;
+   solo se versiona el template vacío. Guardarla local.
+5. Seguimiento por etiqueta (cadencia, del sistema de ventas — ver
+   `contenido/SISTEMA-VENTAS-MARCA-PERSONAL.md`):
+   - **compró** → seguimiento semanal, ofertas puntuales, resolver reclamos sin discutir.
+   - **potencial** → 2-3 días seguidos reactivando curiosidad; si no responde, pasa al
+     mes siguiente (no insistir más allá de eso).
+   - **curioso** → contacto suave una vez por mes, sin ofrecer nada todavía — aportar
+     valor, no vender.
+
+## Salidas útiles
+- "Lista de potenciales para seguir hoy" (filtra etiqueta=potencial, ordena por fecha).
+- "Clientes que compraron este mes" (etiqueta=compró + rango de fecha).
+- Alta rápida desde un mensaje: parsear nombre/producto/monto → agregar fila.

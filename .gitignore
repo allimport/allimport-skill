@@ -1,8 +1,25 @@
 
 # Local agent skills (installed via npx skills add)
 .agents/
-.claude/
+
+# Bóveda de Obsidian del dueño (apunta a la raíz del repo en su PC)
+.obsidian/
+.claude/*
+!.claude/settings.json
+!.claude/agents/
+!.claude/agents/**
 skills-lock.json
 
 # Graphify generated output (local knowledge graph)
 graphify-out/
+
+# Impeccable (design skill/hooks vendorizado por harness, local por dueño)
+.github/hooks/
+.github/skills/
+
+# Remotion (video/) generated output — se regenera con npm install / render
+video/node_modules/
+video/out/
+
+# MCP config with real tokens — copy .mcp.json.example to .mcp.json locally
+.mcp.json
