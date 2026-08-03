@@ -6,12 +6,13 @@ Memoria del proyecto para Claude Code. Leé esto antes de trabajar.
 Repo de **All Import** (Córdoba, Argentina · @allimport.cba). Contiene:
 - **`web/`** — landing de la marca (Next.js 15 + React 19 + three.js/R3F + Tailwind 4 + TypeScript). Se deploya como export estático a GitHub Pages.
 - **`skills/`** — biblioteca de skills para Claude Code (base + terceros: `claude-seo` 25 skills, `graphify`, `openmontage`). Cada una en `skills/<nombre>/SKILL.md`.
-- **`_research/`** — conocimiento del proyecto: plan maestro, análisis de videos/fotos, prompts útiles. **Leé `_research/PLAN-DEFINITIVO.md` para el plan y las prioridades vigentes** (foco en redes).
-- **`contenido/`** — motor de contenido para redes: calendario semanal, 10 ganchos+guiones de reel, `DESIGN.md` (branding).
-- **`historias/`** — editor de fotos → historias de Instagram (Python + Pillow).
-- **`video/`** — clips de producto animados (proyecto Remotion).
-- **`proveedores/`** — analizador de chats de WhatsApp (→ HTML/CSV) + plantilla de base de clientes.
-- **`docs/`** — núcleo documental (SSOT). Índice en `docs/README.md`; reporte de estado en `docs/ESTADO-INICIAL.md`; terceros diferidos en `docs/TERCEROS-PENDIENTES.md`.
+- **`allimport/`** — carpeta central con todo lo específico del negocio, clasificado en subcarpetas (ver `allimport/docs/FLUJOS-DE-TRABAJO.md` para cómo se reparte entre los 4 chats):
+  - **`allimport/_research/`** — conocimiento del proyecto: plan maestro, análisis de videos/fotos, prompts útiles. **Leé `allimport/_research/PLAN-DEFINITIVO.md` para el plan y las prioridades vigentes** (foco en redes).
+  - **`allimport/contenido/`** — motor de contenido para redes: calendario semanal, 10 ganchos+guiones de reel, `DESIGN.md` (branding).
+  - **`allimport/historias/`** — editor de fotos → historias de Instagram (Python + Pillow).
+  - **`allimport/video/`** — clips de producto animados (Remotion) + pipeline de corte de silencios (ffmpeg).
+  - **`allimport/proveedores/`** — analizador de chats de WhatsApp (→ HTML/CSV) + plantilla de base de clientes.
+  - **`allimport/docs/`** — núcleo documental (SSOT) y sistema de diseño. Índice en `allimport/docs/README.md`; diseño en `allimport/docs/DISEÑO.md`; reporte de estado en `allimport/docs/ESTADO-INICIAL.md`; terceros diferidos en `allimport/docs/TERCEROS-PENDIENTES.md`.
 - **`.claude/agents/`** — subagentes: `reviewer` y `web-qa` (propios) + 37 de `contains-studio/agents` + 18 de `claude-seo` (solo `.md`).
 
 > El **producto/app de All Import todavía no existe como código** en este repo. Hoy hay landing + skills. Cuando exista el producto (con backend/DB), va con el mismo estándar.
@@ -48,7 +49,7 @@ Uso obligatorio de los 5 comandos nativos de Claude Code en el flujo de All Impo
 4. **`/plan`** — Activar el modo de planificación explícita antes de ejecutar cambios arquitectónicos o tareas complejas de múltiples archivos.
 5. **`/agents`** — Acceder y gestionar el panel de subagentes especializados (ej. `reviewer`, `web-qa`).
 
-Regla de sesión: **una tarea = una sesión**; `/clear` entre tareas distintas; `/compact` dentro de una tarea larga; `/context` para vigilar la ventana. Detalle ampliado en `docs/03-CLAUDE-CODE.md`.
+Regla de sesión: **una tarea = una sesión**; `/clear` entre tareas distintas; `/compact` dentro de una tarea larga; `/context` para vigilar la ventana. Detalle ampliado en `allimport/docs/03-CLAUDE-CODE.md`.
 
 ## Reglas de oro (no negociables)
 1. **Nunca dejes de compilar.** Antes de dar por hecho un cambio en `web/`, corré `npm run lint` y `npm run build`.
@@ -59,16 +60,16 @@ Regla de sesión: **una tarea = una sesión**; `/clear` entre tareas distintas; 
 6. Para tareas grandes o delicadas: **plan primero** (mostrá el plan, esperá OK), después ejecutá.
 
 ## Seguridad (cuando exista el producto con backend)
-Aplicar: RLS en Supabase, CORS restringido, credenciales en env vars, rate limiting, sanitizar inputs. Prompts listos en `_research/prompts-utiles.md`.
+Aplicar: RLS en Supabase, CORS restringido, credenciales en env vars, rate limiting, sanitizar inputs. Prompts listos en `allimport/_research/prompts-utiles.md`.
 
 ## Cómo trabajar acá
-- Empezá leyendo `_research/PLAN-DEFINITIVO.md` (prioridades vigentes; foco en redes). `_research/PLAN-MAESTRO.md` queda como contexto histórico.
+- Empezá leyendo `allimport/_research/PLAN-DEFINITIVO.md` (prioridades vigentes; foco en redes). `allimport/_research/PLAN-MAESTRO.md` queda como contexto histórico.
 - Tarea concreta > pedido vago. Verificá lo que hacés (build/lint/screenshot), no solo lo escribas.
 
 ## Eficiencia de contexto (tokens)
 - **Buscá antes de leer:** usá `grep`/`find` para ubicar lo puntual antes de abrir carpetas o archivos enteros. No leas todo un directorio si necesitás una función.
 - **Una tarea = una sesión.** `/clear` entre tareas distintas; `/compact` dentro de una tarea larga; `/context` para vigilar la ventana.
-- Detalle durable → `docs/` (se lee bajo demanda), no repetido en el chat.
+- Detalle durable → `allimport/docs/` (se lee bajo demanda), no repetido en el chat.
 - **Seguridad:** nunca commitear secretos ni `.mcp.json` (está en `.gitignore`); credenciales solo en variables de entorno.
 
 ## graphify

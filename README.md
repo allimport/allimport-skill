@@ -1,6 +1,8 @@
 # allimport-skills
 
-Stack curado de skills para Claude Code / agentes autónomos + dev SaaS. 89 skills, cada una en `skills/<nombre>/SKILL.md`.
+Stack curado de skills para Claude Code / agentes autónomos + dev SaaS. 110 skills, cada una en `skills/<nombre>/SKILL.md`.
+
+Todo lo específico del negocio **All Import** (guiones, historias, video, sistema de diseño, investigación, proveedores) vive centralizado en [`allimport/`](allimport/) — ver `allimport/docs/FLUJOS-DE-TRABAJO.md` para cómo se separa el trabajo en 4 chats. `web/` (la landing) y `skills/` (librería general) quedan en la raíz.
 
 ## Instalación
 - Skills de Drive: copiá cada carpeta listada en `MANIFEST.md` dentro de `~/.claude/skills/`.
@@ -14,13 +16,7 @@ Stack curado de skills para Claude Code / agentes autónomos + dev SaaS. 89 skil
 - **skill-router** — rutea la tarea a la skill correcta
 - **skill-creator** — crea skills nuevas
 - **task-decomposition** — parte tareas en subtareas
-- **multi-agent-patterns** — patrones de orquestación multi-agente
-- **tool-design** — diseño de herramientas para agentes
-- **harness-engineering** — diseño de harnesses/loops de agentes
-- **hosted-agents** — despliegue de agentes hospedados
 - **advanced-evaluation / evaluation** — evaluación de outputs de agentes/modelos
-- **latent-briefing** — briefs implícitos para agentes
-- **bdi-mental-states** — modelado de creencia/deseo/intención en agentes
 - **workflow-planner** — convierte un objetivo en plan de pasos verificables
 - **workflow-executor** — ejecuta planes multi-paso con checkpoints y reintentos
 - **skill-chaining** — encadena skills pasando salida→entrada
@@ -29,18 +25,16 @@ Stack curado de skills para Claude Code / agentes autónomos + dev SaaS. 89 skil
 - **continuous-improvement** — aprende de cada run y mejora el proceso
 
 ### Contexto / tokens
-- **context-fundamentals** — principios base de gestión de contexto
 - **context-optimization** — optimización del uso de contexto
 - **context-compression** — comprime contexto largo
-- **context-degradation** — detecta degradación de contexto
 - **prompt-compression** — acorta prompts sin perder requisitos
 - **token-optimizer** — presupuesto y reducción de tokens
-- **memory-systems** — memoria persistente entre sesiones
 - **composition-patterns** — patrones de composición de prompts/contexto
 - **filesystem-context** — archivos como contexto
 - **context7** — docs actualizadas de librerías vía Context7 MCP
 - **napkin** — diagramas/wireframes rápidos desde texto
 - **repo-indexer** — indexa símbolos y dependencias del repo
+- **graphify** — convierte código/docs/papers/video en un grafo de conocimiento persistente y consultable
 - **smart-file-selector** — set mínimo de archivos relevantes para una tarea
 - **semantic-diff** — resume diffs por intención e impacto
 
@@ -91,6 +85,11 @@ Stack curado de skills para Claude Code / agentes autónomos + dev SaaS. 89 skil
 - **ad-creative-generation** — generación de creativos publicitarios
 - **marketing-skills** — colección de decenas de skills de marketing (ab-testing, cold-email, etc.)
 - **humanizer** — elimina patrones de escritura IA del texto
+- **seo** — auditoría SEO completa (técnico, schema, E-E-A-T, Core Web Vitals, GEO para AI Overviews)
+- **seo-audit / seo-technical / seo-schema / seo-sitemap / seo-hreflang** — auditorías técnicas específicas
+- **seo-content / seo-content-brief / seo-images / seo-image-gen** — contenido y assets on-page
+- **seo-cluster / seo-flow / seo-plan / seo-programmatic** — arquitectura y planificación de contenido a escala
+- **seo-backlinks / seo-competitor-pages / seo-drift / seo-ecommerce / seo-geo / seo-google / seo-local / seo-maps / seo-page / seo-sxo** — nichos y plataformas específicas de SEO
 
 ### Backend / infra
 - **nextjs-best-practices** — buenas prácticas Next.js
@@ -102,13 +101,19 @@ Stack curado de skills para Claude Code / agentes autónomos + dev SaaS. 89 skil
 - **observability-logging** — logs, métricas y traces
 - **ci-cd-pipeline** — pipeline de CI/CD con tests y deploy seguro
 - **error-monitoring** — captura, agrupa y alerta errores en producción
-- **project-development** — flujo general de desarrollo de proyectos
 
 ### Visual / video
 - **thumbnail-gen** — genera thumbnails
 - **remotion-video-creation** — creación de videos con Remotion
 - **sound-design-short-video** — asigna SFX/transiciones a cada beat de un guion de video corto (TikTok/Reels) según su función narrativa
-- **silence-removal-pipeline** — corta silencios de un video/audio crudo (ffmpeg + Node, ver `video/` y `docs/VIDEO-PIPELINE.md`) manteniendo sync audio/video
+- **silence-removal-pipeline** — corta silencios de un video/audio crudo (ffmpeg + Node, ver `allimport/video/` y `allimport/docs/VIDEO-PIPELINE.md`) manteniendo sync audio/video
+- **openmontage** — colección vendorizada de skills de producción de video end-to-end (guion→assets→edición→publish); el motor de render va aparte, no está en el repo
+
+### All Import (negocio)
+- **allimport-web-design** — design system de `web/` (colores, tipografía, spacing, patrones de componente)
+- **allimport-catalog-checker** — valida el catálogo de `web/` antes de shippear (naming trademark-safe, precios, WhatsApp)
+- **allimport-crm** — gestiona la base de clientes (`allimport/proveedores/`)
+- **allimport-viral-research** — investiga qué es viral en el nicho antes de escribir guiones
 
 ### Extra / colecciones
 - **caveman** — colección vendoreada (commit, compress, review, stats, etc.)
