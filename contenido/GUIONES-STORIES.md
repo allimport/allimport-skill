@@ -109,5 +109,23 @@ Cada pedido, cada mensaje, cada "no" que te dicen, te acerca más a tu objetivo
 Seguí. Vas bien
 ```
 
+## Guión 5 — Campera AFA Adidas ($80.000)
+Pieza suelta (1 story, no secuencia). Foto: campera rompeviento negra Adidas AFA,
+escudo 3 estrellas, con capucha, AEROREADY. Kicker abierto a talles (todavía no
+confirmado el stock por talle).
+
+```
+STORY 1 · CIERRE
+La campera que vas a querer usar en todos lados este invierno
+
+Adidas AFA, impermeable y con capucha — ideal para vos o para revender
+
+$80.000
+
+[HABLAME POR ACÁ]
+
+— CAMPERA AFA ADIDAS · CONSULTAME TU TALLE
+```
+
 ## Próximos guiones
 Se agregan acá a medida que se escriben — uno por bloque, mismo formato de arriba.
