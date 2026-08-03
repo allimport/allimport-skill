@@ -47,6 +47,7 @@ Diseño sonoro y de edición para video vertical corto (TikTok/Reels/Shorts), ba
 - Máximo 2-3 tipografías que contrasten pero se lean bien; variar tamaño para dar jerarquía y ritmo.
 - Variantes según el tono del video: *tracking text* (el texto sigue al sujeto en pantalla) para contenido dinámico/físico; *playful text* (rebote, rotación leve) para tono cómico o ligero.
 - El punto óptimo está entre "subtítulo plano" (aburre) y "texto sobre-animado" (satura) — si dudás, quedate más cerca de lo simple.
+- Fuente por defecto para el cuerpo del subtítulo: un bold sans con x-height grande (ej. Montserrat Bold) — se lee mejor en pantallas chicas que un serif o script. Ver banco completo de tipografías por categoría (groovy, editorial de lujo, ligature, handwritten) en `references/typography.md`.
 
 ## Elementos gráficos (overlays)
 
@@ -101,4 +102,4 @@ Regla práctica: mismo guion, hook y elementos gráficos para ambas plataformas 
 ## Output esperado
 Guion devuelto línea por línea con las marcas `[efecto/gráfico — momento]` insertadas en cada beat, listo para pasarle a un editor humano o a un motor de generación de video.
 
-Para el detalle completo por creador (timestamps, ejemplos, prompt de síntesis), ver `references/creator-methods.md`. Para subtítulos, overlays gráficos, cortes a IA, pattern interrupts y diferencias IG/TikTok con más profundidad y fuentes, ver `references/visual-elements-viral.md`.
+Para el detalle completo por creador (timestamps, ejemplos, prompt de síntesis), ver `references/creator-methods.md`. Para subtítulos, overlays gráficos, cortes a IA, pattern interrupts y diferencias IG/TikTok con más profundidad y fuentes, ver `references/visual-elements-viral.md`. Para el banco de tipografías por categoría (groovy/retro, editorial de lujo, bold display/captions, ligature/script, handwritten) con nombres concretos y dónde conseguirlas, ver `references/typography.md`.
