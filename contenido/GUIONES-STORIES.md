@@ -127,5 +127,17 @@ $80.000
 — CAMPERA AFA ADIDAS · CONSULTAME TU TALLE
 ```
 
+## Guión 6 — Ya estamos activos (toma de pedidos, versión 2)
+Pieza suelta (1 story, no secuencia). Variante del Guión 3, apertura distinta.
+
+```
+STORY 1 · CIERRE
+Ya estamos activos
+
+Buen día, buena energía — empecemos bien el día. Escribime y hacemos tu pedido
+
+— TOMANDO PEDIDOS HOY
+```
+
 ## Próximos guiones
 Se agregan acá a medida que se escriben — uno por bloque, mismo formato de arriba.
