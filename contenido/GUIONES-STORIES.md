@@ -127,16 +127,16 @@ $80.000
 — CAMPERA AFA ADIDAS · CONSULTAME TU TALLE
 ```
 
-## Guión 6 — Ya estamos activos (toma de pedidos, versión 2)
-Pieza suelta (1 story, no secuencia). Variante del Guión 3, apertura distinta.
+## Guión 6 — Buen día (toma de pedidos, versión 3, tono tranqui)
+Pieza suelta (1 story, no secuencia). Variante del Guión 3, tono más calmo, sin "hoy" en el kicker.
 
 ```
 STORY 1 · CIERRE
-Ya estamos activos
+Buen día
 
-Buen día, buena energía — empecemos bien el día. Escribime y hacemos tu pedido
+Empecemos bien el día — estoy tomando pedidos, minorista y mayorista
 
-— TOMANDO PEDIDOS HOY
+— ESCRIBIME Y HACEMOS TU PEDIDO
 ```
 
 ## Próximos guiones
