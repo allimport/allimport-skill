@@ -139,5 +139,33 @@ Empecemos bien el día — estoy tomando pedidos, minorista y mayorista
 — ESCRIBIME Y HACEMOS TU PEDIDO
 ```
 
+## Guión 7 — Motivadoras: no esperes el momento perfecto (4 piezas)
+4 piezas sueltas, independientes (no secuencia). Tema: dejar de esperar el momento
+perfecto y actuar hoy — cierra la última empujando a la acción (comprar/escribir).
+
+```
+STORY 1 · CIERRE
+El momento perfecto no existe
+
+Si esperás que todo esté perfecto para arrancar, nunca vas a arrancar
+
+STORY 2 · CIERRE
+Hoy es el día
+
+No es "mañana", no es "cuando tenga más plata" — es hoy, es ahora
+
+STORY 3 · CIERRE
+Podés cambiar el chip cuando quieras
+
+Dejá de esperar que las cosas cambien solas y empezá a moverte vos
+
+STORY 4 · CIERRE
+Dejá de pensarlo y hacelo
+
+Esa decisión que venís postergando, tomala hoy
+
+[HABLAME POR ACÁ]
+```
+
 ## Próximos guiones
 Se agregan acá a medida que se escriben — uno por bloque, mismo formato de arriba.
