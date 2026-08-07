@@ -55,15 +55,23 @@ valores por tu cuenta.
 ## 2. PALETA EXACTA
 
 ```
---accent:   #00D4D4   /* ÚNICO color de acento — cyan de marca All Import */
---card-bg:  #131F38
-fondo app:  #020408
-texto:      #FFFFFF
-gris meta:  #8a8a92
-borde dark: #12151F / #161A26
+--accent:      #00D4D4   /* color de acento PRINCIPAL — cyan de marca All Import, domina la pieza */
+--accent-2:    #78B4EB   /* celeste — detalle secundario, NUNCA reemplaza al cyan como protagonista */
+--urgent:      #E22A2A   /* rojo — SOLO urgencia real ("últimas unidades"), nunca decorativo ni falsa urgencia */
+--price:       #C9A227   /* dorado — opcional, solo para destacar un precio puntual */
+--card-bg:     #131F38
+fondo app:     #020408
+texto:         #FFFFFF
+gris meta:     #8a8a92
+borde dark:    #12151F / #161A26
 ```
 
-**Regla de oro:** el cyan `#00D4D4` es el ÚNICO color de acento. Cero rojos/verdes/morados/amarillos. Solo blanco, negro, gris y cyan. (Excepción: el tick verificado azul `#1d9bf0` SÓLO si hay un mention `@usuario` con verificación — se mantiene azul porque imita el badge real de la plataforma, no es un color decorativo de marca.)
+**Regla de oro:** el cyan `#00D4D4` sigue siendo el color de acento **dominante** — es lo primero que se lee como "esto es All Import". Los tres colores secundarios (`--accent-2`, `--urgent`, `--price`) están disponibles para llamar la atención puntualmente, pero cada uno tiene un uso específico, no decorativo:
+- `--accent-2` (celeste) → un detalle secundario que no debe competir con el cyan (ej. un dato de apoyo, un ícono chico)
+- `--urgent` (rojo) → solo si el guión expresa urgencia real y verificable. Nunca para "crear" urgencia falsa
+- `--price` (dorado) → opcional, solo para un precio destacado puntual
+
+Máximo **un color secundario por slide**, además del cyan — nunca los tres juntos, y nunca un secundario sin el cyan presente en la misma pieza. Fuera de esta paleta (los 3 secundarios + cyan + blanco/negro/gris), no se agregan colores nuevos. (Excepción aparte: el tick verificado azul `#1d9bf0` SÓLO si hay un mention `@usuario` con verificación — imita el badge real de la plataforma, no es un color de marca.)
 
 ## 3. TIPOGRAFÍA
 
@@ -135,6 +143,9 @@ Cada vez que el guión use **mayúsculas**, comillas dobles, asteriscos, o palab
 - Números enormes (porcentajes, cifras) → su propio bloque gigante con color `var(--accent)` y glow cyan detrás (ver layout HOOK)
 - Si una misma frase tiene 2 enfatizados, alterna los estilos para crear jerarquía
 
+**4. `callout-box`** → recuadro para destacar un bloque entero (no una palabra suelta) — un dato, una lista corta, un precio. Se usa cuando el highlight inline no alcanza y hace falta que la mirada pare ahí.
+`background: var(--card-bg); border: 2px solid var(--accent); border-radius: 14px; padding: 24px 28px;` — el borde puede usar `--accent-2` en vez de `--accent` si el recuadro es un dato secundario (nunca los dos bordes de color distinto en la misma slide). Puede llevar glow difuso detrás igual que `.proof-wrap` (§7 Tipo B) si el layout lo pide. No abusar: **máximo un `callout-box` por slide**, para que siga funcionando como punto de atención y no como otro elemento más.
+
 ## 7. LAYOUTS POR TIPO DE SLIDE
 
 ### TIPO A · HOOK (apertura impactante con número/palabra gigante)
@@ -169,7 +180,7 @@ mantenelas.
 .progress      .seg / .seg.active / .seg.done
 .counter
 .glow          .noise            .vignette        .bg-photo
-.hl-solid      .hl-dashed        .hl-underline
+.hl-solid      .hl-dashed        .hl-underline    .callout-box
 ```
 
 ## 9. INPUT QUE RECIBIRÁS
