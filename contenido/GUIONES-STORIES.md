@@ -176,5 +176,21 @@ Esa decisión que venís postergando, tomala hoy
 — LA DECISIÓN ES HOY
 ```
 
+## Guión 8 — Buen arranque de semana (foto calle Córdoba)
+Pieza suelta (1 story, no secuencia). Foto: esquina de Córdoba, mañana soleada,
+edificios y arbolado — clima de "arranca la semana". Combina saludo de lunes +
+toma de pedidos + gancho para emprendedores.
+
+```
+STORY 1 · CIERRE
+Buen arranque de semana
+
+Empecemos el lunes con todo. Estamos tomando pedidos, minorista y mayorista — y si querés emprender, hablame y vemos por dónde arrancar
+
+[HABLAME POR ACÁ]
+
+— LUNES DE PEDIDOS · MINORISTA Y MAYORISTA
+```
+
 ## Próximos guiones
 Se agregan acá a medida que se escriben — uno por bloque, mismo formato de arriba.
