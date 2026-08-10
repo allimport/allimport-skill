@@ -12,9 +12,13 @@ STORY N · TIPO
 
 — [opcional: kicker/footer en mayúsculas, precedido de em-dash]
 
+[opcional: CTA entre corchetes — SIEMPRE va al final, después del kicker si hay uno]
+
 STORY N+1 · TIPO
 …
 ```
+**Regla fija:** el CTA `[HABLAME POR ACÁ]` (o el que corresponda) siempre va como la
+última línea de la story. Si hay kicker, el kicker va antes del CTA, no después.
 
 **Tipos disponibles:**
 - **HOOK** — apertura con número/palabra gigante. Para arrancar la secuencia.
@@ -59,18 +63,18 @@ esto se vende solo
 
 no dejes pasar la oportunidad de hacer unos pesos con algo que la gente ya busca
 
-[HABLAME POR ACÁ]
-
 — VASOS TÉRMICOS · RECIÉN LLEGADOS
+
+[HABLAME POR ACÁ]
 
 STORY 2 · CIERRE
 todo el mundo necesita una
 
 rotan rápido y casi no hay que venderlas — es tu oportunidad de hacer unos pesos
 
-[HABLAME POR ACÁ]
-
 — FUNDAS NUEVAS · CONSULTAME QUÉ MODELO Y COLOR TENGO PARA VOS
+
+[HABLAME POR ACÁ]
 ```
 
 ## Guión 3 — Toma de pedidos + gancho emprendedores (31/07)
@@ -83,9 +87,9 @@ Hoy tomamos pedidos
 
 ¿Estás pensando en armar tu propio emprendimiento y no sabés por dónde arrancar? Te leo, contame qué tenés en mente y armamos un plan juntos
 
-[HABLAME POR ACÁ]
-
 — MINORISTA Y MAYORISTA
+
+[HABLAME POR ACÁ]
 ```
 
 ## Guión 4 — Motivadoras (3 piezas sueltas)
@@ -122,9 +126,9 @@ Adidas AFA, impermeable y con capucha — ideal para vos o para revender
 
 $80.000
 
-[HABLAME POR ACÁ]
-
 — CAMPERA AFA ADIDAS · CONSULTAME TU TALLE
+
+[HABLAME POR ACÁ]
 ```
 
 ## Guión 6 — Buen día (toma de pedidos, versión 3, tono tranqui)
@@ -171,9 +175,9 @@ Dejá de pensarlo y hacelo
 
 Esa decisión que venís postergando, tomala hoy
 
-[HABLAME POR ACÁ]
-
 — LA DECISIÓN ES HOY
+
+[HABLAME POR ACÁ]
 ```
 
 ## Guión 8 — Buen arranque de semana (foto calle Córdoba)
@@ -187,9 +191,9 @@ Buen arranque de semana
 
 Empecemos el lunes con todo. Estamos tomando pedidos, minorista y mayorista — y si querés emprender, hablame y vemos por dónde arrancar
 
-[HABLAME POR ACÁ]
-
 — LUNES DE PEDIDOS · MINORISTA Y MAYORISTA
+
+[HABLAME POR ACÁ]
 ```
 
 ## Próximos guiones
