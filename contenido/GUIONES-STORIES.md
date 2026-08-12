@@ -196,5 +196,46 @@ Empecemos el lunes con todo. Estamos tomando pedidos, minorista y mayorista — 
 [HABLAME POR ACÁ]
 ```
 
+## Guión 9 — Buen día, cambiá el pensamiento
+Pieza suelta (1 story, no secuencia). Tipo "buen día" pero enfocada en mentalidad,
+no en pedidos — sin CTA de venta, es puro mindset matutino.
+
+```
+STORY 1 · CIERRE
+Buen día
+
+Cambiá el pensamiento y vas a cambiar el resultado — hoy es una buena oportunidad para empezar de nuevo
+
+— NUEVO DÍA, NUEVA MENTALIDAD
+```
+
+## Guión 10 — Motivadoras: confiá en tu proceso (3 piezas)
+3 piezas sueltas, independientes (no secuencia). Ángulo distinto al Guión 4 y al
+Guión 7: confiar en los tiempos propios, no compararse, y que las ganas de hoy
+valen más que la excusa de ayer.
+
+```
+STORY 1 · CIERRE
+Confiá en tu proceso
+
+Los resultados no se ven de un día para el otro, pero se están construyendo aunque no los veas
+
+— CONFIÁ EN EL PROCESO
+
+STORY 2 · CIERRE
+No compares tu capítulo 1 con el capítulo 20 de otro
+
+Cada uno tiene su tiempo — el tuyo también va a llegar
+
+— TU TIEMPO ES EL TUYO
+
+STORY 3 · CIERRE
+Las ganas de hoy valen más que la excusa de ayer
+
+Levantate, arrancá, hacé algo — por chico que sea, hoy cuenta
+
+— HOY CUENTA
+```
+
 ## Próximos guiones
 Se agregan acá a medida que se escriben — uno por bloque, mismo formato de arriba.
