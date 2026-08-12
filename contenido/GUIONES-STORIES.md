@@ -197,8 +197,8 @@ Empecemos el lunes con todo. Estamos tomando pedidos, minorista y mayorista — 
 ```
 
 ## Guión 9 — Buen día, cambiá el pensamiento
-Pieza suelta (1 story, no secuencia). Tipo "buen día" pero enfocada en mentalidad,
-no en pedidos — sin CTA de venta, es puro mindset matutino.
+Pieza suelta (1 story, no secuencia). Tipo "buen día" enfocada en mentalidad,
+cierra avisando que se toman pedidos.
 
 ```
 STORY 1 · CIERRE
@@ -206,7 +206,9 @@ Buen día
 
 Cambiá el pensamiento y vas a cambiar el resultado — hoy es una buena oportunidad para empezar de nuevo
 
-— NUEVO DÍA, NUEVA MENTALIDAD
+— NUEVO DÍA, NUEVA MENTALIDAD · ESTAMOS TOMANDO PEDIDOS
+
+[HABLAME POR ACÁ]
 ```
 
 ## Guión 10 — Motivadoras: confiá en tu proceso (3 piezas)
