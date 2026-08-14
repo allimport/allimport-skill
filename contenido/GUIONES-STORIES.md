@@ -239,5 +239,18 @@ Levantate, arrancá, hacé algo — por chico que sea, hoy cuenta
 — HOY CUENTA
 ```
 
-## Próximos guiones
-Se agregan acá a medida que se escriben — uno por bloque, mismo formato de arriba.
+## Guión 11 — Buen día (versión 4, ángulo constancia)
+Pieza suelta (1 story, no secuencia). Es el "buen día + tomamos pedidos" de siempre,
+pero con un ángulo distinto a los anteriores (3, 6, 8, 9): en vez de pura energía o
+mindset, habla de la constancia de estar todos los días, haya venta grande o no.
+
+```
+STORY 1 · CIERRE
+Otra vez acá, sumando
+
+No todos los días son un golazo de ventas, pero estamos, todos los días — buenos días, ya estamos tomando pedidos
+
+— CONSTANCIA ANTES QUE SUERTE
+
+[HABLAME POR ACÁ]
+```
