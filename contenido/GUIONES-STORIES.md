@@ -255,17 +255,19 @@ No todos los días son un golazo de ventas, pero estamos, todos los días — bu
 [HABLAME POR ACÁ]
 ```
 
-## Guión 12 — Mate + tablet estudiando (cuenta personal)
+## Guión 12 — Buen día (versión 5, mate + tablet estudiando)
 Pieza suelta (1 story, no secuencia). Foto: mate AFA en mano, tablet con apuntes de
-estudio de fondo, mantel con estampado de café. Es contenido de cuenta personal
-(@_agus_moreno_) — sin CTA de venta, sin marca, momento real de estudiar +
-emprender al mismo tiempo.
+estudio de fondo. Va en la misma línea que los Guiones 3, 6, 8, 9 y 11 — saludo de
+buen día + aviso de que se toman pedidos — con el ángulo de esta foto puntual
+(arrancando el día con mate y estudio, y ya trabajando en los pedidos).
 
 ```
 STORY 1 · CIERRE
-Mate en mano, cabeza puesta
+Buen día, con mate y todo
 
-Entre estudiar y armar esto de a poco — las dos cosas suman, hoy también se avanza
+Arrancando el día así — entre el estudio y ya tomando pedidos, minorista y mayorista
 
-— UN MATE Y GANAS DE HACER
+— BUEN DÍA · TOMANDO PEDIDOS
+
+[HABLAME POR ACÁ]
 ```
