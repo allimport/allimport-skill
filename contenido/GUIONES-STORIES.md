@@ -254,3 +254,18 @@ No todos los días son un golazo de ventas, pero estamos, todos los días — bu
 
 [HABLAME POR ACÁ]
 ```
+
+## Guión 12 — Mate + tablet estudiando (cuenta personal)
+Pieza suelta (1 story, no secuencia). Foto: mate AFA en mano, tablet con apuntes de
+estudio de fondo, mantel con estampado de café. Es contenido de cuenta personal
+(@_agus_moreno_) — sin CTA de venta, sin marca, momento real de estudiar +
+emprender al mismo tiempo.
+
+```
+STORY 1 · CIERRE
+Mate en mano, cabeza puesta
+
+Entre estudiar y armar esto de a poco — las dos cosas suman, hoy también se avanza
+
+— UN MATE Y GANAS DE HACER
+```
