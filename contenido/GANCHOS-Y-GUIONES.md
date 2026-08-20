@@ -96,12 +96,16 @@ producto (regla de marca). Duración objetivo: 30-45 seg.
 Hook del banco: estilo #23 "esta es tu señal", adaptado a pregunta directa)*
 
 - **HOOK (0-3s):** "¿Qué estás esperando para empezar a invertir?"
-- **PROBLEMA (3-12s):** "Si tu respuesta es 'juntar la plata suficiente', tengo que decirte
-  algo: ese momento no llega nunca. Esperás un año, dos años, y seguís en el mismo lugar."
-- **SOLUCIÓN (12-28s):** "Yo no arranqué con un capital grande. Arranqué con lo que tenía y
-  un producto que la gente ya estaba buscando. Se puede empezar con poco — la clave no es
-  cuánto tenés, es con qué arrancás y cómo lo movés."
-- **PRUEBA SOCIAL (28-36s):** "Cada semana hablo con alguien que arranca así, de cero, y en
+- **PROBLEMA (3-14s):** "Si pensaste que no tenés la plata suficiente y seguís esperando el
+  momento perfecto, te quiero decir una cosa: nunca va a existir el momento perfecto. A
+  todos nos pasó — dejamos pasar un mes, dos meses, hasta seis meses, y terminamos haciendo
+  nada."
+- **SOLUCIÓN (14-30s):** "Yo no arranqué con un gran capital. Empecé con lo poco que tenía y
+  un producto que la gente ya buscaba. Se puede empezar con poco — la diferencia está en con
+  qué arrancás y cómo lo hacés mover."
+- **FINAL / CIERRE (30-34s):** "El momento perfecto no existe. El único momento que tenés
+  es este."
+- **PRUEBA SOCIAL (34-40s):** "Cada semana hablo con alguien que arranca así, de cero, y en
   un mes ya está vendiendo. No es magia, es animarse a dar el primer paso."
 - **CTA (36-42s):** "Si estás en esa etapa de 'quiero pero no sé cómo', escribime. Te cuento
   cómo armamos algo con lo que tengas."
