@@ -89,6 +89,42 @@ de Agus (no solo el producto).
 - [75 Instagram Content Ideas 2026 — Kontentino](https://www.kontentino.com/blog/75-instagram-content-ideas-that-drive-engagement/)
 - [37 Best Instagram Story Ideas 2026 — SocialPilot](https://www.socialpilot.co/instagram-marketing/instagram-story-ideas)
 
+## Banco de hooks (frases gancho reutilizables)
+Fuente: captura compartida por Agustín (creador @charlycreator, TikTok) + investigación
+propia (ver fuentes arriba). Usar como plantilla rellenable — no copiar literal, adaptar
+al tono argentino/directo de la marca. Evitar los que suenan a "tips genéricos de
+marketing" (13, 15, 18, 19, 25, 26) — no calzan con la estructura problema→solución de
+los guiones de Agus.
+
+1. Si estás viendo esto...
+2. No vas a creer esto...
+3. Esto te va a dejar alucinado...
+4. Cómo hice esto en [tiempo]...
+5. Nadie habla de esto, pero...
+6. ¿Alguna vez cometiste este error?
+7. Dejá de hacer X hasta ver esto...
+8. El secreto que nadie comparte (pero yo sí)...
+9. Esto cambió todo para mí.
+10. Lo estuviste haciendo mal todo este tiempo.
+11. Errores que cometí cuando _.
+12. Tengo que confesar algo...
+13. Transformá tu [X] con este consejo simple...
+14. Este es tu recordatorio para _.
+15. Solo [X] va a entender esto.
+16. 7 consejos probados para _.
+17. No iba a compartir esto, pero...
+18. 3 consejos para deshacerte de [X].
+19. Esto es para gente [X] — si no sos vos, seguí deslizando...
+20. Yo solo...
+21. Estuve guardando un secreto...
+22. Saber esto me parece ilegal.
+23. Esta es tu señal para _.
+24. No vas a creer lo que acabo de hacer/descubrir.
+25. Cómo mejorar X al instante_.
+26. 7 maneras de ganar más _.
+27. Dejá de deslizar hasta que entiendas esto.
+
 ## Cómo se usan estos hallazgos
-Alimentan los 3 guiones del paso A2 (`GANCHOS-Y-GUIONES.md`, sección "Guiones completos").
-Repetir esta investigación cada 2-3 semanas para refrescar ángulos.
+Alimentan los guiones de `GANCHOS-Y-GUIONES.md`, sección "Guiones completos". El banco de
+hooks de arriba se usa para variar el gancho de cada guion sin repetir siempre la misma
+fórmula. Repetir esta investigación cada 2-3 semanas para refrescar ángulos.
