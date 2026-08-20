@@ -130,16 +130,16 @@ Hook del banco: estilo #5 "nadie habla de esto", adaptado a pregunta directa)*
 *(Hallazgo 4 y 7: ángulo práctico "cómo arranqué" + hook pregunta.
 Hook del banco: estilo #7 "dejá de hacer X hasta ver esto", adaptado a pregunta directa)*
 
-- **HOOK (0-3s):** "¿Qué es lo que mirás vos al comprar un producto?"
-- **PROBLEMA (3-13s):** "La mayoría mira lo que le gusta a ELLA, no lo que el cliente busca.
-  Y así termina con stock que no se mueve."
-- **SOLUCIÓN (13-30s):** "Yo me hago 3 preguntas antes de comprar: ¿la gente ya lo está
-  buscando? ¿lo puedo conseguir a un precio que me deje margen real? ¿lo puedo entregar
-  fácil? Si las tres dan bien, ahí sí conviene."
-- **PRUEBA SOCIAL (30-38s):** "Por elegir así es que no me quedé colgado con productos que
-  no se venden — y es lo mismo que te ayudo a pensar cuando arrancás con nosotros."
-- **CTA (38-44s):** "Guardá este reel para cuando elijas tu primer producto. Y si querés que
-  lo pensemos juntos, escribime."
+- **HOOK (0-3s):** "¿Qué es lo primero que mirás al comprar un producto?"
+- **PROBLEMA (3-13s):** "La mayoría mira lo bonito, o lo que le gusta a ella, y no lo que
+  busca el cliente. Y así termina con stock que no se vende."
+- **SOLUCIÓN (13-30s):** "Yo me hago 3 preguntas antes de comprar: la gente lo busca, lo
+  consigo a buen precio y tengo margen de ganancia, y lo puedo entregar fácil y rápido. Si
+  todo da bien, ahí es cuando conviene."
+- **PRUEBA SOCIAL (30-38s):** "Por elegir así nunca me quedo colgado con ningún producto que
+  no se venda — y es lo mismo que te ayudo a pensar cuando arrancás conmigo."
+- **CTA (38-44s):** "Guardá este video para cuando vayas a elegir un producto, y si querés
+  que te ayude a pensar, escribime que arrancamos con todo."
 
 ### Guion 4 — "La estuviste 'cuidando' mal todo este tiempo"
 *(Hallazgo 9: anti-aspiracional, realidad argentina; ángulo nuevo, plata quieta pierde
