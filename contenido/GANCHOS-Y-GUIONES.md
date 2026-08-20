@@ -107,8 +107,8 @@ Hook del banco: estilo #23 "esta es tu señal", adaptado a pregunta directa)*
   es este."
 - **PRUEBA SOCIAL (34-40s):** "Cada semana hablo con alguien que arranca así, de cero, y en
   un mes ya está vendiendo. No es magia, es animarse a dar el primer paso."
-- **CTA (36-42s):** "Si estás en esa etapa de 'quiero pero no sé cómo', escribime. Te cuento
-  cómo armamos algo con lo que tengas."
+- **CTA (40-46s):** "Dejá de esperar el momento perfecto. Escribime ahora y vemos con qué
+  arrancás vos."
 
 ### Guion 2 — "¿Querés saber qué me diferencia de los otros proveedores?"
 *(Hallazgo 1 y 7: hook pregunta + diferencial real de Agus: mentoría incluida.
