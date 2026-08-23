@@ -272,13 +272,13 @@ Arrancando el día así — entre el estudio y ya tomando pedidos, minorista y m
 [HABLAME POR ACÁ]
 ```
 
-## Guión 13 — Llegaron productos buenos
-Pieza suelta (1 story, no secuencia). Ángulo motivador, sin atarlo a un día puntual
-(reutilizable cualquier día que sumes stock nuevo) — avisa que llegaron productos nuevos.
+## Guión 13 — Los domingos también suman
+Pieza suelta (1 story, no secuencia). Ángulo motivador: el domingo también es un día de
+moverse, no solo de descanso — y de paso avisa que llegaron productos nuevos.
 
 ```
 STORY 1 · CIERRE
-Llegaron productos buenos
+Los domingos también suman
 
 Ayer sumamos productos nuevos — las ganas de seguir creciendo no tienen día de la semana
 
