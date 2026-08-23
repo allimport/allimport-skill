@@ -281,7 +281,7 @@ domingo también es un día de moverse, no solo de descanso — y de paso avisa 
 STORY 1 · CIERRE
 Los domingos también suman
 
-Mientras otros descansan del todo, ayer sumamos productos nuevos — moverse no tiene día de la semana
+Ayer llegaron productos nuevos — las ganas de seguir creciendo no tienen día de la semana
 
 — DOMINGO · PRODUCTOS NUEVOS
 
