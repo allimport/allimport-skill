@@ -272,15 +272,16 @@ Arrancando el día así — entre el estudio y ya tomando pedidos, minorista y m
 [HABLAME POR ACÁ]
 ```
 
-## Guión 13 — Domingo con novedades (productos nuevos)
-Pieza suelta (1 story, no secuencia). Domingo, aviso de que ayer (sábado) llegaron
-productos nuevos y se siguen tomando pedidos.
+## Guión 13 — Los domingos también suman (productos nuevos)
+Pieza suelta (1 story, no secuencia). Ángulo motivador en vez de anuncio plano: el
+domingo también es un día de moverse, no solo de descanso — y de paso avisa que ayer
+(sábado) llegaron productos nuevos.
 
 ```
 STORY 1 · CIERRE
-Domingo con novedades
+Los domingos también suman
 
-Ayer llegaron productos nuevos. Ya los podés pedir, minorista y mayorista
+Mientras otros descansan del todo, ayer sumamos productos nuevos — moverse no tiene día de la semana
 
 — DOMINGO · PRODUCTOS NUEVOS
 
