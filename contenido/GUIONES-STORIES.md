@@ -286,3 +286,19 @@ Ayer sumamos productos nuevos — las ganas de seguir creciendo no tienen día d
 
 [HABLAME POR ACÁ]
 ```
+
+## Guión 14 — Promo Battery Pack + funda de regalo ($30.000)
+Pieza suelta (1 story, no secuencia). Foto: caja de iPhone Battery Pack MagSafe +
+caja de funda transparente magnética (iPhone 17 Pro Max). Promo: comprando el
+battery pack, la funda va de regalo.
+
+```
+STORY 1 · CIERRE
+Comprás la batería, la funda va de regalo
+
+Battery Pack MagSafe a $30.000 — y te llevás la funda sin cargo extra
+
+— PROMO BATTERY PACK + FUNDA DE REGALO
+
+[HABLAME POR ACÁ]
+```
