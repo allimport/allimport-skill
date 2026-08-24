@@ -298,7 +298,7 @@ Comprás la batería, la funda va de regalo
 
 Battery Pack MagSafe a $30.000 — y te llevás la funda sin cargo extra
 
-— PROMO BATTERY PACK + FUNDA DE REGALO
+— NO TE PIERDAS ESTA OFERTA
 
 [HABLAME POR ACÁ]
 ```
