@@ -313,7 +313,7 @@ Buenas tardes
 
 Seguimos tomando pedidos toda la tarde, minorista y mayorista — y si estás por arrancar tu propio negocio, también te leo
 
-— BUENAS TARDES · TOMANDO PEDIDOS
+— NO DEJES PASAR EL DÍA
 
 [HABLAME POR ACÁ]
 ```
