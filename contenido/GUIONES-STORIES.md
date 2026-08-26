@@ -302,3 +302,18 @@ Battery Pack MagSafe a $30.000 — y te llevás la funda sin cargo extra
 
 [HABLAME POR ACÁ]
 ```
+
+## Guión 15 — Buenas tardes (toma de pedidos + gancho emprendedores)
+Pieza suelta (1 story, no secuencia). Versión "tarde" de la serie de saludo + pedidos
+(Guiones 3, 6, 8, 9, 11, 12) — suma el gancho a emprendedores en el mismo texto.
+
+```
+STORY 1 · CIERRE
+Buenas tardes
+
+Seguimos tomando pedidos toda la tarde, minorista y mayorista — y si estás por arrancar tu propio negocio, también te leo
+
+— BUENAS TARDES · TOMANDO PEDIDOS
+
+[HABLAME POR ACÁ]
+```
