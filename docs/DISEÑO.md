@@ -65,6 +65,10 @@ necesita:
   chat nuevo de Claude Design (con el design system enganchado). Fotos reales en
   [`historias/stock-fotos/`](../historias/stock-fotos). Guiones ya escritos en
   [`contenido/GUIONES-STORIES.md`](../contenido/GUIONES-STORIES.md).
+- **Prompt maestro de carruseles** — [`contenido/PROMPT-MAESTRO-CARRUSEL.md`](../contenido/PROMPT-MAESTRO-CARRUSEL.md)
+  — mismo sistema visual que el de stories, pero para posts de carrusel del feed
+  (1080×1350, sin progress bar, portada = miniatura del feed). Se pega igual, como texto,
+  en un chat nuevo de Claude Design.
 
 ## 5. Dónde están las piezas ya hechas
 - [`historias/generadas/`](../historias/generadas) — las historias de restock ya editadas,
