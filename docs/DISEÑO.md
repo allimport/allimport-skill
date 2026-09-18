@@ -69,6 +69,10 @@ necesita:
   — mismo sistema visual que el de stories, pero para posts de carrusel del feed
   (1080×1350, sin progress bar, portada = miniatura del feed). Se pega igual, como texto,
   en un chat nuevo de Claude Design.
+- **Prompt maestro de carrusel "edades"** — [`contenido/PROMPT-MAESTRO-CARRUSEL-EDADES.md`](../contenido/PROMPT-MAESTRO-CARRUSEL-EDADES.md)
+  — formato aparte, minimalista, blanco y negro, sin acento de marca (1080×1080).
+  Pensado para piezas puntuales tipo "Cuando..." que rompen a propósito con el sistema
+  oscuro de marca. Guion en [`contenido/GUIONES-CARRUSEL.md`](../contenido/GUIONES-CARRUSEL.md).
 
 ## 5. Dónde están las piezas ya hechas
 - [`historias/generadas/`](../historias/generadas) — las historias de restock ya editadas,
