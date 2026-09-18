@@ -12,9 +12,10 @@ en "None").
 Vas a recibir más abajo un guión de carrusel (texto plano, una slide por bloque). Tu
 trabajo: convertirlo en un único archivo HTML llamado `Carrusel.html` que renderice las
 slides como imágenes **1080×1350px (4:5, vertical de feed)** — mismo formato que
-`PROMPT-MAESTRO-CARRUSEL.md`, para que se vea consistente con el resto del feed. A
-diferencia de ese otro prompt, acá el banner de texto es sobrio (sin degradado sobre la
-foto), pero SÍ lleva el acento cyan de marca — nada de banner blanco plano.
+`PROMPT-MAESTRO-CARRUSEL.md`, para que se vea consistente con el resto del feed. El
+banner de texto es blanco, pero el borde donde termina y empieza la foto NO es un corte
+recto — es un borde difuminado (blur), como una niebla blanca que se disuelve sobre la
+foto. Eso es lo que le da personalidad a la pieza, en vez de una placa blanca lisa.
 
 ## 0. CONTEXTO
 
@@ -46,47 +47,47 @@ paréntesis = elegís vos de `historias/stock-fotos/` o pedís que suban una.
 ## 2. PALETA (igual al resto del sistema de marca)
 
 ```
---accent:    #00D4D4   /* único color de acento — cyan de marca All Import */
---dark-bg:   #020408   /* extremo oscuro del degradado del banner */
---surface:   #131F38   /* extremo claro del degradado del banner */
-texto banner: #FFFFFF (frase) / #00D4D4 (número)
+--accent:     #00D4D4   /* único color de acento — cyan de marca All Import */
+--banner-bg:  #FFFFFF   /* fondo del banner */
+número:       #00D4D4 (cyan)
+frase:        #111111 (gris casi negro, no negro puro)
 foto: sin filtro, sin degradado, tal cual es
 ```
 
-**Regla de oro:** el cyan es el ÚNICO acento. Nada de otros colores decorativos. El
-banner es oscuro, no blanco — es lo que le da identidad de marca a la pieza sin perder
-la sobriedad del formato original. Pero oscuro NO significa negro liso: ver regla del
-fondo del banner en la sección 3.
+**Regla de oro:** el cyan es el ÚNICO acento de color. El banner es blanco — pero blanco
+NO significa una placa plana con un corte recto contra la foto: ver la regla del borde
+difuminado en la sección 3, es el elemento que le da personalidad a la pieza.
 
 ## 3. LAYOUT DE CADA SLIDE (fijo, igual en las 8)
 
 **Regla anti-vacío (la más importante de esta sección):** el banner NO puede quedar como
-un bloque negro con texto flotando en el medio y aire muerto alrededor — eso es lo que
-lo hace ver genérico y feo. El número y la frase van agrupados, pegados entre sí, con
+un bloque de color con texto flotando en el medio y aire muerto alrededor — eso es lo
+que lo hace ver genérico y feo. El número y la frase van agrupados, pegados entre sí, con
 padding controlado, no centrados sueltos dentro de un espacio grande.
 
-- **Banner superior oscuro**, ~22% de la altura de la slide (≈300px de 1350px, NO más —
-  si mediste bien y da 350px+ de banner con mucho negro vacío arriba/abajo del texto,
+- **Banner superior blanco**, ~22% de la altura de la slide (≈300px de 1350px, NO más —
+  si mediste bien y da 350px+ de banner con mucho blanco vacío arriba/abajo del texto,
   está mal, achicalo).
-  - **Fondo con degradado, nunca sólido liso** (regla de marca, `docs/DISEÑO.md` §2):
-    `linear-gradient(135deg, #020408 0%, #131F38 100%)`. Encima, la misma capa de noise
-    que se usa en el resto de las piezas de marca: SVG fractal `feTurbulence
-    baseFrequency="0.9"`, opacity 0.06, `mix-blend-mode: overlay`, cubriendo todo el
-    banner. Esto es obligatorio — un banner de color sólido liso (negro, gris, lo que
-    sea) sin degradado ni textura está mal, se ve como una placa pegada.
-  - Padding interno del banner: 32px arriba, 40px a los costados, 28px abajo — nada de
-    dejar el número "flotando" en el medio de un banner grande.
+  - Fondo `#FFFFFF` sólido en la parte de arriba del banner (donde va el texto).
+  - Padding interno: 32px arriba, 40px a los costados, 28px abajo — nada de dejar el
+    número "flotando" en el medio de un banner grande.
   - Número de la edad (si la slide lo tiene): **cyan `#00D4D4`**, bold (900), tamaño
     ~90-100px, centrado horizontalmente, `line-height: 0.95` (pegado, sin aire arriba).
-  - Frase entre comillas: **blanco `#FFFFFF`**, bold (700-800), tamaño ~32-38px,
-    centrada, `margin-top: 8px` como máximo respecto al número — van pegados como una
-    sola unidad visual, no como dos elementos separados.
-  - Las slides sin número (como "Pero después...") solo llevan la frase en blanco,
-    centrada verticalmente en el banner, tamaño ~44-50px ya que está sola.
-  - **Línea divisoria cyan** de 4px de alto, `background: var(--accent)`, ancho 72px,
-    centrada horizontalmente, ubicada 20px debajo de la frase (o del número si no hay
-    frase con número) — es el único elemento decorativo del banner, reemplaza el corte
-    seco banner→foto por un detalle que se sienta diseñado.
+  - Frase entre comillas: gris casi negro **`#111111`** (no `#FFFFFF`, el fondo ahora es
+    blanco), bold (700-800), tamaño ~32-38px, centrada, `margin-top: 8px` como máximo
+    respecto al número — van pegados como una sola unidad visual.
+  - Las slides sin número (como "Pero después..." o el cierre final) solo llevan la
+    frase en `#111111`, centrada verticalmente en el banner, tamaño ~44-50px ya que está
+    sola.
+  - **Borde inferior difuminado (obligatorio, es el elemento clave del diseño):** el
+    banner blanco NO termina en una línea recta contra la foto. En vez de eso, generá un
+    `div.banner-blur` posicionado absoluto, pegado al borde inferior del banner,
+    `width: 100%`, `height: 90px`, `background: #FFFFFF`, `filter: blur(28px)`, superpuesto
+    sobre el límite banner/foto (mitad dentro del banner, mitad invadiendo la foto). El
+    efecto tiene que verse como una niebla blanca que se disuelve gradualmente sobre la
+    parte superior de la foto — nunca un corte seco ni una línea marcada. Si hace falta,
+    agregá una segunda capa más chica (`height: 40px`, blur menor) para reforzar el
+    degradé del difuminado sin que se note escalonado.
 - **Foto abajo**, el resto de la slide: `background-size: cover`, `background-position:
   center`, a página completa, **sin degradado, sin overlay, sin filtro** — la foto tal
   cual es, natural. Esto no cambia: la foto sigue siendo protagonista, sin vignette ni
