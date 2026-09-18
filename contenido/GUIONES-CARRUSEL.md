@@ -43,7 +43,7 @@ SLIDE 7 — "Pero después..."
 SLIDE 8 — 80 — "Ojalá hubiera empezado"
 [FOTO: selfie relajado en tu pieza, seña de paz — clima casero, el contraste final]
 
-SLIDE 9 — "El momento perfecto no existe. El único momento que tenés es este."
+SLIDE 9 — "El objetivo final es vivir, no simplemente sobrevivir"
 (sugerencia: una foto tuya que transmita estar disfrutando/viviendo — aire libre o
 social, sin otras personas identificables en cuadro)
 ```
@@ -75,11 +75,13 @@ replicar por la regla de privacidad.)*
 cambiaron las frases de las slides 20, 35, 40 y 50 por las genéricas del original
 ("cuando consiga un trabajo", "cuando los niños crezcan", "cuando acabe de pagar la
 casa", "cuando me retire") en vez de las versiones adaptadas a emprender. Se mantienen
-sin cambios: 16 y 25 (ya coincidían con el original), "Pero después...", y las dos
-slides de cierre — 80 ("Ojalá hubiera empezado", el original dice solo "Ojalá
-hubiera...") y la SLIDE 9 final — porque son las que hacen el giro hacia el mensaje de
-la marca; si también se vuelven genéricas, todo el carrusel queda sin conexión con
-emprender.)*
+sin cambios: 16 y 25 (ya coincidían con el original), "Pero después...", y la slide 80
+("Ojalá hubiera empezado", el original dice solo "Ojalá hubiera...").)*
+
+*(Sexta pasada: confirmado — la SLIDE 9 final también vuelve a la frase original ("El
+objetivo final es vivir, no simplemente sobrevivir") en vez del cierre de marca. Con
+esto, todo el guion queda igual al carrusel original salvo la 80, que sigue cerrada
+("...empezado") en vez de abierta ("Ojalá hubiera...").)*
 
 ## Próximos guiones de carrusel
 Se agregan acá a medida que se escriben.
