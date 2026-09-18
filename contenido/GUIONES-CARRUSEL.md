@@ -22,19 +22,19 @@ el momento perfecto para emprender nunca llega, en ninguna edad — se decide, n
 SLIDE 1 — 16 — "Cuando termine de estudiar"
 [FOTO: vos estudiando — mate con el escudo de Talleres, laptop y tablet con apuntes de fondo]
 
-SLIDE 2 — 20 — "Cuando tenga la plata suficiente"
+SLIDE 2 — 20 — "Cuando consiga un trabajo"
 [FOTO: dados y anotador — clima de cálculo/decisión]
 
 SLIDE 3 — 25 — "Cuando tenga más tiempo"
 [FOTO: el cachorro rottweiler suelto en el parque — aire libre, paseo, tiempo de sobra]
 
-SLIDE 4 — 35 — "Cuando esté más asentado"
+SLIDE 4 — 35 — "Cuando los niños crezcan"
 [FOTO: interior de un depto con vinoteca y ventanal con vista a la ciudad]
 
-SLIDE 5 — 40 — "Cuando no tenga tantos gastos"
+SLIDE 5 — 40 — "Cuando acabe de pagar la casa"
 [FOTO: balcón con sillones de mimbre, vista a los techos de la ciudad]
 
-SLIDE 6 — 50 — "Cuando sea el momento indicado"
+SLIDE 6 — 50 — "Cuando me retire"
 [FOTO: la pileta al atardecer, cielo naranja]
 
 SLIDE 7 — "Pero después..."
@@ -70,6 +70,16 @@ cambio el cierre ya establecido del Guion 1 de reels (`GANCHOS-Y-GUIONES.md`), p
 mantener el mismo mensaje de marca entre formatos. Falta definir la foto: se dejó como
 sugerencia abierta porque el formato original usa una foto en pareja, que no podemos
 replicar por la regla de privacidad.)*
+
+*(Quinta pasada: a partir de las capturas del carrusel original que mandó Agustín, se
+cambiaron las frases de las slides 20, 35, 40 y 50 por las genéricas del original
+("cuando consiga un trabajo", "cuando los niños crezcan", "cuando acabe de pagar la
+casa", "cuando me retire") en vez de las versiones adaptadas a emprender. Se mantienen
+sin cambios: 16 y 25 (ya coincidían con el original), "Pero después...", y las dos
+slides de cierre — 80 ("Ojalá hubiera empezado", el original dice solo "Ojalá
+hubiera...") y la SLIDE 9 final — porque son las que hacen el giro hacia el mensaje de
+la marca; si también se vuelven genéricas, todo el carrusel queda sin conexión con
+emprender.)*
 
 ## Próximos guiones de carrusel
 Se agregan acá a medida que se escriben.
