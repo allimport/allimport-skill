@@ -24,13 +24,13 @@ SLIDE 2 — 20 — "Cuando tenga la plata suficiente"
 [FOTO: dados y anotador — clima de cálculo/decisión]
 
 SLIDE 3 — 25 — "Cuando tenga más tiempo"
-[FOTO: mesa de desayuno con mate y medialunas, mañana tranquila]
+[FOTO: el cachorro rottweiler suelto en el parque — aire libre, paseo, tiempo de sobra]
 
 SLIDE 4 — 35 — "Cuando esté más asentado"
 [FOTO: interior de un depto con vinoteca y ventanal con vista a la ciudad]
 
 SLIDE 5 — 40 — "Cuando no tenga tantos gastos"
-[FOTO: balcón con sillones de mimbre, vista a los techos de la ciudad]
+[FOTO: vos manejando de noche, tablero del auto iluminado]
 
 SLIDE 6 — 50 — "Cuando sea el momento indicado"
 [FOTO: la pileta al atardecer, cielo naranja]
@@ -46,7 +46,11 @@ SLIDE 8 — 80 — "Ojalá hubiera empezado"
 afuera por tamaño, el conector no las pudo bajar). Criterio: clima/sensación, no precisión
 cronológica. Se descartó toda foto con otras personas identificables (sobre todo
 criaturas) por reserva de privacidad — quedaron afuera fotos de sobrinos, una foto grupal
-de amigos, la del cachorro y una foto con la mano de otra persona.
+de amigos y una foto con la mano de otra persona.
+
+*(Segunda pasada: se cambió la foto de la slide 3, de la mesa de desayuno al cachorro en
+el parque — mejor clima de "tiempo libre" — y la de la slide 5, de otro balcón al de vos
+manejando de noche, para no repetir dos balcones seguidos.)*
 
 ## Próximos guiones de carrusel
 Se agregan acá a medida que se escriben.
