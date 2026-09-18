@@ -8,10 +8,12 @@ su propio diseño si así se decidió.
 ---
 
 ## Guion 1 — "Cuando..." (postergar el momento de emprender por edad)
-Formato distinto a los otros dos sistemas: banner blanco arriba (~28% de la slide) con
-el número en negro bold grande y la frase entre comillas debajo, también en negro bold.
-El resto de la slide es la foto a página completa, sin degradado ni overlay oscuro, sin
-acento de color. Formato 1080×1080 (1:1), 8 slides.
+Formato vertical de feed 1080×1350 (4:5) — mismo tamaño que `PROMPT-MAESTRO-CARRUSEL.md`,
+para que quede consistente con el resto del feed. Banner superior oscuro (~26% de la
+slide, `#020408` de marca) con el número en **cyan** bold grande y la frase entre
+comillas debajo, en blanco bold. El resto de la slide es la foto a página completa, sin
+degradado ni overlay — eso no cambia, la foto sigue siendo protagonista. 8 slides.
+Prompt maestro completo: [`PROMPT-MAESTRO-CARRUSEL-EDADES.md`](PROMPT-MAESTRO-CARRUSEL-EDADES.md).
 
 Adaptado de un formato viral genérico ("vida por edades") al eje central de la cuenta:
 el momento perfecto para emprender nunca llega, en ninguna edad — se decide, no se espera.

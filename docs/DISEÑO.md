@@ -70,9 +70,11 @@ necesita:
   (1080×1350, sin progress bar, portada = miniatura del feed). Se pega igual, como texto,
   en un chat nuevo de Claude Design.
 - **Prompt maestro de carrusel "edades"** — [`contenido/PROMPT-MAESTRO-CARRUSEL-EDADES.md`](../contenido/PROMPT-MAESTRO-CARRUSEL-EDADES.md)
-  — formato aparte, minimalista, blanco y negro, sin acento de marca (1080×1080).
-  Pensado para piezas puntuales tipo "Cuando..." que rompen a propósito con el sistema
-  oscuro de marca. Guion en [`contenido/GUIONES-CARRUSEL.md`](../contenido/GUIONES-CARRUSEL.md).
+  — formato vertical de feed 1080×1350 (4:5), banner superior oscuro `#020408` con
+  acento cyan de marca (número en cyan, frase en blanco), foto a página completa sin
+  overlay. Pensado para piezas puntuales tipo "Cuando..." — sobrio, pero ya no
+  blanco/negro puro, lleva el acento de marca. Guion en
+  [`contenido/GUIONES-CARRUSEL.md`](../contenido/GUIONES-CARRUSEL.md).
 
 ## 5. Dónde están las piezas ya hechas
 - [`historias/generadas/`](../historias/generadas) — las historias de restock ya editadas,
