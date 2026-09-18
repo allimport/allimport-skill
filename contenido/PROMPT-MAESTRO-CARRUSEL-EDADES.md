@@ -46,15 +46,17 @@ paréntesis = elegís vos de `historias/stock-fotos/` o pedís que suban una.
 ## 2. PALETA (igual al resto del sistema de marca)
 
 ```
---accent:   #00D4D4   /* único color de acento — cyan de marca All Import */
---dark-bg:  #020408   /* fondo del banner de texto */
+--accent:    #00D4D4   /* único color de acento — cyan de marca All Import */
+--dark-bg:   #020408   /* extremo oscuro del degradado del banner */
+--surface:   #131F38   /* extremo claro del degradado del banner */
 texto banner: #FFFFFF (frase) / #00D4D4 (número)
 foto: sin filtro, sin degradado, tal cual es
 ```
 
 **Regla de oro:** el cyan es el ÚNICO acento. Nada de otros colores decorativos. El
-banner es oscuro (`#020408`), no blanco — es lo que le da identidad de marca a la pieza
-sin perder la sobriedad del formato original.
+banner es oscuro, no blanco — es lo que le da identidad de marca a la pieza sin perder
+la sobriedad del formato original. Pero oscuro NO significa negro liso: ver regla del
+fondo del banner en la sección 3.
 
 ## 3. LAYOUT DE CADA SLIDE (fijo, igual en las 8)
 
@@ -66,7 +68,12 @@ padding controlado, no centrados sueltos dentro de un espacio grande.
 - **Banner superior oscuro**, ~22% de la altura de la slide (≈300px de 1350px, NO más —
   si mediste bien y da 350px+ de banner con mucho negro vacío arriba/abajo del texto,
   está mal, achicalo).
-  - Fondo `#020408` sólido.
+  - **Fondo con degradado, nunca sólido liso** (regla de marca, `docs/DISEÑO.md` §2):
+    `linear-gradient(135deg, #020408 0%, #131F38 100%)`. Encima, la misma capa de noise
+    que se usa en el resto de las piezas de marca: SVG fractal `feTurbulence
+    baseFrequency="0.9"`, opacity 0.06, `mix-blend-mode: overlay`, cubriendo todo el
+    banner. Esto es obligatorio — un banner de color sólido liso (negro, gris, lo que
+    sea) sin degradado ni textura está mal, se ve como una placa pegada.
   - Padding interno del banner: 32px arriba, 40px a los costados, 28px abajo — nada de
     dejar el número "flotando" en el medio de un banner grande.
   - Número de la edad (si la slide lo tiene): **cyan `#00D4D4`**, bold (900), tamaño
