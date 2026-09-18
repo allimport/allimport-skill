@@ -32,7 +32,7 @@ SLIDE 4 — 35 — "Cuando esté más asentado"
 [FOTO: interior de un depto con vinoteca y ventanal con vista a la ciudad]
 
 SLIDE 5 — 40 — "Cuando no tenga tantos gastos"
-[FOTO: vos manejando de noche, tablero del auto iluminado]
+[FOTO: balcón con sillones de mimbre, vista a los techos de la ciudad]
 
 SLIDE 6 — 50 — "Cuando sea el momento indicado"
 [FOTO: la pileta al atardecer, cielo naranja]
@@ -51,8 +51,13 @@ criaturas) por reserva de privacidad — quedaron afuera fotos de sobrinos, una 
 de amigos y una foto con la mano de otra persona.
 
 *(Segunda pasada: se cambió la foto de la slide 3, de la mesa de desayuno al cachorro en
-el parque — mejor clima de "tiempo libre" — y la de la slide 5, de otro balcón al de vos
-manejando de noche, para no repetir dos balcones seguidos.)*
+el parque — mejor clima de "tiempo libre".)*
+
+*(Tercera pasada: la de manejando de noche en la slide 5 salió borrosa y con el volante
+tapando media foto al pasarla por Design — se volvió al balcón con sillones de mimbre,
+que tiene mejor calidad y composición. Queda una foto de balcón (slide 4 es interior con
+vinoteca, slide 5 es el balcón en sí) — no son iguales, pero si en Design vuelven a verse
+parecidas, avisar para buscar una tercera opción.)*
 
 ## Próximos guiones de carrusel
 Se agregan acá a medida que se escriben.

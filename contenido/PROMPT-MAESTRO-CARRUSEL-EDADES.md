@@ -58,22 +58,41 @@ sin perder la sobriedad del formato original.
 
 ## 3. LAYOUT DE CADA SLIDE (fijo, igual en las 8)
 
-- **Banner superior oscuro**, ~26% de la altura de la slide (≈350px de 1350px).
-  - Fondo `#020408` sólido (el mismo oscuro de marca, no negro puro ni blanco).
+**Regla anti-vacío (la más importante de esta sección):** el banner NO puede quedar como
+un bloque negro con texto flotando en el medio y aire muerto alrededor — eso es lo que
+lo hace ver genérico y feo. El número y la frase van agrupados, pegados entre sí, con
+padding controlado, no centrados sueltos dentro de un espacio grande.
+
+- **Banner superior oscuro**, ~22% de la altura de la slide (≈300px de 1350px, NO más —
+  si mediste bien y da 350px+ de banner con mucho negro vacío arriba/abajo del texto,
+  está mal, achicalo).
+  - Fondo `#020408` sólido.
+  - Padding interno del banner: 32px arriba, 40px a los costados, 28px abajo — nada de
+    dejar el número "flotando" en el medio de un banner grande.
   - Número de la edad (si la slide lo tiene): **cyan `#00D4D4`**, bold (900), tamaño
-    grande (~100-120px), centrado horizontalmente.
-  - Frase entre comillas debajo del número: **blanco `#FFFFFF`**, bold (700-800),
-    tamaño medio (~36-44px), centrada, con salto de línea si no entra en una sola.
+    ~90-100px, centrado horizontalmente, `line-height: 0.95` (pegado, sin aire arriba).
+  - Frase entre comillas: **blanco `#FFFFFF`**, bold (700-800), tamaño ~32-38px,
+    centrada, `margin-top: 8px` como máximo respecto al número — van pegados como una
+    sola unidad visual, no como dos elementos separados.
   - Las slides sin número (como "Pero después...") solo llevan la frase en blanco,
-    centrada verticalmente en el banner, tamaño un poco más grande (~46-54px) ya que
-    está sola.
-- **Foto abajo**, el 74% restante de la slide: `background-size: cover`, a página
-  completa, **sin degradado, sin overlay, sin filtro** — la foto tal cual es, natural.
-  Esto no cambia respecto a la versión anterior: la foto sigue siendo protagonista, sin
-  vignette ni glow encima.
-- Tipografía: stack `'Satoshi', 'Manrope', 'Inter', system-ui, sans-serif` — la misma
-  familia en las 8 slides, un solo peso pesado (900 para el número, 700-800 para la
-  frase). Nada de mezclar tipografías distintas entre slides.
+    centrada verticalmente en el banner, tamaño ~44-50px ya que está sola.
+  - **Línea divisoria cyan** de 4px de alto, `background: var(--accent)`, ancho 72px,
+    centrada horizontalmente, ubicada 20px debajo de la frase (o del número si no hay
+    frase con número) — es el único elemento decorativo del banner, reemplaza el corte
+    seco banner→foto por un detalle que se sienta diseñado.
+- **Foto abajo**, el resto de la slide: `background-size: cover`, `background-position:
+  center`, a página completa, **sin degradado, sin overlay, sin filtro** — la foto tal
+  cual es, natural. Esto no cambia: la foto sigue siendo protagonista, sin vignette ni
+  glow encima.
+- **Elegí bien el encuadre de la foto real que llega**: si la foto tiene elementos que
+  tapan mucho el centro de la composición (ej. un volante, un objeto en primer plano muy
+  cerca de cámara, algo borroso en foco), usá `background-position` para recortar hacia
+  la parte más limpia de la imagen en vez de centrarla a ciegas — priorizá que se vea
+  nítido y compuesto, no solo que "entre" la foto completa.
+- Tipografía: stack `'Satoshi', 'Manrope', 'Inter', system-ui, sans-serif` — pesos 900 y
+  700/800 EXACTOS como se indica arriba. Si el resultado usa una tipografía redondeada
+  tipo Poppins/Quicksand en vez de Satoshi/Manrope, está mal — revisá que la fuente haya
+  cargado (`document.fonts.ready`) antes de dar por bueno el resultado.
 - Sin logo, sin iconos, sin emojis.
 
 ## 4. INPUT QUE RECIBIRÁS
