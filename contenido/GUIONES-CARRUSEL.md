@@ -18,23 +18,35 @@ el momento perfecto para emprender nunca llega, en ninguna edad — se decide, n
 
 ```
 SLIDE 1 — 16 — "Cuando termine de estudiar"
+[FOTO: vos estudiando — mate con el escudo de Talleres, laptop y tablet con apuntes de fondo]
+
 SLIDE 2 — 20 — "Cuando tenga la plata suficiente"
+[FOTO: dados y anotador — clima de cálculo/decisión]
+
 SLIDE 3 — 25 — "Cuando tenga más tiempo"
+[FOTO: mesa de desayuno con mate y medialunas, mañana tranquila]
+
 SLIDE 4 — 35 — "Cuando esté más asentado"
+[FOTO: interior de un depto con vinoteca y ventanal con vista a la ciudad]
+
 SLIDE 5 — 40 — "Cuando no tenga tantos gastos"
+[FOTO: balcón con sillones de mimbre, vista a los techos de la ciudad]
+
 SLIDE 6 — 50 — "Cuando sea el momento indicado"
+[FOTO: la pileta al atardecer, cielo naranja]
+
 SLIDE 7 — "Pero después..."
+[FOTO: vista panorámica de Córdoba desde arriba — la iglesia gótica con la ciudad de fondo]
+
 SLIDE 8 — 80 — "Ojalá hubiera empezado"
+[FOTO: selfie relajado en tu pieza, seña de paz — clima casero, el contraste final]
 ```
 
-**Fotos sugeridas** (personales, elegidas por clima/sensación, no por precisión
-cronológica — no hace falta que documenten literalmente cada edad):
-- 16 y 20: algo del día a día real (estudiando, laburando) — ej. la foto de mate + laptop + libro ya usada.
-- 25: aire libre, salida, sensación de tiempo libre.
-- 35 y 40: paisajes contemplativos distintos entre sí (cielo, horizonte), de espaldas o de perfil, sin necesidad de mostrar la cara.
-- 50: paisaje de atardecer, tono más quieto.
-- "Pero después...": vista panorámica abierta — la de la ciudad de Córdoba sirve acá.
-- 80: foto de vos relajado/descansando — el contraste final.
+**Elegidas tras revisar la carpeta completa de Drive** (~35 fotos, 32 vistas — 3 quedaron
+afuera por tamaño, el conector no las pudo bajar). Criterio: clima/sensación, no precisión
+cronológica. Se descartó toda foto con otras personas identificables (sobre todo
+criaturas) por reserva de privacidad — quedaron afuera fotos de sobrinos, una foto grupal
+de amigos, la del cachorro y una foto con la mano de otra persona.
 
 ## Próximos guiones de carrusel
 Se agregan acá a medida que se escriben.
