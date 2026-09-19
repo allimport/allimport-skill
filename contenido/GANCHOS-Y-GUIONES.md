@@ -155,6 +155,27 @@ valor. Hook del banco: estilo #10 "lo estuviste haciendo mal todo este tiempo")*
   vez de dejarla perdiendo valor guardada."
 - **CTA (36-42s):** "Si tenés plata parada y no sabés en qué moverla, hablame."
 
+### Guion 5 — "El efecto psicológico que te frena, y no tiene que ver con la plata"
+*(Ángulo nuevo: efecto Golem — expectativas bajas del entorno → autosabotaje. Contraste
+directo con el diferencial real de Agus: mentoría/confianza, lo opuesto del efecto
+Golem. Investigación con fuente en la conversación del 2026-09-18)*
+
+- **HOOK (0-3s):** "Hay un efecto psicológico que te frena para siempre, y no tiene que
+  ver con la plata."
+- **PROBLEMA (3-16s):** "Se llama efecto Golem: cuando tu entorno espera poco de vos —
+  aunque nunca te lo digan con esas palabras — vos mismo terminás rindiendo menos. Te
+  bajan la exigencia, te bajan la confianza, y sin darte cuenta empezás a actuar como si
+  fuera verdad que no podés."
+- **SOLUCIÓN (16-32s):** "Por eso importa con quién te rodeás. Existe el efecto
+  contrario: cuando alguien SÍ confía en tu potencial, rendís más. No es magia, está
+  estudiado. Por eso yo no te doy solo el producto — te acompaño confiando en que
+  podés, aunque nunca hayas vendido nada en tu vida."
+- **PRUEBA SOCIAL (32-40s):** "Vi arrancar de cero a gente a la que nadie le daba nada —
+  y lo que les cambió no fue la plata, fue que alguien les dijo en serio 'vos podés' y
+  se lo sostuvo."
+- **CTA (40-46s):** "Si en tu entorno nadie confía en que puedas, yo sí. Escribime y
+  arrancamos juntos."
+
 ## Cómo generar variantes
 Pedile a Claude: *"generá 5 hooks nuevos con la estructura de GANCHOS-Y-GUIONES.md para
 el tema X"*. Mantené siempre: hook de 3 seg, prueba social real, CTA suave.
