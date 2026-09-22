@@ -176,6 +176,26 @@ Golem. Investigación con fuente en la conversación del 2026-09-18)*
 - **CTA (40-46s):** "Si en tu entorno nadie confía en que puedas, yo sí. Escribime y
   arrancamos juntos."
 
+## Backlog de títulos aprobados (pendientes de convertir en guion completo)
+Salieron de varias tandas de brainstorm ("dame ideas, solo títulos") donde Agus fue
+eligiendo cuáles le gustaban. Se habían quedado solo en el chat sin guardar — quedan acá
+para no perderlos de nuevo. Angulo pedido para las últimas: "que no sean tanto de venta,
+que generen confianza y marca personal".
+
+1. "3 señales de que un producto va a rotar rápido"
+2. "Cómo respondo cuando me dicen 'está caro'"
+3. "Cómo elijo con qué proveedor trabajar"
+4. "Por qué prefiero menos clientes pero que vuelvan"
+5. "Cómo organizo mi día entre la facultad y el negocio"
+6. "Lo que nadie pregunta cuando empieza a revender"
+7. "Cuánto tarda en verse un resultado real"
+8. "Qué anoto de cada cliente para no olvidarme de nada"
+9. "Cómo sé cuándo un cliente va a volver a comprar"
+10. "Lo que hago distinto los días que no vendo nada"
+11. "Lo que hago cuando llega un pedido mal del proveedor"
+12. "Cómo decido cuánto stock tener de cada producto"
+13. "Cómo cierro el día antes de dormir"
+
 ## Cómo generar variantes
 Pedile a Claude: *"generá 5 hooks nuevos con la estructura de GANCHOS-Y-GUIONES.md para
 el tema X"*. Mantené siempre: hook de 3 seg, prueba social real, CTA suave.
