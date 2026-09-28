@@ -140,5 +140,298 @@ falta que te vean real, porque eso es lo que nadie más está mostrando.
 
 ---
 
+### 2. "3 señales de que un producto va a rotar rápido"
+
+**[HOOK]**
+La mayoría de los mayoristas elige lo que va a vender por instinto. Por eso la mitad se
+queda con la plata parada en una caja.
+
+**[PROBLEMA]**
+Ves algo lindo, calculás el margen y comprás. Sin mirar si de verdad lo están pidiendo,
+si es algo que se gasta rápido, o si podés explicarlo en una sola frase. Así terminás
+con stock que ocupa lugar y no rota, mientras seguís esperando que "en algún momento" se
+venda.
+
+**[SOLUCIÓN]**
+Yo dejé de comprar por gusto hace tiempo. Antes de meter un peso en un producto nuevo,
+me fijo en tres cosas: que ya lo estén preguntando, que sea de uso constante, y que se
+entienda en diez segundos. Desde que filtro así, no tengo productos guardados juntando
+polvo — todo lo que entra, sale.
+
+**[CTA]**
+¿Cuánto de tu stock hoy está ahí hace más de dos meses sin moverse?
+
+---
+
+### 3. "Cómo respondo cuando me dicen 'está caro'"
+
+**[HOOK]**
+Cuando te dicen "está caro" y bajás el precio, no cerraste una venta — perdiste el
+control de tu negocio.
+
+**[PROBLEMA]**
+La mayoría escucha "está caro" y entra en pánico: ofrece descuento, se disculpa,
+justifica el precio como si tuviera que pedir perdón. Eso no genera confianza, genera
+dudas — si vos dudás de tu precio, el cliente también.
+
+**[SOLUCIÓN]**
+A mí me pasó de bajar precio por miedo a perder la venta, y lo único que logré fue que
+ese mismo cliente después me pidiera descuento en todo. El día que dejé de negociar el
+precio y empecé a explicar qué incluye, cambió todo — el que realmente quiere, paga; el
+que solo quería probar, se va, y está bien que se vaya.
+
+**[CTA]**
+¿Cuántas veces bajaste un precio esta semana solo para no perder la conversación?
+
+---
+
+### 4. "Cómo elijo con qué proveedor trabajar"
+
+**[HOOK]**
+El 90% de los problemas de un mayorista no son de venta — son de con quién compra.
+
+**[PROBLEMA]**
+Elegís proveedor por precio, por quién contesta más rápido, o porque te lo recomendó
+alguien una vez. Y después te enterás tarde: llega mal, tarda, o directamente
+desaparece con tu plata. Ahí no perdés solo el pedido — perdés la cara con tu cliente.
+
+**[SOLUCIÓN]**
+Yo antes de meter plata fuerte en un proveedor nuevo, hago una compra chica de prueba.
+Sin excepciones. Y reviso algo que casi nadie mira: qué pasa cuando algo sale mal — si
+responde rápido o si desaparece. De treinta grupos de proveedores que tengo guardados,
+trabajo en serio con tres. El resto quedó afuera por algo.
+
+**[CTA]**
+¿Con cuántos proveedores estás trabajando hoy sin haberlos probado en chico primero?
+
+---
+
+### 5. "Por qué prefiero menos clientes pero que vuelvan"
+
+**[HOOK]**
+Perseguir clientes nuevos todo el tiempo es la forma más cara de vender.
+
+**[PROBLEMA]**
+Estás todo el día atrás de gente nueva, contestando consultas que no cierran, mandando
+catálogo a desconocidos que preguntan precio y desaparecen. Mientras tanto, el cliente
+que ya te compró una vez, se te enfría, y tenés que volver a empezar de cero con alguien
+nuevo.
+
+**[SOLUCIÓN]**
+Prefiero diez clientes que vuelven, a cien que compran una sola vez. Hago seguimiento
+después de cada venta — no para vender de nuevo ya, sino para que se acuerden de mí
+cuando necesiten. Hoy, la mayoría de lo que facturo en el mes viene de gente que ya me
+había comprado antes, no de gente nueva.
+
+**[CTA]**
+De tus últimos diez clientes, ¿cuántos te volvieron a comprar sin que vos los busques?
+
+---
+
+### 6. "Cómo organizo mi día entre la facultad y el negocio"
+
+**[HOOK]**
+No tenés menos tiempo que yo. Tenés menos estructura que yo.
+
+**[PROBLEMA]**
+Decís que entre estudiar y laburar no te queda tiempo para el negocio, y por eso "cuando
+pueda" subís algo, "cuando pueda" contestás. El problema no es la falta de horas — es
+que sin un horario fijo, el negocio siempre pierde contra lo urgente del día.
+
+**[SOLUCIÓN]**
+Yo armo mi día entre estudio y pedidos, y lo que me salvó fue tener un bloque fijo,
+siempre a la misma hora, solo para el negocio — ahí entra grabar, responder, hacer
+seguimiento. Desde que tengo ese bloque, no se me pasó un solo día sin mover algo,
+estudie lo que estudie ese día.
+
+**[CTA]**
+¿Tenés un horario fijo para tu negocio, o depende de si "te queda tiempo"?
+
+---
+
+### 7. "Lo que nadie pregunta cuando empieza a revender"
+
+**[HOOK]**
+Todos preguntan qué vender. Casi nadie pregunta qué va a pasar después de la primera
+venta.
+
+**[PROBLEMA]**
+Te obsesionás con encontrar el producto perfecto, calculás el margen, buscás el
+proveedor — y ahí termina el plan. Nadie piensa en el cliente después de que compra, y
+por eso la mitad de los que arrancan a revender terminan vendiendo una vez a cada
+persona, para siempre.
+
+**[SOLUCIÓN]**
+A mí el producto dejó de importarme tanto el día que entendí que lo que sostiene un
+negocio no es qué vendés, es si el que te compró vuelve. Desde que hago seguimiento real
+después de cada venta, dejé de depender de encontrar "el producto ganador" — cualquier
+cosa que venda bien, la sostengo con gente que vuelve.
+
+**[CTA]**
+Si dejaras de conseguir clientes nuevos mañana, ¿tu negocio seguiría en pie con los que
+ya tenés?
+
+---
+
+### 8. "Cuánto tarda en verse un resultado real"
+
+**[HOOK]**
+Si a las dos semanas no viste resultado y ya querés bajar los brazos, nunca ibas a durar
+en esto.
+
+**[PROBLEMA]**
+Arrancás algo nuevo — un canal de venta, una forma de mostrar el producto — y si en
+unos días no explota, lo abandonás y volvés a lo de siempre. Así nunca le das tiempo a
+nada de funcionar de verdad, y terminás probando mil cosas a medias en vez de sostener
+una sola.
+
+**[SOLUCIÓN]**
+A mí los primeros meses no se me notó nada. Repetía lo mismo, sin aplausos, sin
+resultado visible, y por dentro dudaba si estaba perdiendo el tiempo. Lo que cambió no
+fue una técnica nueva — fue sostenerlo el tiempo suficiente para que empezara a
+acumular. Todo lo que hoy me funciona, tardó meses en mostrarse, no días.
+
+**[CTA]**
+¿Cuántas cosas empezaste este año y dejaste antes del mes?
+
+---
+
+### 9. "Qué anoto de cada cliente para no olvidarme de nada"
+
+**[HOOK]**
+Si dependés de acordarte de memoria quién te compró qué, ya perdiste plata sin darte
+cuenta.
+
+**[PROBLEMA]**
+Tenés la cabeza llena de nombres, pedidos, "el que quería tal color", "la que iba a
+confirmar" — y se te mezcla todo. Se te pasa volver a escribirle a alguien, se te olvida
+qué le debías, y esas son ventas que ya estaban prácticamente cerradas y se enfriaron
+solas.
+
+**[SOLUCIÓN]**
+Yo anoto hasta la venta más chica — qué compró, cuándo, y qué dijo que capaz necesitaba
+después. No es una planilla complicada, es una costumbre. Gracias a eso le vuelvo a
+escribir a la persona justa en el momento justo, y no porque me acuerde de memoria, sino
+porque lo tengo anotado.
+
+**[CTA]**
+Si te preguntara ahora qué te dijo tu último cliente que "capaz" iba a necesitar, ¿te
+acordás?
+
+---
+
+### 10. "Cómo sé cuándo un cliente va a volver a comprar"
+
+**[HOOK]**
+Hay una señal clara de que un cliente va a volver, y la mayoría la deja pasar sin
+verla.
+
+**[PROBLEMA]**
+Tratás a todos los clientes igual — el que compró una vez por curiosidad, y el que ya te
+compró tres veces. Y por tratarlos igual, no le das seguimiento al que en realidad ya te
+mostró que confía en vos, y perdés esa segunda o tercera venta que estaba prácticamente
+servida.
+
+**[SOLUCIÓN]**
+Yo dejé de esperar a que el cliente vuelva solo. Cuando alguien ya me compró una vez y
+preguntó algo más al pasar — un producto, un dato — ahí sé que hay una segunda venta
+esperando, y le vuelvo a escribir yo primero. La mayoría de mis ventas repetidas no
+llegaron solas, las fui a buscar en el momento justo.
+
+**[CTA]**
+¿Cuántos de los que ya te compraron una vez, hoy están esperando que vos les escribas
+primero?
+
+---
+
+### 11. "Lo que hago distinto los días que no vendo nada"
+
+**[HOOK]**
+Los días que no vendés nada dicen más de tu negocio que los días que vendés todo.
+
+**[PROBLEMA]**
+Un día sin ventas te desespera, dudás de todo — del producto, del precio, de si esto
+realmente funciona. Y esa desesperación se nota: escribís distinto, ofertás sin que te
+pregunten, bajás precio sin que nadie lo pida. Ahí es cuando más plata se pierde, no
+cuando no hay ventas.
+
+**[SOLUCIÓN]**
+A mí también me pasan días en cero. La diferencia es que ya no los uso para
+desesperarme — los uso para lo que no hago cuando estoy ocupado vendiendo: ordenar
+números, hacer seguimiento a gente vieja, dejar todo listo para cuando vuelva a
+moverse. Los días flojos dejaron de ser un problema el día que les di una función.
+
+**[CTA]**
+La última vez que no vendiste nada en el día, ¿qué hiciste con ese tiempo?
+
+---
+
+### 12. "Lo que hago cuando llega un pedido mal del proveedor"
+
+**[HOOK]**
+Cómo reaccionás cuando te llega un pedido mal define si tu negocio sigue en pie el año
+que viene.
+
+**[PROBLEMA]**
+Te llega algo roto, incompleto o distinto a lo que pediste, y entrás en pánico —
+porque ya le prometiste eso a tu cliente, y no sabés si el proveedor te va a responder.
+Ahí muchos se paralizan, o peor, le mandan el problema al cliente como si fuera de él.
+
+**[SOLUCIÓN]**
+A mí me pasó, más de una vez. Lo que aprendí es a no esperar a que el proveedor resuelva
+para moverme yo — reviso el pedido apenas llega, antes de prometerle nada a nadie, y si
+algo viene mal, ya tengo un plan B armado con otro proveedor de respaldo. El cliente
+nunca se entera del quilombo si vos ya lo resolviste antes de que le toque a él.
+
+**[CTA]**
+Si hoy te llega mal un pedido grande, ¿tenés un plan B ya armado, o improvisás en el
+momento?
+
+---
+
+### 13. "Cómo decido cuánto stock tener de cada producto"
+
+**[HOOK]**
+Tener mucho stock no es estar preparado. Es tener plata dormida.
+
+**[PROBLEMA]**
+Comprás de más "por las dudas", pensando que más cantidad es sinónimo de más ventas. Y
+terminás con la plata metida en cajas que no se mueven, mientras te falta justo lo que
+sí se está pidiendo. Ahí confundís tener stock con tener negocio.
+
+**[SOLUCIÓN]**
+Yo dejé de comprar "por las dudas" hace rato. Miro qué rotó las últimas semanas, no lo
+que me gustaría que rote, y compro en base a eso — ni de más ni de menos. Desde que hago
+así, tengo menos plata parada y más margen para meterle a lo que sí se está moviendo.
+
+**[CTA]**
+De todo lo que tenés guardado hoy, ¿cuánto compraste "por las dudas" y no porque te lo
+estaban pidiendo?
+
+---
+
+### 14. "Cómo cierro el día antes de dormir"
+
+**[HOOK]**
+Si te vas a dormir sin saber cómo te fue hoy, mañana vas a repetir el mismo error sin
+darte cuenta.
+
+**[PROBLEMA]**
+Terminás el día agotado, cerrás el teléfono y ya está — sin revisar qué vendiste, qué
+quedó pendiente, a quién le debés una respuesta. Al otro día arrancás de cero, sin
+aprender nada de lo que pasó el día anterior, y así se repiten los mismos errores semana
+tras semana.
+
+**[SOLUCIÓN]**
+Antes de dormir, reviso tres cosas siempre: qué entró, qué quedó sin responder, y qué
+tengo que hacer primero mañana. Son cinco minutos, no más. Desde que tengo esa
+costumbre, dejé de perder ventas por olvidarme de contestar a alguien, y empiezo cada
+día sabiendo exactamente por dónde arrancar.
+
+**[CTA]**
+¿Te acordás con quién quedaste en hablar hoy y todavía no le contestaste?
+
+---
+
 ## Próximos guiones
 Se agregan acá a medida que se piden, uno por tema.
