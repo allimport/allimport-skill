@@ -433,5 +433,84 @@ día sabiendo exactamente por dónde arrancar.
 
 ---
 
+## Formatos nuevos (paso B1, `HALLAZGOS-VIRALES.md`)
+Distintos a los de arriba (que son todos Hook/Problema/Solución/CTA sobre un problema
+del cliente ideal). Estos salen de la investigación de formatos que generan ventas y
+seguidores — mismo tono de autoridad, estructura distinta según el formato.
+
+### Antes y después real — variante 1 (arranque vs. hoy)
+*(Hallazgo 12: antes/después real, anclado en la historia real de Agus, sin exagerar)*
+
+**[HOOK]**
+Esto es lo que tenía cuando arranqué. Y esto es lo que tengo hoy.
+
+**[ANTES]**
+Un producto. Un grupo de WhatsApp de cuarenta contactos. Contestaba yo, entregaba yo,
+todo a pulmón, sin saber si esto iba a funcionar.
+
+**[DESPUÉS]**
+Hoy laburo con proveedores fijos, clientes que vuelven solos, y un sistema armado para
+no perder ni un pedido. No cambió de un día para el otro — fue sostenerlo mes tras mes
+sin soltar.
+
+**[CTA]**
+¿Vos en qué parte de esa foto de "antes" estás hoy?
+
+---
+
+### Antes y después real — variante 2 (disponibilidad)
+**[HOOK]**
+Antes contestaba mensajes a la una de la mañana. Ahora ni loco.
+
+**[ANTES]**
+Estaba disponible todo el tiempo, pensando que así mostraba compromiso. En realidad,
+mostraba desorganización.
+
+**[DESPUÉS]**
+El día que puse un horario de atención, no perdí ni un cliente — al contrario,
+empezaron a tomarme más en serio. La disponibilidad total no genera confianza, genera
+que te vean como el último de la fila.
+
+**[CTA]**
+¿A qué hora contestaste el último mensaje de anoche?
+
+---
+
+### Detrás de escena puro (sin vender, sin diagnóstico)
+*(Hallazgo 13: contenido de proceso, tipo Mercado Libre mostrando cómo empacan — el
+contenido genera enganche solo, no sigue la estructura Hook/Problema/Solución/CTA
+porque no hay nada que resolver, es observacional)*
+
+**[VISUAL]**
+Corte directo a la acción, sin presentación: manos armando pedidos, revisando cada uno
+contra la lista, empaquetando. Texto en pantalla marcando el conteo: "Pedido 1:
+revisado. Pedido 2: revisado..." hasta el último.
+
+**[CIERRE]**
+Texto final en pantalla: "Ningún pedido sale de acá sin que yo lo vea antes."
+
+---
+
+### Duda sin resolver (para generar DMs, no vistas)
+*(Hallazgo 14: el formato de dudas trae menos alcance pero más mensajes directos — acá
+el CTA no resuelve nada, a propósito)*
+
+**[HOOK]**
+¿Alguien más se pregunta si en algún momento esto deja de dar miedo?
+
+**[PROBLEMA]**
+Cada pedido grande que hago, por dentro pienso qué pasa si no se vende, si el proveedor
+me falla, si me equivoqué de producto. Nadie te cuenta que ese miedo no se va, ni con
+más ventas ni con más tiempo en esto.
+
+**[RESPUESTA PARCIAL — no se resuelve del todo]**
+Lo único que cambió es que ahora sé convivir con esa duda sin que me paralice. No sé si
+algún día se va del todo.
+
+**[CTA]**
+Si a vos también te pasa, contámelo — quiero saber si soy el único.
+
+---
+
 ## Próximos guiones
 Se agregan acá a medida que se piden, uno por tema.
