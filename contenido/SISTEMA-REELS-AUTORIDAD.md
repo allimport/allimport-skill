@@ -138,6 +138,44 @@ falta que te vean real, porque eso es lo que nadie más está mostrando.
 **[CTA]**
 ¿Cuántas veces grabaste algo esta semana y lo borraste antes de subirlo?
 
+**[NOTAS DE GRABACIÓN/EDICIÓN]** *(aplicando Hallazgos 16-21 de `HALLAZGOS-VIRALES.md`)*
+- **0:00-0:02** — Arrancá ya hablando, sin intro ni logo. Encuadre levemente de perfil,
+  desde el pecho para arriba. En el segundo 0:01 aparece en pantalla la palabra
+  "vergüenza" con un sonido de énfasis corto (un golpe/swoosh), sincronizado con la
+  palabra al decirla.
+- **0:02-0:04** — Cierra el hook. Corte de plano o zoom leve acá (primer pattern
+  interrupt).
+- **0:04-0:08** — Arranca el Problema ("Decís que no tenés tiempo..."). Nuevo corte de
+  plano.
+- **0:08-0:14** — Sigue el Problema. Texto en pantalla con la idea central ("tenés
+  contenido de sobra"). No repitas el mismo intervalo de corte que en 0:02-0:04 — que
+  varíe.
+- **0:14-0:20** — Cierre del Problema. Acá metele un pattern interrupt más fuerte: cortá
+  a un plano B-roll (vos armando un pedido) mientras seguís narrando en off, ilustrando
+  literalmente "tenés contenido de sobra".
+- **0:20-0:26** — Arranca la Solución ("A mí me pasaba exactamente eso..."). Volvé al
+  plano principal, cambiá el tono de voz — más bajo, más personal, marca el quiebre de
+  ritmo entre Problema y Solución.
+- **0:26-0:38** — Sigue la Solución. Otro corte/zoom en algún punto intermedio, sin que
+  caiga en el mismo segundo que los anteriores.
+- **0:38-0:50** — Cierre de la Solución, la frase de impacto ("no hace falta verte
+  profesional..."). Texto en pantalla con esa frase completa (subtítulo, no una palabra
+  suelta).
+- **0:50-0:53** — Arranca el CTA. Corte final de plano.
+- **0:53-0:60** — Volvé al MISMO encuadre y pose del segundo 0:00 (para que el video
+  loopee sin que se note el corte final-inicio si alguien lo re-mira). La pregunta del
+  CTA queda como texto fijo en pantalla unos segundos después de que dejás de hablar.
+
+*(Esta es la plantilla de timing — aplicá la misma lógica a cualquier otro guion de 60
+segundos: hook 0-4s con gancho visual+sonoro, pattern interrupt cada 2-4s pero variando
+el intervalo, cambio de ritmo entre Problema y Solución, texto subtitulado completo
+siempre, y cierre que vuelva al plano inicial para el loop.)*
+
+**Referencia real para mirar (no analizada por mí, no puedo reproducir video en este
+entorno):** [reel de emprendimiento encontrado en la búsqueda](https://www.instagram.com/reel/DWKV505CmBs/)
+— mismo nicho (arrancar un emprendimiento), sirve para ver en vivo el ritmo de corte y
+el uso de texto en pantalla que describen los hallazgos.
+
 ---
 
 ### 2. "3 señales de que un producto va a rotar rápido"
