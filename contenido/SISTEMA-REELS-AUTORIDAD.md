@@ -199,6 +199,27 @@ polvo — todo lo que entra, sale.
 **[CTA]**
 ¿Cuánto de tu stock hoy está ahí hace más de dos meses sin moverse?
 
+**[NOTAS DE GRABACIÓN/EDICIÓN]**
+- **0:00-0:02** — Hook a cámara, plano de perfil. En 0:01 aparece "por instinto" en
+  pantalla con sonido de golpe corto.
+- **0:02-0:04** — Corte de plano o zoom leve (primer pattern interrupt).
+- **0:04-0:08** — Arranca el Problema, nuevo corte.
+- **0:08-0:14** — Texto en pantalla: "stock que no rota".
+- **0:14-0:20** — Corte a B-roll: vos mirando el estante/stock parado, cara de "esto no
+  se mueve" — ilustra literalmente el problema.
+- **0:20-0:26** — Arranca la Solución, volvés al plano principal, bajás el tono.
+- **0:26-0:38** — Corte a B-roll contando con los dedos o señalando un papel con las
+  "3 señales", sincronizado con "me fijo en tres cosas".
+- **0:38-0:50** — Cierre con la frase de impacto subtitulada completa ("todo lo que
+  entra, sale").
+- **0:50-0:53** — Arranca el CTA, corte final.
+- **0:53-0:60** — Volvés al plano y encuadre inicial (loop).
+
+**Cómo grabar / ejemplos:** grabalo con el celular apoyado, no en mano (evita el
+temblor en el momento de contar las 3 señales). El B-roll del estante puede ser
+literal — tu propio stock — no hace falta actuación. Ejemplo de qué NO hacer: leer las
+3 señales de un papel a cámara sin nada visual de fondo, se pierde el gancho.
+
 ---
 
 ### 3. "Cómo respondo cuando me dicen 'está caro'"
@@ -221,6 +242,28 @@ que solo quería probar, se va, y está bien que se vaya.
 **[CTA]**
 ¿Cuántas veces bajaste un precio esta semana solo para no perder la conversación?
 
+**[NOTAS DE GRABACIÓN/EDICIÓN]**
+- **0:00-0:02** — Hook a cámara. En 0:01 aparece "está caro" en pantalla como si fuera
+  un mensaje de WhatsApp (burbuja de chat), con sonido de notificación.
+- **0:02-0:04** — Corte de plano (pattern interrupt).
+- **0:04-0:08** — Arranca el Problema, nuevo corte.
+- **0:08-0:14** — Texto en pantalla: "si vos dudás, el cliente también".
+- **0:14-0:20** — B-roll: pantalla del celular mostrando una respuesta típica de
+  disculpa/descuento (podés recrearla con capturas propias reales, sin inventar el
+  contenido del chat).
+- **0:20-0:26** — Arranca la Solución, volvés al plano principal, tono más firme (marca
+  autoridad acá).
+- **0:26-0:38** — Corte intermedio, mismo plano o zoom leve.
+- **0:38-0:50** — Cierre con la frase de impacto subtitulada ("el que realmente quiere,
+  paga").
+- **0:50-0:53** — Arranca el CTA, corte final.
+- **0:53-0:60** — Volvés al plano inicial (loop).
+
+**Cómo grabar / ejemplos:** el tono acá importa más que el visual — grabalo con
+convicción, sin sonreír de más (este tema pide seriedad, no simpatía). Si tenés una
+captura real de un chat donde bajaste precio y te arrepentiste, podés mostrarla tapando
+el nombre del cliente — refuerza que es real, no teoría.
+
 ---
 
 ### 4. "Cómo elijo con qué proveedor trabajar"
@@ -241,6 +284,27 @@ trabajo en serio con tres. El resto quedó afuera por algo.
 
 **[CTA]**
 ¿Con cuántos proveedores estás trabajando hoy sin haberlos probado en chico primero?
+
+**[NOTAS DE GRABACIÓN/EDICIÓN]**
+- **0:00-0:02** — Hook a cámara. En 0:01 aparece "90%" grande en pantalla con sonido de
+  golpe.
+- **0:02-0:04** — Corte de plano.
+- **0:04-0:08** — Arranca el Problema, nuevo corte.
+- **0:08-0:14** — Texto en pantalla: "llega mal, tarda, desaparece".
+- **0:14-0:20** — B-roll: scrolleando una lista de grupos de proveedores en el celular
+  (real, la tuya).
+- **0:20-0:26** — Arranca la Solución, volvés al plano principal.
+- **0:26-0:38** — Corte a B-roll de una caja/pedido chico llegando — la "compra de
+  prueba" — sincronizado con esa frase.
+- **0:38-0:50** — Cierre con la frase de impacto subtitulada ("de treinta grupos,
+  trabajo en serio con tres").
+- **0:50-0:53** — Arranca el CTA, corte final.
+- **0:53-0:60** — Volvés al plano inicial (loop).
+
+**Cómo grabar / ejemplos:** el scrolleo del celular con los grupos de proveedores es tu
+prueba social visual más fuerte acá — no hace falta mostrar nombres ni precios, solo la
+cantidad. Si tenés una foto real de un pedido de prueba chico, usala en vez de actuar la
+escena.
 
 ---
 
@@ -264,6 +328,25 @@ había comprado antes, no de gente nueva.
 **[CTA]**
 De tus últimos diez clientes, ¿cuántos te volvieron a comprar sin que vos los busques?
 
+**[NOTAS DE GRABACIÓN/EDICIÓN]**
+- **0:00-0:02** — Hook a cámara. En 0:01 aparece "la forma más cara de vender" con
+  sonido de énfasis.
+- **0:02-0:04** — Corte de plano.
+- **0:04-0:08** — Arranca el Problema, nuevo corte.
+- **0:08-0:14** — Texto en pantalla: "el cliente que ya te compró, se enfría".
+- **0:14-0:20** — B-roll: contestando mensajes de desconocidos en el celular, ritmo
+  agitado (recreá tu propio día real).
+- **0:20-0:26** — Arranca la Solución, cambia el ritmo — más calmo, plano principal.
+- **0:26-0:38** — Corte a B-roll de la lista/agenda de clientes que ya compraron.
+- **0:38-0:50** — Cierre con la frase de impacto subtitulada ("prefiero diez que
+  vuelven, a cien que compran una vez").
+- **0:50-0:53** — Arranca el CTA, corte final.
+- **0:53-0:60** — Volvés al plano inicial (loop).
+
+**Cómo grabar / ejemplos:** el contraste de ritmo entre el Problema (agitado, muchos
+mensajes) y la Solución (calmo, una lista ordenada) es el corazón visual de este reel —
+si lo grabás todo al mismo ritmo, se pierde el punto.
+
 ---
 
 ### 6. "Cómo organizo mi día entre la facultad y el negocio"
@@ -284,6 +367,25 @@ estudie lo que estudie ese día.
 
 **[CTA]**
 ¿Tenés un horario fijo para tu negocio, o depende de si "te queda tiempo"?
+
+**[NOTAS DE GRABACIÓN/EDICIÓN]**
+- **0:00-0:02** — Hook a cámara. En 0:01 aparece "estructura" en pantalla con sonido de
+  golpe.
+- **0:02-0:04** — Corte de plano.
+- **0:04-0:08** — Arranca el Problema, nuevo corte.
+- **0:08-0:14** — Texto en pantalla: "el negocio pierde contra lo urgente".
+- **0:14-0:20** — B-roll: apuntes de facultad al lado del celular con pedidos —
+  contraste visual directo entre estudio y negocio.
+- **0:20-0:26** — Arranca la Solución, volvés al plano principal.
+- **0:26-0:38** — Corte a B-roll de vos en tu "bloque fijo" (grabando, respondiendo),
+  con reloj o celular marcando la hora, sincronizado con "siempre a la misma hora".
+- **0:38-0:50** — Cierre con la frase de impacto subtitulada ("no se me pasó un solo
+  día").
+- **0:50-0:53** — Arranca el CTA, corte final.
+- **0:53-0:60** — Volvés al plano inicial (loop).
+
+**Cómo grabar / ejemplos:** mostrar la hora real en pantalla (reloj del celular) suma
+credibilidad sin necesidad de decir un número — es prueba visual, no una afirmación.
 
 ---
 
@@ -309,6 +411,25 @@ cosa que venda bien, la sostengo con gente que vuelve.
 Si dejaras de conseguir clientes nuevos mañana, ¿tu negocio seguiría en pie con los que
 ya tenés?
 
+**[NOTAS DE GRABACIÓN/EDICIÓN]**
+- **0:00-0:02** — Hook a cámara. En 0:01 aparece "casi nadie pregunta esto" con sonido
+  de golpe.
+- **0:02-0:04** — Corte de plano.
+- **0:04-0:08** — Arranca el Problema, nuevo corte.
+- **0:08-0:14** — Texto en pantalla: "vender una vez a cada persona, para siempre".
+- **0:14-0:20** — B-roll: vos armando un pedido, cámara enfocando el producto sin
+  mostrarlo entero (regla de marca: nunca mostrar la réplica a cámara).
+- **0:20-0:26** — Arranca la Solución, plano principal.
+- **0:26-0:38** — Corte intermedio, zoom leve en el momento de "cualquier cosa que venda
+  bien, la sostengo con gente que vuelve".
+- **0:38-0:50** — Cierre con la frase de impacto subtitulada.
+- **0:50-0:53** — Arranca el CTA, corte final.
+- **0:53-0:60** — Volvés al plano inicial (loop).
+
+**Cómo grabar / ejemplos:** este tema es más conceptual que visual — apoyate en el tono
+de voz y las pausas antes de la frase clave ("es si el que te compró, vuelve") en vez de
+buscar un B-roll forzado.
+
 ---
 
 ### 8. "Cuánto tarda en verse un resultado real"
@@ -331,6 +452,25 @@ acumular. Todo lo que hoy me funciona, tardó meses en mostrarse, no días.
 
 **[CTA]**
 ¿Cuántas cosas empezaste este año y dejaste antes del mes?
+
+**[NOTAS DE GRABACIÓN/EDICIÓN]**
+- **0:00-0:02** — Hook a cámara. En 0:01 aparece "dos semanas" en pantalla con sonido de
+  golpe.
+- **0:02-0:04** — Corte de plano.
+- **0:04-0:08** — Arranca el Problema, nuevo corte.
+- **0:08-0:14** — Texto en pantalla: "mil cosas a medias, no una sostenida".
+- **0:14-0:20** — B-roll: calendario o agenda con semanas tachadas — visualiza el paso
+  del tiempo sin resultado.
+- **0:20-0:26** — Arranca la Solución, tono más pausado, plano principal.
+- **0:26-0:38** — Corte intermedio, sin B-roll forzado — este tramo funciona mejor solo
+  con la cara, transmite la espera.
+- **0:38-0:50** — Cierre con la frase de impacto subtitulada ("tardó meses, no días").
+- **0:50-0:53** — Arranca el CTA, corte final.
+- **0:53-0:60** — Volvés al plano inicial (loop).
+
+**Cómo grabar / ejemplos:** bajá el ritmo de corte en la Solución respecto a los otros
+guiones — acá el mensaje es sobre paciencia, así que un ritmo más lento (menos cortes)
+refuerza el contenido en vez de contradecirlo.
 
 ---
 
@@ -356,6 +496,23 @@ porque lo tengo anotado.
 Si te preguntara ahora qué te dijo tu último cliente que "capaz" iba a necesitar, ¿te
 acordás?
 
+**[NOTAS DE GRABACIÓN/EDICIÓN]**
+- **0:00-0:02** — Hook a cámara. En 0:01 aparece "ya perdiste plata" con sonido de golpe.
+- **0:02-0:04** — Corte de plano.
+- **0:04-0:08** — Arranca el Problema, nuevo corte.
+- **0:08-0:14** — Texto en pantalla: "ventas que se enfriaron solas".
+- **0:14-0:20** — B-roll: cuaderno o notas del celular con anotaciones de clientes
+  (tapando datos sensibles si hace falta).
+- **0:20-0:26** — Arranca la Solución, plano principal.
+- **0:26-0:38** — Corte a B-roll anotando algo en el momento, sincronizado con "anoto
+  hasta la venta más chica".
+- **0:38-0:50** — Cierre con la frase de impacto subtitulada.
+- **0:50-0:53** — Arranca el CTA, corte final.
+- **0:53-0:60** — Volvés al plano inicial (loop).
+
+**Cómo grabar / ejemplos:** mostrar el cuaderno o la nota real (aunque sea desordenada)
+vende más autenticidad que una planilla prolija — no la "arregles" para la cámara.
+
 ---
 
 ### 10. "Cómo sé cuándo un cliente va a volver a comprar"
@@ -380,6 +537,23 @@ llegaron solas, las fui a buscar en el momento justo.
 ¿Cuántos de los que ya te compraron una vez, hoy están esperando que vos les escribas
 primero?
 
+**[NOTAS DE GRABACIÓN/EDICIÓN]**
+- **0:00-0:02** — Hook a cámara. En 0:01 aparece "una señal clara" con sonido de golpe.
+- **0:02-0:04** — Corte de plano.
+- **0:04-0:08** — Arranca el Problema, nuevo corte.
+- **0:08-0:14** — Texto en pantalla: "esa segunda venta estaba servida".
+- **0:14-0:20** — B-roll: chat de WhatsApp con un cliente preguntando algo más "al
+  pasar" (recreado con tu propio patrón real, sin inventar contenido de un chat que no
+  existió).
+- **0:20-0:26** — Arranca la Solución, plano principal.
+- **0:26-0:38** — Corte a B-roll escribiéndole vos primero a alguien.
+- **0:38-0:50** — Cierre con la frase de impacto subtitulada.
+- **0:50-0:53** — Arranca el CTA, corte final.
+- **0:53-0:60** — Volvés al plano inicial (loop).
+
+**Cómo grabar / ejemplos:** si vas a mostrar pantalla de chat, tapá nombre y foto de
+perfil del cliente — la idea se entiende igual sin exponer a nadie.
+
 ---
 
 ### 11. "Lo que hago distinto los días que no vendo nada"
@@ -401,6 +575,24 @@ moverse. Los días flojos dejaron de ser un problema el día que les di una func
 
 **[CTA]**
 La última vez que no vendiste nada en el día, ¿qué hiciste con ese tiempo?
+
+**[NOTAS DE GRABACIÓN/EDICIÓN]**
+- **0:00-0:02** — Hook a cámara. En 0:01 aparece "dicen más" en pantalla con sonido de
+  golpe.
+- **0:02-0:04** — Corte de plano.
+- **0:04-0:08** — Arranca el Problema, nuevo corte.
+- **0:08-0:14** — Texto en pantalla: "ahí es cuando más plata se pierde".
+- **0:14-0:20** — B-roll: celular sin notificaciones, pantalla quieta — visualiza el
+  "día en cero" sin necesidad de decirlo.
+- **0:20-0:26** — Arranca la Solución, plano principal.
+- **0:26-0:38** — Corte a B-roll ordenando stock o revisando números, sincronizado con
+  "los uso para ordenar números".
+- **0:38-0:50** — Cierre con la frase de impacto subtitulada.
+- **0:50-0:53** — Arranca el CTA, corte final.
+- **0:53-0:60** — Volvés al plano inicial (loop).
+
+**Cómo grabar / ejemplos:** el plano de "celular sin notificaciones" es simple pero
+efectivo — dejalo 2-3 segundos en pantalla sin narración encima, el silencio ahí suma.
 
 ---
 
@@ -425,6 +617,26 @@ nunca se entera del quilombo si vos ya lo resolviste antes de que le toque a él
 Si hoy te llega mal un pedido grande, ¿tenés un plan B ya armado, o improvisás en el
 momento?
 
+**[NOTAS DE GRABACIÓN/EDICIÓN]**
+- **0:00-0:02** — Hook a cámara. En 0:01 aparece "define tu negocio" con sonido de
+  golpe.
+- **0:02-0:04** — Corte de plano.
+- **0:04-0:08** — Arranca el Problema, nuevo corte.
+- **0:08-0:14** — Texto en pantalla: "no le mandes el problema a tu cliente".
+- **0:14-0:20** — B-roll: revisando una caja recién llegada, cara de revisar con
+  atención (real, no actuado con un producto roto de mentira).
+- **0:20-0:26** — Arranca la Solución, plano principal.
+- **0:26-0:38** — Corte a B-roll mostrando el "plan B" — otro proveedor guardado en
+  contactos, sincronizado con esa frase.
+- **0:38-0:50** — Cierre con la frase de impacto subtitulada ("el cliente nunca se
+  entera del quilombo").
+- **0:50-0:53** — Arranca el CTA, corte final.
+- **0:53-0:60** — Volvés al plano inicial (loop).
+
+**Cómo grabar / ejemplos:** no rompas ni ensucies un producto real para simular el
+"pedido mal" — alcanza con la cara y el tono al contarlo, más el B-roll de revisar la
+caja.
+
 ---
 
 ### 13. "Cómo decido cuánto stock tener de cada producto"
@@ -445,6 +657,23 @@ así, tengo menos plata parada y más margen para meterle a lo que sí se está 
 **[CTA]**
 De todo lo que tenés guardado hoy, ¿cuánto compraste "por las dudas" y no porque te lo
 estaban pidiendo?
+
+**[NOTAS DE GRABACIÓN/EDICIÓN]**
+- **0:00-0:02** — Hook a cámara. En 0:01 aparece "plata dormida" con sonido de golpe.
+- **0:02-0:04** — Corte de plano.
+- **0:04-0:08** — Arranca el Problema, nuevo corte.
+- **0:08-0:14** — Texto en pantalla: "confundís stock con negocio".
+- **0:14-0:20** — B-roll: cajas apiladas sin moverse, plano fijo unos segundos.
+- **0:20-0:26** — Arranca la Solución, plano principal.
+- **0:26-0:38** — Corte a B-roll revisando qué rotó las últimas semanas (celular o
+  cuaderno), sincronizado con "miro qué rotó".
+- **0:38-0:50** — Cierre con la frase de impacto subtitulada.
+- **0:50-0:53** — Arranca el CTA, corte final.
+- **0:53-0:60** — Volvés al plano inicial (loop).
+
+**Cómo grabar / ejemplos:** el plano de las cajas apiladas funciona mejor si es tu
+stock real, aunque no sea mucho — no hace falta que se vea "un depósito grande" para que
+el punto se entienda.
 
 ---
 
@@ -468,6 +697,25 @@ día sabiendo exactamente por dónde arrancar.
 
 **[CTA]**
 ¿Te acordás con quién quedaste en hablar hoy y todavía no le contestaste?
+
+**[NOTAS DE GRABACIÓN/EDICIÓN]**
+- **0:00-0:02** — Hook a cámara, de noche o con luz cálida (coherente con el tema).
+  En 0:01 aparece "vas a repetir el error" con sonido de golpe.
+- **0:02-0:04** — Corte de plano.
+- **0:04-0:08** — Arranca el Problema, nuevo corte.
+- **0:08-0:14** — Texto en pantalla: "arrancás de cero, sin aprender nada".
+- **0:14-0:20** — B-roll: cerrando el teléfono y dejándolo en la mesa de noche, sin
+  revisar nada — ilustra el problema.
+- **0:20-0:26** — Arranca la Solución, plano principal.
+- **0:26-0:38** — Corte a B-roll de vos revisando el teléfono antes de dormir,
+  sincronizado con "reviso tres cosas siempre".
+- **0:38-0:50** — Cierre con la frase de impacto subtitulada ("sé por dónde arrancar").
+- **0:50-0:53** — Arranca el CTA, corte final.
+- **0:53-0:60** — Volvés al plano inicial (loop).
+
+**Cómo grabar / ejemplos:** grabalo de noche de verdad, con la luz que tengas
+disponible en tu cuarto — no lo simules de día, el contexto real (hora, luz) refuerza el
+tema del reel.
 
 ---
 
@@ -494,6 +742,26 @@ sin soltar.
 **[CTA]**
 ¿Vos en qué parte de esa foto de "antes" estás hoy?
 
+**[NOTAS DE GRABACIÓN/EDICIÓN]**
+- **0:00-0:02** — Hook a cámara, plano actual (el "hoy"). Sonido de énfasis en "hoy".
+- **0:02-0:04** — Transición fuerte (corte seco o efecto de swoosh) marcando el salto de
+  tiempo hacia el "antes".
+- **0:04-0:18** — ANTES: visual del punto de partida real — el producto único, el grupo
+  de WhatsApp en pantalla del celular. Narración en off.
+- **0:18-0:20** — Transición de vuelta al presente (mismo efecto de swoosh, simétrico).
+- **0:20-0:50** — DESPUÉS: espacio de trabajo actual, stock, notificaciones — mostrá el
+  presente real, sin exagerar ni dramatizar de más.
+- **0:50-0:53** — Arranca el CTA.
+- **0:53-0:60** — Volvés al plano/encuadre del "antes" en pantalla partida o superpuesta
+  sobre el actual, si tu editor lo permite — refuerza el contraste visual antes de
+  cerrar en loop.
+
+**Cómo grabar / ejemplos:** si no tenés foto/video real de tu "antes" (el primer
+producto, el grupo viejo de WhatsApp), no la inventes ni actúes una falsa — usá una
+captura de pantalla real de ese grupo si todavía existe, o directamente contalo hablado
+sin el recurso visual del "antes". Hallazgo 12: el público de 2026 detecta las
+transformaciones armadas — mejor un antes real y simple que uno actuado.
+
 ---
 
 ### Antes y después real — variante 2 (disponibilidad)
@@ -512,6 +780,22 @@ que te vean como el último de la fila.
 **[CTA]**
 ¿A qué hora contestaste el último mensaje de anoche?
 
+**[NOTAS DE GRABACIÓN/EDICIÓN]**
+- **0:00-0:02** — Hook a cámara. Sonido de énfasis en "ni loco".
+- **0:02-0:06** — B-roll: pantalla del celular mostrando la hora "1:00 AM" (real, de una
+  captura vieja si la tenés, o el reloj del celular en el momento de grabar simulando la
+  hora con un texto superpuesto que aclare que es ilustrativo).
+- **0:06-0:20** — ANTES narrado a cámara: "estaba disponible todo el tiempo...".
+- **0:20-0:26** — Transición (corte seco), marca el quiebre hacia el cambio.
+- **0:26-0:50** — DESPUÉS: mostrá tu horario de atención actual (una nota, un estado de
+  WhatsApp, algo real) mientras narrás la Solución.
+- **0:50-0:53** — Arranca el CTA.
+- **0:53-0:60** — Volvés al plano inicial (loop).
+
+**Cómo grabar / ejemplos:** si vas a mostrar la hora "1 AM" en pantalla, aclará (texto
+chico) que es ilustrativo si no tenés la captura real exacta de esa noche — no inventes
+un dato puntual presentándolo como printscreen real cuando no lo es.
+
 ---
 
 ### Detrás de escena puro (sin vender, sin diagnóstico)
@@ -526,6 +810,24 @@ revisado. Pedido 2: revisado..." hasta el último.
 
 **[CIERRE]**
 Texto final en pantalla: "Ningún pedido sale de acá sin que yo lo vea antes."
+
+**[NOTAS DE GRABACIÓN/EDICIÓN]**
+- **0:00-0:02** — Corte directo a manos trabajando, sin cara, sin presentación —
+  arranca ya en acción.
+- **0:02-0:05, 0:05-0:09, 0:09-0:13...** — Pattern interrupts frecuentes pero en
+  intervalos irregulares (cambios de ángulo de cámara — de arriba, de costado, primer
+  plano de las manos) cada vez que arranca un "pedido nuevo" del conteo.
+- **A lo largo de todo el video** — Audio: instrumental de ritmo constante, sin
+  narración hablada (Hallazgo 19: el audio marca el ritmo, acá reemplaza a la voz).
+  Texto en pantalla contando cada pedido revisado, sincronizado con el corte de plano.
+- **Últimos 3-5 segundos** — Cámara vuelve al primer plano/ángulo del inicio (loop) y
+  aparece el texto de cierre.
+
+**Cómo grabar / ejemplos:** este formato no necesita guion hablado — grabá el proceso
+real la próxima vez que arms pedidos, en una sola sesión, y editá después eligiendo los
+mejores 15-20 segundos de acción. Puede durar un poco más de 60 segundos si el ritmo de
+corte se mantiene ágil (Hallazgo 13: el contenido de proceso genera enganche por sí
+solo). No repitas siempre el mismo ángulo de cámara — variá entre pedido y pedido.
 
 ---
 
@@ -547,6 +849,24 @@ algún día se va del todo.
 
 **[CTA]**
 Si a vos también te pasa, contámelo — quiero saber si soy el único.
+
+**[NOTAS DE GRABACIÓN/EDICIÓN]**
+- **0:00-0:02** — Hook a cámara, tono más bajo/reflexivo que los otros guiones (este
+  formato pide vulnerabilidad controlada, no autoridad pura). En 0:01 aparece "¿esto deja
+  de dar miedo?" en pantalla.
+- **0:02-0:04** — Corte de plano.
+- **0:04-0:16** — Problema, sin cortes agresivos — dejá que la cámara quede fija más
+  tiempo que en los otros guiones, transmite introspección.
+- **0:16-0:18** — Corte de plano (único pattern interrupt fuerte del video).
+- **0:18-0:50** — Respuesta parcial, mismo tono bajo, sin resolver del todo.
+- **0:50-0:53** — Arranca el CTA.
+- **0:53-0:60** — Se queda en el mismo plano, sin volver a un "inicio" marcado — este
+  formato no busca el loop, busca que se sienta una conversación abierta, no cerrada.
+
+**Cómo grabar / ejemplos:** menos cortes que en el resto de los guiones, a propósito —
+Hallazgo 14 dice que este formato prioriza mensajes por sobre alcance, así que la edición
+tiene que sentirse más cruda/honesta, no tan producida como los guiones de autoridad
+pura.
 
 ---
 
