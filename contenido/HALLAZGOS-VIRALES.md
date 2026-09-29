@@ -124,7 +124,55 @@ los guiones de Agus.
 26. 7 maneras de ganar más _.
 27. Dejá de deslizar hasta que entiendas esto.
 
+## Paso B1 — Qué formatos generan más ventas y seguidores (2026-09-29)
+Investigación puntual para el sistema de reels de autoridad (`SISTEMA-REELS-AUTORIDAD.md`).
+
+**Hallazgo 11 — Reel vs. post: la brecha se mantiene**
+Un reel promedia 3-5x más alcance que un post tradicional del mismo perfil; una cuenta
+chica (500 seguidores) puede llegar a 10-50k views con un solo reel bien hecho.
+**All Import:** confirma la decisión ya tomada — foco 100% en reels.
+
+**Hallazgo 12 — Formato "antes y después" real, no impostado**
+Es de los formatos que la plataforma prioriza (junto con educativo e inspiracional),
+pero en 2026 el público detecta las transformaciones falsas — funcionan mejor los
+plazos de tiempo reales y un punto de partida imperfecto, no pulido.
+**All Import:** si se usa este formato, anclarlo en la historia real de Agus (arrancó
+con poco, no un "antes" exagerado a propósito) — coincide con la regla ya establecida
+de no inventar prueba social.
+
+**Hallazgo 13 — Contenido educativo tipo "detrás de escena" funciona**
+Ejemplo citado: Mercado Libre hace reels educativos mostrando cómo empacan los pedidos.
+El contenido de proceso (cómo se arma un pedido, cómo se revisa antes de mandarlo)
+genera engagement por sí solo, sin necesidad de venderlo.
+**All Import:** ya cubierto parcialmente por el guion "Lo que hago cuando llega un
+pedido mal del proveedor" — hay espacio para más reels de "proceso" puro.
+
+**Hallazgo 14 — El "formato de dudas" trae menos alcance pero más mensajes directos**
+Un reel que plantea una duda genuina (sin resolverla del todo) mueve menos views que uno
+viral, pero convierte más en DMs — más cerca de la venta real que del alcance vanidoso.
+**All Import:** el CTA del sistema de autoridad (pregunta de auto-diagnóstico, no pedido
+directo) ya apunta en esta dirección — reforzar este tipo de cierre en vez de buscar
+viralidad pura.
+
+**Hallazgo 15 — Estructura validada externamente para B2B/autoridad**
+Un formato citado para contenido B2B/consultoría: situación cotidiana (qué pasa) →
+problema (por qué duele) → idea clara (qué hacer distinto) → mini ejemplo → cierre con
+pregunta.
+**All Import:** es básicamente el mismo esqueleto que ya se define en
+`SISTEMA-REELS-AUTORIDAD.md` (Hook/Problema/Solución/CTA) — confirma que la estructura
+elegida no es arbitraria, está validada afuera también.
+
+## Fuentes (paso B1)
+- [Cómo Hacer Reels para Mi Negocio 2026 — Shortway](https://shortway.com.mx/como-hacer/reels-para-mi-negocio)
+- [Guía definitiva de ideas para Reels 2026 — Delefant](https://www.delefant.com/ideas-para-reels-instagram-tiktok/)
+- [Cómo hacer Reels para tu negocio: estructura + 10 guiones — Kalend](https://getkalend.com/blog/como-hacer-reels-para-tu-negocio/)
+- [Marketing B2B, 12 formatos de contenidos — Social Media Pymes](https://www.socialmediapymes.com/marketing-b2b-formatos-de-contenidos/)
+- [Reels para Marcas: cómo vender en Instagram — Socialancer](https://www.socialancer.com/reels-para-marcas/)
+- [The Reel Hooks That Are Actually Going Viral in 2026 — Medium](https://medium.com/@viralboris/the-reel-hooks-that-are-actually-going-viral-right-now-2026-breakdown-5ad6af6fad06)
+- [100+ Best Instagram Hooks for Reels 2026 — Taggbox](https://taggbox.com/blog/best-instagram-hooks/)
+
 ## Cómo se usan estos hallazgos
-Alimentan los guiones de `GANCHOS-Y-GUIONES.md`, sección "Guiones completos". El banco de
-hooks de arriba se usa para variar el gancho de cada guion sin repetir siempre la misma
-fórmula. Repetir esta investigación cada 2-3 semanas para refrescar ángulos.
+Alimentan los guiones de `GANCHOS-Y-GUIONES.md`, sección "Guiones completos", y del
+sistema nuevo en `SISTEMA-REELS-AUTORIDAD.md`. El banco de hooks de arriba se usa para
+variar el gancho de cada guion sin repetir siempre la misma fórmula. Repetir esta
+investigación cada 2-3 semanas para refrescar ángulos.
