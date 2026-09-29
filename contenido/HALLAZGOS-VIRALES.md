@@ -171,8 +171,79 @@ elegida no es arbitraria, está validada afuera también.
 - [The Reel Hooks That Are Actually Going Viral in 2026 — Medium](https://medium.com/@viralboris/the-reel-hooks-that-are-actually-going-viral-right-now-2026-breakdown-5ad6af6fad06)
 - [100+ Best Instagram Hooks for Reels 2026 — Taggbox](https://taggbox.com/blog/best-instagram-hooks/)
 
+## Paso B2 — Retención, ganchos visuales/sonoros y grabación (2026-09-29)
+Investigación puntual pedida para mejorar guion Y grabación/edición, no solo el texto.
+
+**Hallazgo 16 — La retención decide la distribución, no las vistas**
+El algoritmo mide microcomportamiento: el primer 1-1.5 segundo decide si el reel se
+distribuye masivamente, y el promedio de retención en todo el video dictamina el
+alcance después — no importa cuánta gente lo empieza a ver, importa cuánta lo termina.
+**All Import:** confirma por qué el CTA de autodiagnóstico (Hallazgo 14) es mejor que
+buscar viralidad pura — pero además dice que hay que cuidar TODO el video, no solo el
+hook, porque el abandono a mitad de camino castiga el alcance.
+
+**Hallazgo 17 — Pattern interrupts cada 1-3 segundos, en intervalos irregulares**
+Reels con 4+ pattern interrupts (corte de plano, texto que aparece, zoom, cambio de
+ángulo) tienen 2.3x más probabilidad de superar 100K vistas (estudio citado de
+Later.com, 2025). Pero si el intervalo es siempre igual (ej. zoom cada 3 segundos
+exactos), el cerebro detecta el patrón y deja de reaccionar — hay que variar los
+tiempos (3 seg, después 5, después 2.5).
+**All Import:** al grabar, cortar el plano o cambiar de ángulo entre el Hook, el
+Problema y la Solución (no dejarlo como un plano fijo de 45 segundos seguidos), y variar
+dónde se hacen los cortes de un reel a otro.
+
+**Hallazgo 18 — El texto en pantalla es obligatorio, no decorativo**
+Gran parte de la audiencia ve reels sin sonido — si el mensaje vive solo en el audio, se
+pierde. El texto en pantalla sube retención, accesibilidad, y sobre todo la tasa de
+finalización, que es de las señales que más premia el algoritmo.
+**All Import:** cada guion de acá en más debería subtitularse completo al grabar (Reels/
+CapCut generan subtítulos automáticos), no solo poner una palabra clave suelta en
+pantalla.
+
+**Hallazgo 19 — Ganchos sonoros: audio que marca ritmo y emoción, no solo música de fondo**
+El audio correcto sube las métricas de retención marcando ritmo y señales emocionales —
+no es solo "ponerle una canción de fondo". Recomendación citada: abrir con un gancho
+vocal (la propia voz diciendo el hook), texto en pantalla que acompañe el ritmo del
+audio, y sostener los primeros 3 segundos con un micro-gancho visual además del sonoro.
+**All Import:** el Hook hablado (que ya escribimos siempre) debería ir acompañado de un
+corte visual o un sonido de énfasis (un golpe, un "swoosh") justo en la palabra clave del
+hook, no solo la voz sola.
+
+**Hallazgo 20 — Cierre en loop suma retención extra**
+Un reel que puede verse en bucle sin que se note el corte final-inicio (el cierre
+conecta visualmente con el arranque) mantiene a la persona un poco más de tiempo mirando
+de nuevo, y eso suma en el alcance.
+**All Import:** al editar, buscar que el plano final se parezca o conecte con el plano
+inicial (mismo encuadre, misma pose) para favorecer el loop, sobre todo en los reels de
+"antes y después" que ya armamos.
+
+**Hallazgo 21 — Grabación: encuadre, cuerpo y autenticidad**
+Encuadrarse un poco de perfil en vez de frontal total se ve más natural; si no sabés qué
+hacer con las manos, encuadrar desde el pecho hacia arriba y no moverlas de más. La
+audiencia juzga competencia y confianza en los primeros 2 segundos, mayormente por
+postura y contacto visual, no por las palabras. Hablar con intención (marcar los puntos
+importantes, variar el tono) transmite autoridad — no hace falta sonar ensayado, al
+contrario: si algo suena "a folleto", hay que cambiarlo por como se habla realmente con
+un cliente en el mostrador.
+**All Import:** coincide 100% con las reglas ya escritas en `SISTEMA-REELS-AUTORIDAD.md`
+("nunca profesor ni vendecursos", "autenticidad") — esto es la versión de grabación de
+esa misma regla.
+
+## Fuentes (paso B2)
+- [Hooks para Reels: cómo escribir ganchos que retienen — Oink](https://oinkmygod.com/blog/hooks-reels/)
+- [Video Hooks That Stop Scrolling: 7 Patterns 2026 — Green Frog Labs](https://greenfroglabs.com/blog/video-hooks-scroll-stopping-2026)
+- [Edición Instagram Reels 2026: Guía que Aumenta Engagement — Edición Video Pro](https://edicionvideopro.com/edicion-para-plataformas-y-video-marketing/edicion-para-instagram-reels-estilo-ritmo-y-conversion/)
+- [Pattern Interrupts in TikTok 2026 — Edición Video Pro](https://edicionvideopro.com/en/editing-for-platforms-video-marketing/pattern-interrupts-tiktok-retention-guide/)
+- [7 Técnicas de Edición que el Algoritmo de Instagram Ama 2026 — Edición Video Pro](https://edicionvideopro.com/edicion-para-plataformas-y-video-marketing/7-tecnicas-edicion-algoritmo-instagram-2026/)
+- [Instagram Reels 06/2026: sonidos y cómo usarlos — Crescitaly](https://blog.crescitaly.com/instagram-reels-06-2026-lista-sonidos-como-usarlos/)
+- [Cómo Verse Profesional en Cámara — BIGVU](https://bigvu.tv/blog/es/c-mo-verse-profesional-en-c-385/)
+- [Hablar a cámara: 10 consejos para hacerlo con naturalidad — El Taller Audiovisual](https://eltalleraudiovisual.com/hablar-a-camara/)
+- [Cómo hacer reels que vendan para tu negocio — Tomás GTC](https://tomasgtc.es/blog/como-hacer-reels-que-vendan/)
+
 ## Cómo se usan estos hallazgos
 Alimentan los guiones de `GANCHOS-Y-GUIONES.md`, sección "Guiones completos", y del
 sistema nuevo en `SISTEMA-REELS-AUTORIDAD.md`. El banco de hooks de arriba se usa para
-variar el gancho de cada guion sin repetir siempre la misma fórmula. Repetir esta
-investigación cada 2-3 semanas para refrescar ángulos.
+variar el gancho de cada guion sin repetir siempre la misma fórmula. Los hallazgos del
+paso B2 (retención, edición, grabación) van más allá del texto del guion — son para
+tener en cuenta al filmar y editar, no solo al escribir. Repetir esta investigación
+cada 2-3 semanas para refrescar ángulos.
