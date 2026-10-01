@@ -247,3 +247,32 @@ variar el gancho de cada guion sin repetir siempre la misma fórmula. Los hallaz
 paso B2 (retención, edición, grabación) van más allá del texto del guion — son para
 tener en cuenta al filmar y editar, no solo al escribir. Repetir esta investigación
 cada 2-3 semanas para refrescar ángulos.
+
+## Paso B3 — Carrusel "mentalidad" (frase + foto épica) (2026-10-01)
+Investigación puntual sobre el formato pedido a partir de capturas (cuentas tipo
+`usuaario.666`, `agustinbadt`). Detalle completo y banco de frases propio en
+`contenido/CARRUSEL-MENTALIDAD.md`.
+
+**Hallazgo 22 — Es un género establecido, sin nombre único fijo**
+Conocido como "mentalidad fuerte", "lobo solitario" o la versión en español del "sigma"
+importado del inglés — contenido de superación con estética dura, no motivación
+genérica. No hay una sola cuenta "fundadora" identificable, es un formato replicado por
+muchas cuentas de frases.
+
+**Hallazgo 23 — La fórmula de la frase es contraste/paradoja en una sola oración**
+Declarativa, corta, primera persona, sin desarrollo — la imagen no explica nada, afirma.
+Muchas usan una palabra final mucho más grande que el resto (la "pegada" visual).
+Lenguaje estoico (Marco Aurelio, Séneca) adaptado a frases modernas cortas es una fuente
+recurrente de este tipo de contenido.
+
+**Hallazgo 24 — Estas cuentas en general no son fotógrafos originales**
+Curan/repostean fotos de deportes extremos o paisajes impactantes de otros, con crédito
+(se ve el ícono de repost + la foto de perfil del autor original superpuesta). Es un
+modelo de curación, no de autoridad personal — importante si el objetivo es construir
+marca propia, no solo una cuenta de frases.
+
+## Fuentes (paso B3)
+- [77 Citas de Hombres Sigma — Barraza Carlos](https://barrazacarlos.com/es/77-citas-de-hombres-sigma-para-inspirar-la-mentalidad-del-lobo-solitario/)
+- [35 Frases Estoicas Sobre la Disciplina y el Carácter — Cifrado Estoico](https://cifradoestoico.com/frases-estoicas/sobre-disciplina/)
+- [Frases De Lobo Solitario — Frases para copiar y pegar](https://frasesparacopiarypegar.com/frases-de-lobo-solitario/)
+- [80 Frases de lobos sobre lealtad, fuerza y soledad — Fraseando](https://fraseando.top/frases-de-lobos/)
