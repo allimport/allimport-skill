@@ -53,24 +53,33 @@ original superpuesta). Opciones para nosotros:
 
 ## Banco propio de frases (inspiradas en el estilo, no copiadas literal)
 No se replican las frases que viste tal cual — son de otras cuentas. Este es un banco
-original en el mismo tono, algunas neutras y otras ya conectadas al eje de emprender de
-la marca:
+original en el mismo tono — mezcla de conectadas al eje de emprender y generales de
+mentalidad (decisión: usar las dos, no una sola línea):
 
-1. "No corro contra nadie. Corro contra quien era ayer."
-2. "El que espera aplausos, se cansa rápido. El que no los necesita, no para."
-3. "Nadie te va a avisar cuándo es el momento. Lo decidís vos."
-4. "La plata se puede perder y se recupera. El tiempo que no usaste, no."
-5. "Prefiero construir en silencio y que hablen los resultados."
-6. "El que aparece en las malas, es el que se queda en las buenas."
-7. "No necesito que me crean. Necesito que me vean sostenerlo."
-8. "La duda no se va. Se aprende a caminar con ella."
-9. "Todo lo que hoy sostengo, en algún momento también me dio miedo empezarlo."
+**Conectadas a emprender:**
+1. "Nadie te va a avisar cuándo es el momento. Lo decidís vos."
+2. "La plata se puede perder y se recupera. El tiempo que no usaste, no."
+3. "Prefiero construir en silencio y que hablen los resultados."
+4. "No necesito que me crean. Necesito que me vean sostenerlo."
+5. "Todo lo que hoy sostengo, en algún momento también me dio miedo empezarlo."
+
+**Generales de mentalidad:**
+6. "No corro contra nadie. Corro contra quien era ayer."
+7. "El que espera aplausos, se cansa rápido. El que no los necesita, no para."
+8. "El que aparece en las malas, es el que se queda en las buenas."
+9. "La duda no se va. Se aprende a caminar con ella."
 10. "No soy el que más sabe. Soy el que no se fue cuando se puso difícil."
 
-## Cómo seguimos
-Antes de armar el prompt de diseño (banner, formato, tipografía) necesito que me
-confirmes:
-- ¿Usamos fotos reales tuyas (de espaldas, paisajes, algo "épico" que tengas) o
-  buscamos/generamos imágenes para esto?
-- ¿Las frases quedan conectadas al eje de emprender (como el banco de arriba), o
-  también querés algunas más generales de mentalidad sin ese gancho?
+## Decisiones ya tomadas
+- **Fotos: reales de Agus primero, stock/generado como respaldo.** Es lo que distingue
+  esto de una cuenta de curación — todo lo que armamos en este repo apuesta a prueba
+  social real, no a repostear fotos ajenas. El stock/generado queda solo para frases sin
+  nada propio que encaje.
+- **Frases: las dos líneas, mezcladas** (conectadas a emprender + mentalidad general),
+  como en el banco de arriba.
+
+## Próximo paso
+Revisar qué fotos reales de Agus encajan (de espaldas, paisajes, algo "épico" — mismo
+criterio de privacidad ya aplicado al carrusel de edades: nada con otras personas
+identificables) y recién ahí armar el prompt maestro de diseño (formato, tipografía,
+blanco y negro/duotono).
