@@ -83,3 +83,29 @@ Revisar qué fotos reales de Agus encajan (de espaldas, paisajes, algo "épico" 
 criterio de privacidad ya aplicado al carrusel de edades: nada con otras personas
 identificables) y recién ahí armar el prompt maestro de diseño (formato, tipografía,
 blanco y negro/duotono).
+
+## Fotos de respaldo (Unsplash, gratis, uso comercial sin atribución obligatoria)
+Como no hay fotos propias definidas todavía, se arma un primer carrusel con estas —
+cuando Agus tenga una foto real que encaje mejor con alguna frase, se reemplaza. Todas
+bajo licencia Unsplash (gratis, sin atribución obligatoria).
+
+1. "Nadie te va a avisar cuándo es el momento. Lo decidís vos."
+   → [Camino vacío en el desierto](https://unsplash.com/photos/an-empty-road-stretches-across-a-vast-desert-VB8I2m4ggZI)
+2. "La plata se puede perder y se recupera. El tiempo que no usaste, no."
+   → [Árbol solo en la montaña al atardecer](https://unsplash.com/photos/a-lone-tree-on-top-of-a-mountain-at-sunset-z-J6t9UJqEg)
+3. "Prefiero construir en silencio y que hablen los resultados."
+   → [Escalando un acantilado, en soledad](https://unsplash.com/photos/a-person-is-rock-climbing-up-a-cliff-cvikmsgyiKQ)
+4. "No necesito que me crean. Necesito que me vean sostenerlo."
+   → [Silueta sobre un acantilado al atardecer](https://unsplash.com/photos/silhouette-photo-of-person-on-mountain-cliff-drEZ7t-b5Dw)
+5. "Todo lo que hoy sostengo, en algún momento también me dio miedo empezarlo."
+   → [Pino solitario en la nieve al amanecer](https://unsplash.com/photos/lone-pine-tree-on-snowy-hill-at-sunrise-8Lp_S_0vfcA)
+6. "No corro contra nadie. Corro contra quien era ayer."
+   → [Silueta de una persona en la montaña](https://unsplash.com/photos/AP9tC5i7RTQ)
+7. "El que espera aplausos, se cansa rápido. El que no los necesita, no para."
+   → [Figura sola caminando hacia un paisaje rocoso](https://unsplash.com/photos/a-lone-figure-walks-towards-a-surreal-rocky-mountain-landscape-RutIi_FmLMY)
+8. "El que aparece en las malas, es el que se queda en las buenas."
+   → [Acantilado bajo nubes de tormenta](https://unsplash.com/photos/Ob-5QPT6yv4)
+9. "La duda no se va. Se aprende a caminar con ella."
+   → [Sendero subiendo entre la niebla](https://unsplash.com/photos/a-path-going-up-a-hill-in-the-fog-MZtvPBb8HJI)
+10. "No soy el que más sabe. Soy el que no se fue cuando se puso difícil."
+    → [Montañas con neblina y una figura solitaria a la distancia](https://unsplash.com/photos/misty-mountains-and-a-lone-figure-in-the-distance-UnjOccnOTxA)
