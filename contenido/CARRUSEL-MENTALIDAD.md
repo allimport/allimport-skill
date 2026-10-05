@@ -19,6 +19,32 @@ motivación genérica tipo "cree en vos".
   cortas modernas).
 - Contraste/paradoja en una sola frase ("nos falta maldad, pero nos sobra humildad").
 - Fe — agradecer "al de arriba" por lo bueno, sin perder el tono duro.
+- Indiferencia a lo que opinen los demás / no vivir para ser juzgado.
+- Esfuerzo sin ayuda ("a mí nadie me regaló nada") — mismo ángulo que ya usamos en
+  nuestro banco de emprender.
+- Desconfianza — "la gente te da las miserias que tiene, no lo que merecés".
+- También aparece humor/complicidad liviana (bromas con amigos) mezclado entre las
+  frases serias — no es 100% drama todo el tiempo.
+
+## Cómo crecen estas cuentas (hallazgo de `ixxan.7`, 57,2 mil seguidores, 542 posts)
+No encontré cobertura externa sobre esta cuenta puntual ni sobre "Frases365" (parece ser
+una etiqueta de colaboración de Instagram, no una marca con prensa), pero el perfil en
+sí reveló algo importante que no teníamos: **esto funciona como red, no como creadores
+aislados.**
+- La bio linkea a otras 2 cuentas del mismo estilo (`@ethaan.99`, `@izxxn_1`).
+- Un post está tageado con "Frases365" — probablemente la función de colaboración de
+  Instagram (varios perfiles posteando lo mismo a la vez, cada uno suma el alcance a su
+  propia cuenta).
+- Uno de los posts tiene tageado a `@usuaario.666` — la MISMA cuenta de las primeras
+  capturas que mandaste. Confirma que son cuentas que se repostean y arrastran
+  seguidores entre sí, no competencia aislada.
+- **Fotos: mezcla fotos propias reales (selfies de esquí/snowboard, claramente su hobby)
+  con fotos de jugadores de fútbol tomadas de internet** (Cristiano Ronaldo con la
+  camiseta del Manchester United, un futbolista con camiseta del Banco Provincia) — esto
+  es una señal de alerta, no algo a copiar: usar fotos de jugadores conocidos sin
+  derechos es la norma en estas cuentas, pero es la parte de esta estrategia que NO
+  conviene replicar (riesgo de copyright, y además no construye marca propia — ya lo
+  habíamos descartado al decidir fotos reales de Agus primero).
 
 **Fórmula de la frase:** una oración corta, casi siempre con una palabra o frase final
 mucho más grande que el resto (la "pegada"), directa, en primera persona, sin
