@@ -75,6 +75,12 @@ necesita:
   overlay. Pensado para piezas puntuales tipo "Cuando..." — sobrio, pero ya no
   blanco/negro puro, lleva el acento de marca. Guion en
   [`contenido/GUIONES-CARRUSEL.md`](../contenido/GUIONES-CARRUSEL.md).
+- **Prompt maestro de carrusel "mentalidad"** — [`contenido/PROMPT-MAESTRO-CARRUSEL-MENTALIDAD.md`](../contenido/PROMPT-MAESTRO-CARRUSEL-MENTALIDAD.md)
+  — sin banner, texto (blanco o negro, sin acento de color) directo sobre la foto a
+  página completa, con jerarquía de tamaño dentro de la misma frase (la palabra de
+  cierre bien más grande). Blanco y negro o color real, según la foto. Investigación,
+  banco de frases y fotos sugeridas en
+  [`contenido/CARRUSEL-MENTALIDAD.md`](../contenido/CARRUSEL-MENTALIDAD.md).
 
 ## 5. Dónde están las piezas ya hechas
 - [`historias/generadas/`](../historias/generadas) — las historias de restock ya editadas,
