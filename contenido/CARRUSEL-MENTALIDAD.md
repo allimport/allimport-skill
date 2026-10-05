@@ -109,3 +109,38 @@ bajo licencia Unsplash (gratis, sin atribución obligatoria).
    → [Sendero subiendo entre la niebla](https://unsplash.com/photos/a-path-going-up-a-hill-in-the-fog-MZtvPBb8HJI)
 10. "No soy el que más sabe. Soy el que no se fue cuando se puso difícil."
     → [Montañas con neblina y una figura solitaria a la distancia](https://unsplash.com/photos/misty-mountains-and-a-lone-figure-in-the-distance-UnjOccnOTxA)
+
+## Sobre investigar a los creadores de las capturas (`usuaario.666`, `agustinbadt`)
+Busqué si había algo público relevante sobre esas cuentas puntuales (más allá de lo que
+ya se ve en tus capturas) y no apareció nada — no son cuentas con cobertura de prensa ni
+perfil público más allá de Instagram mismo, así que no hay más para sacar de ahí que lo
+que ya analizamos directamente de las imágenes que mandaste (cuenta de curación/repost
+en un caso, cuenta personal verificada en el otro). No vale la pena seguir
+investigándolas puntualmente — el género en sí (mentalidad fuerte / lobo solitario) es
+lo que tiene volumen de información, y ya está cubierto arriba.
+
+## Banco 2 — frases sobre fe / Dios (mismo estilo, declarativo + contraste)
+Pedido aparte: variante centrada en fe, no copiada de las frases que viste (esas son de
+otras cuentas) — mismo tono duro/seco, sin golpe de efecto barato, con la fórmula de
+contraste ya identificada en la investigación.
+
+1. "No le pido que me saque el problema. Le pido fuerza para atravesarlo."
+   → [Silueta con las manos levantadas al cielo](https://unsplash.com/photos/silhouette-of-man-raising-his-hands-73YCrY31GHY)
+2. "Lo que no pude solo, lo sostuvo Dios sin que yo lo viera."
+   → [Rayos de sol entre las nubes](https://unsplash.com/photos/sun-rays-through-clouds-qziEfi5lyXM)
+3. "No tengo todas las respuestas. Tengo fe en que voy por el camino correcto."
+   → [El sol brillando entre las nubes sobre las montañas](https://unsplash.com/photos/the-sun-is-shining-through-the-clouds-over-the-mountains-B5nCJC-KpvA)
+4. "Cada vez que pensé que no daba más, apareció algo que no esperaba."
+   → [Rayos de sol rompiendo nubes oscuras](https://unsplash.com/photos/sun-rays-breaking-through-dark-clouds-Iujaige0Ks0)
+5. "Agradezco lo que tengo antes de pedir lo que falta."
+   → [Rayos de sol sobre siluetas de nubes](https://unsplash.com/photos/sun-rays-above-silhouette-of-clouds-Ih3-ww0fBHM)
+6. "El miedo entra primero. La fe se queda al final."
+   → [Sendero subiendo entre la niebla](https://unsplash.com/photos/a-path-going-up-a-hill-in-the-fog-MZtvPBb8HJI)
+7. "No necesito entenderlo todo para confiar en que va a estar bien."
+   → [Árbol solo en la montaña al atardecer](https://unsplash.com/photos/a-lone-tree-on-top-of-a-mountain-at-sunset-z-J6t9UJqEg)
+8. "Lo bueno que me pasa, no lo construí solo."
+   → [Silueta de una persona en la montaña](https://unsplash.com/photos/AP9tC5i7RTQ)
+
+*(Nota: #7 y #8 repiten fotos ya usadas en el Banco 1 — está bien porque van en un
+carrusel distinto, publicado otro día. Si preferís que no se repita ninguna foto entre
+los dos carruseles, avisame y busco 2 alternativas.)*
