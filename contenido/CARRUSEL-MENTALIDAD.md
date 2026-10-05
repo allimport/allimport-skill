@@ -25,18 +25,27 @@ mucho más grande que el resto (la "pegada"), directa, en primera persona, sin
 explicación — la imagen no se desarrolla, se declara.
 
 **Fórmula visual:**
-- Foto real de algo "épico": deportes extremos (snowboard, motos, buggies en desierto),
-  naturaleza imponente, de espaldas o con el rostro cubierto (casco, pasamontañas) — el
-  protagonista es la sensación, no la cara.
-- Blanco y negro o duotono oscuro (azul noche en algunas, gris/negro en otras) — nunca
-  a color saturado.
+- Foto real de algo "épico": deportes extremos (snowboard, motos, cuatriciclos, buggies
+  en desierto o playa), naturaleza imponente, de espaldas, con el rostro cubierto (casco,
+  pasamontañas, antiparras) o mirando a cámara en acción — el protagonista es la
+  sensación/adrenalina, no necesariamente ocultar la cara.
+- **Blanco y negro/duotono O color real** — ambas funcionan (ejemplo: foto a color de
+  playa con cielo celeste y texto negro sólido directo encima, sin degradado ni filtro).
+  No es una regla fija, es más sobre que la foto tenga impacto que sobre el color.
 - Tipografía bold sans-serif tipo impact, centrada, con jerarquía de tamaño (la palabra
   clave bien más grande).
 - Carrusel de 4-5 slides, cada una una frase distinta, sin texto de desarrollo — es el
   formato más simple de todos los que armamos hasta ahora.
 - Audio en tendencia de fondo (ya confirmado como relevante en `HALLAZGOS-VIRALES.md`).
-- Caption del post casi vacío (solo crédito de canción) — todo el peso está en la
-  imagen, no en el texto de abajo.
+- Caption del post casi vacío — solo crédito de canción, o un CTA mínimo tipo "Seguime
+  para más❤️" — todo el peso está en la imagen, no en el texto de abajo.
+
+**Hallazgo adicional — el formato ya se usa para vender oportunidad de reventa/inversión**
+En una captura de referencia apareció, arriba del post analizado, otra cuenta
+(`farias.alexis28`) usando esta misma estética con un caption que dice literal "tu
+oportunidad de arrancar con una inversión mínima es hoy, HABLAME" — confirma que el
+formato ya se aplica al ángulo exacto de Agus (reventa, arrancar con poco capital), no
+solo a mentalidad genérica. Es una señal de que vale la pena probarlo.
 
 ## De dónde salen las fotos (importante para decidir cómo lo hacemos)
 Las cuentas de este estilo en general **no son fotógrafos originales** — curan/repostean
